@@ -11,7 +11,7 @@ import (
 	"encoding/hex"
 	"strconv"
 
-	"github.com/denkhaus/bitshares/util"
+	"github.com/gkany/gobcx/util"
 	"github.com/juju/errors"
 )
 

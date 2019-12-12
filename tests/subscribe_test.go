@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/denkhaus/bitshares"
-	"github.com/denkhaus/bitshares/util"
+	"github.com/gkany/gobcx"
+	"github.com/gkany/gobcx/util"
 	"github.com/denkhaus/logging"
 	"github.com/stretchr/testify/suite"
 	"gopkg.in/cheggaaa/pb.v1"

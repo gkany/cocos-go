@@ -8,7 +8,7 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/btcsuite/btcutil"
 	"github.com/btcsuite/btcutil/base58"
-	"github.com/denkhaus/bitshares/util"
+	"github.com/gkany/gobcx/util"
 	"github.com/juju/errors"
 )
 

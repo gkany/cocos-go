@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/denkhaus/bitshares/types"
-	"github.com/denkhaus/bitshares/util"
+	"github.com/gkany/gobcx/types"
+	"github.com/gkany/gobcx/util"
 	"github.com/juju/errors"
 )
 

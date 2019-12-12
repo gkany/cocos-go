@@ -6,7 +6,7 @@ Look for several examples in [examples](/examples) and [tests](/tests) folder. T
 ## install
 
 ```bash
-go get -u github.com/denkhaus/bitshares
+go get -u github.com/gkany/gobcx
 ```
 
 Install dev-dependencies with
@@ -35,7 +35,7 @@ To generate op samples for testing, go to [gen](/gen) package.
 Generated operation samples get injected automatically while running operation tests.
 
 ## testing
-To test this stuff I use a combined docker based MainNet/TestNet wallet, you can find [here](https://github.com/denkhaus/bitshares-docker).
+To test this stuff I use a combined docker based MainNet/TestNet wallet, you can find [here](https://github.com/gkany/gobcx-docker).
 Operations testing uses generated real blockchain sample code by [gen](/gen) package. To test run:
 
 ```bash

@@ -3,7 +3,7 @@ package bitshares
 import (
 	"encoding/json"
 
-	"github.com/denkhaus/bitshares/api"
+	"github.com/gkany/gobcx/api"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	deadlock "github.com/sasha-s/go-deadlock"

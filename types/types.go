@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/denkhaus/bitshares/util"
+	"github.com/gkany/gobcx/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )

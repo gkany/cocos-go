@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/denkhaus/bitshares"
-	"github.com/denkhaus/bitshares/config"
-	"github.com/denkhaus/bitshares/crypto"
-	"github.com/denkhaus/bitshares/tests"
-	"github.com/denkhaus/bitshares/types"
+	"github.com/gkany/gobcx"
+	"github.com/gkany/gobcx/config"
+	"github.com/gkany/gobcx/crypto"
+	"github.com/gkany/gobcx/tests"
+	"github.com/gkany/gobcx/types"
 	"github.com/juju/errors"
 )
 

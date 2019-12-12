@@ -4,13 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/denkhaus/bitshares"
-	"github.com/denkhaus/bitshares/config"
-	"github.com/denkhaus/bitshares/types"
+	"github.com/gkany/gobcx"
+	"github.com/gkany/gobcx/config"
+	"github.com/gkany/gobcx/types"
 	"github.com/stretchr/testify/suite"
 
 	//import operations to initialize types.OperationMap
-	_ "github.com/denkhaus/bitshares/operations"
+	_ "github.com/gkany/gobcx/operations"
 )
 
 type commonTest struct {

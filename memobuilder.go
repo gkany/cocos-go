@@ -3,8 +3,8 @@ package bitshares
 import (
 	"math/rand"
 
-	"github.com/denkhaus/bitshares/crypto"
-	"github.com/denkhaus/bitshares/types"
+	"github.com/gkany/gobcx/crypto"
+	"github.com/gkany/gobcx/types"
 	"github.com/juju/errors"
 )
 

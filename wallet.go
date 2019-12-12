@@ -3,9 +3,9 @@ package bitshares
 import (
 	"fmt"
 
-	"github.com/denkhaus/bitshares/api"
-	"github.com/denkhaus/bitshares/config"
-	"github.com/denkhaus/bitshares/types"
+	"github.com/gkany/gobcx/api"
+	"github.com/gkany/gobcx/config"
+	"github.com/gkany/gobcx/types"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"

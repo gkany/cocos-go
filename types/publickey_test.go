@@ -3,7 +3,7 @@ package types
 import (
 	"testing"
 
-	"github.com/denkhaus/bitshares/config"
+	"github.com/gkany/gobcx/config"
 	"github.com/juju/errors"
 	"github.com/stretchr/testify/assert"
 )

@@ -6,11 +6,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/denkhaus/bitshares"
-	"github.com/denkhaus/bitshares/config"
-	"github.com/denkhaus/bitshares/crypto"
-	"github.com/denkhaus/bitshares/operations"
-	"github.com/denkhaus/bitshares/types"
+	"github.com/gkany/gobcx"
+	"github.com/gkany/gobcx/config"
+	"github.com/gkany/gobcx/crypto"
+	"github.com/gkany/gobcx/operations"
+	"github.com/gkany/gobcx/types"
 	"github.com/juju/errors"
 )
 

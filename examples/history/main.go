@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/denkhaus/bitshares"
-	"github.com/denkhaus/bitshares/types"
+	"github.com/gkany/gobcx"
+	"github.com/gkany/gobcx/types"
 	"github.com/juju/errors"
 )
 

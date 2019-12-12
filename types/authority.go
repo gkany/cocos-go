@@ -5,7 +5,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/denkhaus/bitshares/util"
+	"github.com/gkany/gobcx/util"
 	sort "github.com/emirpasic/gods/utils"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"

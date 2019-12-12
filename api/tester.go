@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/denkhaus/bitshares/types"
+	"github.com/gkany/gobcx/types"
 	"github.com/denkhaus/logging"
 	sort "github.com/emirpasic/gods/utils"
 	deadlock "github.com/sasha-s/go-deadlock"

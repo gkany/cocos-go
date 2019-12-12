@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/denkhaus/bitshares/gen/data"
-	"github.com/denkhaus/bitshares/types"
-	"github.com/denkhaus/bitshares/util"
+	"github.com/gkany/gobcx/gen/data"
+	"github.com/gkany/gobcx/types"
+	"github.com/gkany/gobcx/util"
 	"github.com/denkhaus/gojson"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
