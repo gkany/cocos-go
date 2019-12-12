@@ -1,4 +1,4 @@
-package bitshares
+package gobcx
 
 import (
 	"math/rand"
