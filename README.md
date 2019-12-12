@@ -1,6 +1,6 @@
-# bitshares
+# gobcx
 
-A Bitshares API consuming a websocket connection to an active full node or a RPC connection to your `cli_wallet`. 
+A gobcx API consuming a websocket connection to an active full node or a RPC connection to your `cli_wallet`. 
 Look for several examples in [examples](/examples) and [tests](/tests) folder. This is work in progress. To mitigate breaking changes, please use tagged branches. New tagged branches will be created for breaking changes. No additional cgo dependencies for transaction signing required. Use it at your own risk. 
 
 ## install
@@ -52,37 +52,40 @@ make test_blocks
 ## code
 
 ```go
-wsFullApiUrl := "wss://bitshares.openledger.info/ws"
+// wsURL := "ws://127.0.0.1:8049"
+wsURL := "ws://test.cocosbcx.net"
 
-api := bitshares.NewWebsocketAPI(wsFullApiUrl)
+api := gobcx.NewWebsocketAPI(wsURL)
 if err := api.Connect(); err != nil {
-	log.Fatal(err)
+	log.Println(err)
 }
 
-api.OnError(func(err error) {
-	log.Fatal(err)
-})
+accountID := types.NewAccountID("1.2.16") // nicotest 1.2.16
+coreAsset := types.NewAssetID("1.3.0")
 
-UserID   := types.NewAccountID("1.2.253")
-AssetBTS := types.NewAssetID("1.3.0")
-
-res, api.GetAccountBalances(UserID, AssetBTS)
+balances, err := api.GetAccountBalances(accountID, coreAsset)
 if err != nil {
 	log.Fatal(err)
 }
-
-log.Printf("balances: %v", res)
+log.Printf("balances: %v", balances)
 ```
 
 If you need wallet functions, use:
 
 ```go
-rpcApiUrl    := "http://localhost:8095" 
-api := bitshares.NewWalletAPI(rpcApiUrl)
+// local cli_wallet, rpc_port: 8048
+walletURL := "http://127.0.0.1:8048"
 
-if err := api.Connect(); err != nil{
+walletAPI := gobcx.NewWalletAPI(walletURL)
+if err := walletAPI.Connect(); err != nil {
+	log.Println(err)
+}
+
+info, err := walletAPI.Info()
+if err != nil {
 	log.Fatal(err)
 }
+log.Printf("info: %v", info)
 
 ...
 ```
@@ -91,12 +94,12 @@ For a long application lifecycle, you can use an API instance with latency teste
 Note: Because the tester takes time to unleash its magic, use the above-mentioned constructor for quick in and out.
 
 ```go
-wsFullApiUrl := "wss://bitshares.openledger.info/ws"
+wsFullApiUrl := "wss://gobcx.openledger.info/ws"
 
 //wsFullApiUrl serves as "quick startup" fallback endpoint here, 
 //until the latency tester provides the first results.
 
-api, err := bitshares.NewWithAutoEndpoint(wsFullApiUrl)
+api, err := gobcx.NewWithAutoEndpoint(wsFullApiUrl)
 if err != nil {
 	log.Fatal(err)
 }
