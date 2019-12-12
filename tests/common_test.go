@@ -4,13 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkany/gobcx"
-	"github.com/gkany/gobcx/config"
-	"github.com/gkany/gobcx/types"
+	"github.com/gkany/graph-sdk"
+	"github.com/gkany/graph-sdk/config"
+	"github.com/gkany/graph-sdk/types"
 	"github.com/stretchr/testify/suite"
 
 	//import operations to initialize types.OperationMap
-	_ "github.com/gkany/gobcx/operations"
+	_ "github.com/gkany/graph-sdk/operations"
 )
 
 type commonTest struct {

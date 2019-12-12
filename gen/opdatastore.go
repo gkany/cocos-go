@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/gkany/gobcx/gen/data"
-	"github.com/gkany/gobcx/types"
+	"github.com/gkany/graph-sdk/gen/data"
+	"github.com/gkany/graph-sdk/types"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/mitchellh/reflectwalk"

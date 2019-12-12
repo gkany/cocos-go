@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/gkany/gobcx/config"
-	"github.com/gkany/gobcx/util"
+	"github.com/gkany/graph-sdk/config"
+	"github.com/gkany/graph-sdk/util"
 	"github.com/stretchr/testify/assert"
 )
 

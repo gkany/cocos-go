@@ -11,7 +11,7 @@ import (
 
 	// register operations
 
-	_ "github.com/gkany/gobcx/operations"
+	_ "github.com/gkany/graph-sdk/operations"
 )
 
 func TestBlockRange(t *testing.T) {

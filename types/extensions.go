@@ -5,7 +5,7 @@ package types
 import (
 	"github.com/pquerna/ffjson/ffjson"
 
-	"github.com/gkany/gobcx/util"
+	"github.com/gkany/graph-sdk/util"
 	"github.com/juju/errors"
 )
 

@@ -28,5 +28,7 @@
   },
   "go.testEnvVars": {
     "GO111MODULE": "on"
-  },  
+  },
+  "go.inferGopath": false,
+  
 }

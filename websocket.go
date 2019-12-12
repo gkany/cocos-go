@@ -1,21 +1,21 @@
-package gobcx
+package graph-sdk
 
 import (
 	"encoding/json"
 	"time"
 
-	"github.com/gkany/gobcx/api"
-	"github.com/gkany/gobcx/config"
-	"github.com/gkany/gobcx/crypto"
-	"github.com/gkany/gobcx/operations"
-	"github.com/gkany/gobcx/types"
-	"github.com/gkany/gobcx/util"
+	"github.com/gkany/graph-sdk/api"
+	"github.com/gkany/graph-sdk/config"
+	"github.com/gkany/graph-sdk/crypto"
+	"github.com/gkany/graph-sdk/operations"
+	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graph-sdk/util"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 
 	// init operations
-	_ "github.com/gkany/gobcx/operations"
+	_ "github.com/gkany/graph-sdk/operations"
 )
 
 const (

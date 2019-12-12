@@ -3,7 +3,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/gkany/gobcx/util"
+	"github.com/gkany/graph-sdk/util"
 	"github.com/denkhaus/logging"
 	sort "github.com/emirpasic/gods/utils"
 	"github.com/juju/errors"

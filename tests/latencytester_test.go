@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkany/gobcx"
-	"github.com/gkany/gobcx/api"
+	"github.com/gkany/graph-sdk"
+	"github.com/gkany/graph-sdk/api"
 	"github.com/stretchr/testify/assert"
 )
 

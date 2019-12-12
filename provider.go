@@ -1,9 +1,9 @@
-package gobcx
+package graph-sdk
 
 import (
 	"encoding/json"
 
-	"github.com/gkany/gobcx/api"
+	"github.com/gkany/graph-sdk/api"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	deadlock "github.com/sasha-s/go-deadlock"

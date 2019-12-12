@@ -1,10 +1,10 @@
-package gobcx
+package graph-sdk
 
 import (
 	"math/rand"
 
-	"github.com/gkany/gobcx/crypto"
-	"github.com/gkany/gobcx/types"
+	"github.com/gkany/graph-sdk/crypto"
+	"github.com/gkany/graph-sdk/types"
 	"github.com/juju/errors"
 )
 

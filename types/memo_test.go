@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/gkany/gobcx/config"
+	"github.com/gkany/graph-sdk/config"
 	"github.com/stretchr/testify/assert"
 )
 

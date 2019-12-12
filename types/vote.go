@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gkany/gobcx/util"
+	"github.com/gkany/graph-sdk/util"
 	sort "github.com/emirpasic/gods/utils"
 	"github.com/juju/errors"
 )

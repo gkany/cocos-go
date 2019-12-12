@@ -3,16 +3,16 @@ package tests
 import (
 	"testing"
 
-	"github.com/gkany/gobcx"
-	"github.com/gkany/gobcx/crypto"
-	"github.com/gkany/gobcx/gen/data"
-	"github.com/gkany/gobcx/operations"
-	"github.com/gkany/gobcx/types"
+	"github.com/gkany/graph-sdk"
+	"github.com/gkany/graph-sdk/crypto"
+	"github.com/gkany/graph-sdk/gen/data"
+	"github.com/gkany/graph-sdk/operations"
+	"github.com/gkany/graph-sdk/types"
 	"github.com/denkhaus/logging"
 	"github.com/stretchr/testify/suite"
 
 	// importing this initializes sample data fetching
-	_ "github.com/gkany/gobcx/gen/samples"
+	_ "github.com/gkany/graph-sdk/gen/samples"
 )
 
 type operationsAPITest struct {

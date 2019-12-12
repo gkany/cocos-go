@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/btcsuite/btcd/btcec"
-	"github.com/gkany/gobcx/config"
-	"github.com/gkany/gobcx/types"
+	"github.com/gkany/graph-sdk/config"
+	"github.com/gkany/graph-sdk/types"
 
 	"github.com/juju/errors"
 )

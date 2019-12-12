@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkany/gobcx"
-	"github.com/gkany/gobcx/types"
-	"github.com/gkany/gobcx/util"
+	"github.com/gkany/graph-sdk"
+	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graph-sdk/util"
 	"github.com/juju/errors"
 	"github.com/stretchr/testify/assert"
 )

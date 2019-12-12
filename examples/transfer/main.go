@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gkany/gobcx"
-	"github.com/gkany/gobcx/config"
-	"github.com/gkany/gobcx/crypto"
-	"github.com/gkany/gobcx/tests"
-	"github.com/gkany/gobcx/types"
+	"github.com/gkany/graph-sdk"
+	"github.com/gkany/graph-sdk/config"
+	"github.com/gkany/graph-sdk/crypto"
+	"github.com/gkany/graph-sdk/tests"
+	"github.com/gkany/graph-sdk/types"
 	"github.com/juju/errors"
 )
 

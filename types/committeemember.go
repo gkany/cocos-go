@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/gkany/gobcx/util"
+	"github.com/gkany/graph-sdk/util"
 	"github.com/juju/errors"
 )
 

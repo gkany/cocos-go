@@ -1,4 +1,4 @@
-module github.com/gkany/gobcx
+module github.com/gkany/graph-sdk
 
 require (
 	github.com/bradhe/stopwatch v0.0.0-20190618212248-a58cccc508ea

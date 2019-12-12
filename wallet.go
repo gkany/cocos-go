@@ -1,11 +1,11 @@
-package gobcx
+package graph-sdk
 
 import (
 	"fmt"
 
-	"github.com/gkany/gobcx/api"
-	"github.com/gkany/gobcx/config"
-	"github.com/gkany/gobcx/types"
+	"github.com/gkany/graph-sdk/api"
+	"github.com/gkany/graph-sdk/config"
+	"github.com/gkany/graph-sdk/types"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
