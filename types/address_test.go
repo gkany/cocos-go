@@ -3,7 +3,7 @@ package types
 import (
 	"testing"
 
-	"github.com/gkany/graph-sdk/config"
+	"github.com/gkany/graphSDK/config"
 	"github.com/stretchr/testify/assert"
 )
 

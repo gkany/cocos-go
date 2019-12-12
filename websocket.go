@@ -1,21 +1,21 @@
-package graph-sdk
+package graphSDK
 
 import (
 	"encoding/json"
 	"time"
 
-	"github.com/gkany/graph-sdk/api"
-	"github.com/gkany/graph-sdk/config"
-	"github.com/gkany/graph-sdk/crypto"
-	"github.com/gkany/graph-sdk/operations"
-	"github.com/gkany/graph-sdk/types"
-	"github.com/gkany/graph-sdk/util"
+	"github.com/gkany/graphSDK/api"
+	"github.com/gkany/graphSDK/config"
+	"github.com/gkany/graphSDK/crypto"
+	"github.com/gkany/graphSDK/operations"
+	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/graphSDK/util"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 
 	// init operations
-	_ "github.com/gkany/graph-sdk/operations"
+	_ "github.com/gkany/graphSDK/operations"
 )
 
 const (

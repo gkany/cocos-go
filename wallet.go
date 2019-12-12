@@ -1,11 +1,11 @@
-package graph-sdk
+package graphSDK
 
 import (
 	"fmt"
 
-	"github.com/gkany/graph-sdk/api"
-	"github.com/gkany/graph-sdk/config"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK/api"
+	"github.com/gkany/graphSDK/config"
+	"github.com/gkany/graphSDK/types"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"

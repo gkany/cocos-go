@@ -5,8 +5,8 @@ import (
 	"log"
 	"math/rand"
 
-	"github.com/gkany/graph-sdk/config"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK/config"
+	"github.com/gkany/graphSDK/types"
 	"github.com/juju/errors"
 )
 

@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkany/graph-sdk"
-	"github.com/gkany/graph-sdk/util"
+	"github.com/gkany/graphSDK"
+	"github.com/gkany/graphSDK/util"
 	"github.com/denkhaus/logging"
 	"github.com/stretchr/testify/suite"
 	"gopkg.in/cheggaaa/pb.v1"

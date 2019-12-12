@@ -10,10 +10,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gkany/graph-sdk"
-	"github.com/gkany/graph-sdk/gen/data"
-	"github.com/gkany/graph-sdk/tests"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK"
+	"github.com/gkany/graphSDK/gen/data"
+	"github.com/gkany/graphSDK/tests"
+	"github.com/gkany/graphSDK/types"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
@@ -21,7 +21,7 @@ import (
 	tomb "gopkg.in/tomb.v2"
 
 	// importing this initializes sample data fetching
-	"github.com/gkany/graph-sdk/gen/samples"
+	"github.com/gkany/graphSDK/gen/samples"
 )
 
 const (

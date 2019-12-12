@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gkany/graph-sdk/gen/data"
-	"github.com/gkany/graph-sdk/types"
-	"github.com/gkany/graph-sdk/util"
+	"github.com/gkany/graphSDK/gen/data"
+	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/graphSDK/util"
 	"github.com/denkhaus/gojson"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"

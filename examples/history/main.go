@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gkany/graph-sdk"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK"
+	"github.com/gkany/graphSDK/types"
 	"github.com/juju/errors"
 )
 

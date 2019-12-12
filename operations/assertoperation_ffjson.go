@@ -6,7 +6,7 @@ package operations
 import (
 	"bytes"
 	"fmt"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK/types"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
 

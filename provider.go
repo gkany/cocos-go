@@ -1,9 +1,9 @@
-package graph-sdk
+package graphSDK
 
 import (
 	"encoding/json"
 
-	"github.com/gkany/graph-sdk/api"
+	"github.com/gkany/graphSDK/api"
 	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	deadlock "github.com/sasha-s/go-deadlock"

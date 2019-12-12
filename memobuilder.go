@@ -1,10 +1,10 @@
-package graph-sdk
+package graphSDK
 
 import (
 	"math/rand"
 
-	"github.com/gkany/graph-sdk/crypto"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK/crypto"
+	"github.com/gkany/graphSDK/types"
 	"github.com/juju/errors"
 )
 

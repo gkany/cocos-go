@@ -4,8 +4,8 @@
 package samples
 
 import (
-	"github.com/gkany/graph-sdk/gen/data"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK/gen/data"
+	"github.com/gkany/graphSDK/types"
 )
 
 var (

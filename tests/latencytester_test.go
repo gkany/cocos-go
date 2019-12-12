@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkany/graph-sdk"
-	"github.com/gkany/graph-sdk/api"
+	"github.com/gkany/graphSDK"
+	"github.com/gkany/graphSDK/api"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -5,7 +5,7 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/gkany/graph-sdk/util"
+	"github.com/gkany/graphSDK/util"
 	sort "github.com/emirpasic/gods/utils"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"

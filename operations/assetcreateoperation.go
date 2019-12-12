@@ -5,8 +5,8 @@ package operations
 import (
 	"strconv"
 
-	"github.com/gkany/graph-sdk/types"
-	"github.com/gkany/graph-sdk/util"
+	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
 )
 

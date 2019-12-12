@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gkany/graph-sdk"
-	"github.com/gkany/graph-sdk/config"
-	"github.com/gkany/graph-sdk/crypto"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK"
+	"github.com/gkany/graphSDK/config"
+	"github.com/gkany/graphSDK/crypto"
+	"github.com/gkany/graphSDK/types"
 )
 
 func main() {
@@ -37,7 +37,7 @@ func main() {
 
 	// 2. chain api 测试
 	log.Println("------- chain api test ----------")
-	api := graph-sdk.NewWebsocketAPI(wsURL)
+	api := graphSDK.NewWebsocketAPI(wsURL)
 	if err := api.Connect(); err != nil {
 		log.Println(err)
 	}
@@ -53,7 +53,7 @@ func main() {
 
 	// 3. wallet api 测试
 	log.Println("------- wallet api test ----------")
-	walletAPI := graph-sdk.NewWalletAPI(walletURL)
+	walletAPI := graphSDK.NewWalletAPI(walletURL)
 	if err := walletAPI.Connect(); err != nil {
 		log.Println(err)
 	}

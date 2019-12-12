@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/gkany/graph-sdk/util"
+	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )

@@ -5,10 +5,10 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/gkany/graph-sdk"
-	"github.com/gkany/graph-sdk/config"
-	"github.com/gkany/graph-sdk/crypto"
-	"github.com/gkany/graph-sdk/types"
+	"github.com/gkany/graphSDK"
+	"github.com/gkany/graphSDK/config"
+	"github.com/gkany/graphSDK/crypto"
+	"github.com/gkany/graphSDK/types"
 	"github.com/juju/errors"
 	"github.com/stretchr/testify/suite"
 )

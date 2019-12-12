@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/btcsuite/btcd/btcec"
-	"github.com/gkany/graph-sdk/config"
+	"github.com/gkany/graphSDK/config"
 	"github.com/stretchr/testify/assert"
 )
 
