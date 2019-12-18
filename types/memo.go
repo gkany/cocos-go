@@ -22,6 +22,7 @@ type Memo struct {
 	Message Buffer    `json:"message"`
 }
 
+
 func (p Memo) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.Encode(p.From); err != nil {
 		return errors.Annotate(err, "encode from")

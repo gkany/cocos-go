@@ -81,6 +81,50 @@ func (p SignedTransaction) ToHex() (string, error) {
 
 	return hex.EncodeToString(b.Bytes()), nil
 }
+/*
+const signature_type &graphene::chain::signed_transaction::sign(const private_key_type &key, const chain_id_type &chain_id)
+{
+      digest_type h = sig_digest(chain_id);
+      signatures.push_back(key.sign_compact(h));
+      return signatures.back();
+}
+
+signature_type graphene::chain::signed_transaction::sign(const private_key_type &key, const chain_id_type &chain_id) const
+{
+      digest_type::encoder enc;
+      fc::raw::pack(enc, chain_id);
+      fc::raw::pack(enc, *this);
+      return key.sign_compact(enc.result());
+}
+
+func CreateSignTransaction(opID int, t Object, prk ...*PrivateKey) (st *Signed_Transaction, err error) {
+	if prk == nil {
+		return nil, errors.New("private key is nil!!")
+	}
+	op := Operation{opID, t}
+	dgp := rpc.GetDynamicGlobalProperties()
+	st = &Signed_Transaction{
+		RefBlockNum:    dgp.Get_ref_block_num(),
+		RefBlockPrefix: dgp.Get_ref_block_prefix(),
+		Expiration:     time.Now().Format(TIME_FORMAT),
+		Operations:     []Operation{op},
+		ExtensionsData: []interface{}{},
+		Signatures:     []string{},
+	}
+	byte_s := st.GetBytes()
+	var cid []byte
+	if cid, err = hex.DecodeString(chain.CocosBCXChain.Properties.ChainID); err != nil {
+		return nil, err
+	}
+	byte_s = append(cid, byte_s...)
+	msg := sha256digest(byte_s)
+	for _, k := range prk {
+		st.Signatures = append(st.Signatures, k.Sign(msg))
+	}
+	return st, nil
+}
+
+*/
 
 //Digest calculates ths sha256 hash of the transaction.
 func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
@@ -94,10 +138,10 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 		return nil, errors.Annotatef(err, "failed to decode chain ID: %v", chain.ID)
 	}
 
-	//	digestChainID := sha256.Sum256(rawChainID)
-	//	util.Dump("digest chainID", hex.EncodeToString(digestChainID[:]))
+	digestChainID := sha256.Sum256(rawChainID)
+	// util.Dump("digest chainID", hex.EncodeToString(digestChainID[:]))
 
-	if _, err := writer.Write(rawChainID); err != nil {
+	if _, err := writer.Write(digestChainID[:]); err != nil {
 		return nil, errors.Annotate(err, "Write [chainID]")
 	}
 
@@ -106,10 +150,10 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 		return nil, errors.Annotatef(err, "Serialize")
 	}
 
-	//	digestTrx := sha256.Sum256(rawTrx)
+	digestTrx := sha256.Sum256(rawTrx)
 	//	util.Dump("digest trx", hex.EncodeToString(digestTrx[:]))
 
-	if _, err := writer.Write(rawTrx); err != nil {
+	if _, err := writer.Write(digestTrx[:]); err != nil {
 		return nil, errors.Annotate(err, "Write [trx]")
 	}
 

@@ -6,6 +6,7 @@ import (
 	"github.com/gkany/graphSDK/types"
 	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
+	"github.com/pquerna/ffjson/ffjson"
 )
 
 func init() {
@@ -20,7 +21,7 @@ type TransferOperation struct {
 	From       types.AccountID   `json:"from"`
 	To         types.AccountID   `json:"to"`
 	Amount     types.AssetAmount `json:"amount"`
-	Memo       *types.Memo       `json:"memo,omitempty"`
+	Memo       []interface{}     `json:"memo,omitempty"`
 	Extensions types.Extensions  `json:"extensions"`
 }
 
@@ -69,7 +70,11 @@ func (p TransferOperation) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode have Memo")
 	}
 
-	if err := enc.Encode(p.Memo); err != nil {
+	memo, err := ffjson.Marshal(p.Memo)
+	if err != nil {
+		return errors.Annotate(err, "ffjson Marshal memo")
+	}
+	if err := enc.Encode(memo); err != nil {
 		return errors.Annotate(err, "encode memo")
 	}
 

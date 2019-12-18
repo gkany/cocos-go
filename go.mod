@@ -8,6 +8,7 @@ require (
 	github.com/cheekybits/genny v1.0.0 // indirect
 	github.com/cheggaaa/pb v2.0.7+incompatible // indirect
 	github.com/creack/pty v1.1.9 // indirect
+	github.com/davecgh/go-spew v1.1.1
 
 	github.com/denkhaus/gojson v1.0.0
 	github.com/denkhaus/logging v0.0.0-20180714213349-14bfb935047c
@@ -28,14 +29,14 @@ require (
 	github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5 // indirect
 	github.com/pquerna/ffjson v0.0.0-20190930134022-aa0246cd15f7
 	github.com/sasha-s/go-deadlock v0.2.0
-	github.com/sirupsen/logrus v1.2.0 // indirect
+	github.com/sirupsen/logrus v1.2.0
 	github.com/stretchr/objx v0.2.0
 	github.com/stretchr/testify v1.4.0
 	github.com/tevino/abool v0.0.0-20170917061928-9b9efcf221b5
-	golang.org/x/crypto v0.0.0-20190418165655-df01cb2cc480
+	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
 	golang.org/x/sys v0.0.0-20191210023423-ac6580df4449 // indirect
-	golang.org/x/tools v0.0.0-20191212051200-825cb0626375 // indirect
+	golang.org/x/tools v0.0.0-20191217033636-bbbf87ae2631 // indirect
 	gopkg.in/VividCortex/ewma.v1 v1.1.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/cheggaaa/pb.v1 v1.0.28

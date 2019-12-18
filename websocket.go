@@ -76,7 +76,7 @@ type WebsocketAPI interface {
 	SubscribeToBlockApplied(onBlockApplied api.BlockAppliedCallback) error
 	SubscribeToMarket(base, quote types.GrapheneObject, onMarketData api.SubscribeCallback) error
 	SubscribeToPendingTransactions(onPendingTransaction api.SubscribeCallback) error
-	Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string) error
+	Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error
 	UnsubscribeFromMarket(base, quote types.GrapheneObject) error
 	Get24Volume(base types.GrapheneObject, quote types.GrapheneObject) (*types.Volume24, error)
 }
@@ -247,14 +247,14 @@ func (p *websocketAPI) SignTransaction(keyBag *crypto.KeyBag, tx *types.SignedTr
 //applies fees, current block data and signs the transaction.
 func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset types.GrapheneObject, ops ...types.Operation) (*types.SignedTransaction, error) {
 	operations := types.Operations(ops)
-	fees, err := p.GetRequiredFees(operations, feeAsset)
-	if err != nil {
-		return nil, errors.Annotate(err, "GetRequiredFees")
-	}
+	// fees, err := p.GetRequiredFees(operations, feeAsset)
+	// if err != nil {
+	// 	return nil, errors.Annotate(err, "GetRequiredFees")
+	// }
 
-	if err := operations.ApplyFees(fees); err != nil {
-		return nil, errors.Annotate(err, "ApplyFees")
-	}
+	// if err := operations.ApplyFees(fees); err != nil {
+	// 	return nil, errors.Annotate(err, "ApplyFees")
+	// }
 
 	props, err := p.GetDynamicGlobalProperties()
 	if err != nil {
@@ -933,8 +933,8 @@ func (p *websocketAPI) GetObjects(ids ...types.GrapheneObject) ([]interface{}, e
 
 // Transfer transfers a certain amount between two accounts. Fees are paid in feeAsset.
 // The transaction is signed with private keys in keyBag.
-func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string) error {
-	op := operations.TransferOperation{
+func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error {
+	op := operations.TransferOperation {
 		Amount:     amount,
 		Extensions: types.Extensions{},
 		From:       types.AccountIDFromObject(from),
@@ -942,13 +942,16 @@ func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.
 	}
 
 	if memo != "" {
-		builder := p.NewMemoBuilder(from, to, memo)
-		m, err := builder.Encrypt(keyBag)
-		if err != nil {
-			return errors.Annotate(err, "Encrypt [memo]")
+		if isEncrypt {
+			builder := p.NewMemoBuilder(from, to, memo)
+			m, err := builder.Encrypt(keyBag)
+			if err != nil {
+				return errors.Annotate(err, "Encrypt [memo]")
+			}
+			op.Memo = []interface{}{1, m,}
+		} else {
+			op.Memo = []interface{}{0, memo,}
 		}
-
-		op.Memo = m
 	}
 
 	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)

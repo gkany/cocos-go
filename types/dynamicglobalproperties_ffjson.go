@@ -44,22 +44,13 @@ func (j *DynamicGlobalProperties) MarshalJSONBuf(buf fflib.EncodingBuffer) error
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"current_witness":`)
+	buf.WriteString(`,"head_block_number":`)
+	fflib.FormatBits2(buf, uint64(j.HeadBlockNumber), 10, false)
+	buf.WriteString(`,"head_block_id":`)
 
 	{
 
-		obj, err = j.CurrentWitness.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"last_budget_time":`)
-
-	{
-
-		obj, err = j.LastBudgetTime.MarshalJSON()
+		obj, err = j.HeadBlockID.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -77,6 +68,19 @@ func (j *DynamicGlobalProperties) MarshalJSONBuf(buf fflib.EncodingBuffer) error
 		buf.Write(obj)
 
 	}
+	buf.WriteString(`,"current_witness":`)
+
+	{
+
+		obj, err = j.CurrentWitness.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"current_transaction_count":`)
+	fflib.FormatBits2(buf, uint64(j.CurrentTransactionCount), 10, false)
 	buf.WriteString(`,"next_maintenance_time":`)
 
 	{
@@ -88,21 +92,34 @@ func (j *DynamicGlobalProperties) MarshalJSONBuf(buf fflib.EncodingBuffer) error
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"accounts_registered_this_interval":`)
-	fflib.FormatBits2(buf, uint64(j.AccountsRegisteredThisInterval), 10, j.AccountsRegisteredThisInterval < 0)
-	buf.WriteString(`,"dynamic_flags":`)
-	fflib.FormatBits2(buf, uint64(j.DynamicFlags), 10, j.DynamicFlags < 0)
-	buf.WriteString(`,"head_block_id":`)
+	buf.WriteString(`,"last_budget_time":`)
 
 	{
 
-		obj, err = j.HeadBlockID.MarshalJSON()
+		obj, err = j.LastBudgetTime.MarshalJSON()
 		if err != nil {
 			return err
 		}
 		buf.Write(obj)
 
 	}
+	buf.WriteString(`,"witness_budget":`)
+
+	{
+
+		obj, err = j.WitnessBudget.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"accounts_registered_this_interval":`)
+	fflib.FormatBits2(buf, uint64(j.AccountsRegisteredThisInterval), 10, j.AccountsRegisteredThisInterval < 0)
+	buf.WriteString(`,"recently_missed_count":`)
+	fflib.FormatBits2(buf, uint64(j.RecentlyMissedCount), 10, j.RecentlyMissedCount < 0)
+	buf.WriteString(`,"current_aslot":`)
+	fflib.FormatBits2(buf, uint64(j.CurrentAslot), 10, j.CurrentAslot < 0)
 	buf.WriteString(`,"recent_slots_filled":`)
 
 	{
@@ -114,16 +131,10 @@ func (j *DynamicGlobalProperties) MarshalJSONBuf(buf fflib.EncodingBuffer) error
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"head_block_number":`)
-	fflib.FormatBits2(buf, uint64(j.HeadBlockNumber), 10, false)
+	buf.WriteString(`,"dynamic_flags":`)
+	fflib.FormatBits2(buf, uint64(j.DynamicFlags), 10, j.DynamicFlags < 0)
 	buf.WriteString(`,"last_irreversible_block_num":`)
 	fflib.FormatBits2(buf, uint64(j.LastIrreversibleBlockNum), 10, false)
-	buf.WriteString(`,"current_aslot":`)
-	fflib.FormatBits2(buf, uint64(j.CurrentAslot), 10, j.CurrentAslot < 0)
-	buf.WriteString(`,"witness_budget":`)
-	fflib.FormatBits2(buf, uint64(j.WitnessBudget), 10, j.WitnessBudget < 0)
-	buf.WriteString(`,"recently_missed_count":`)
-	fflib.FormatBits2(buf, uint64(j.RecentlyMissedCount), 10, j.RecentlyMissedCount < 0)
 	buf.WriteByte('}')
 	return nil
 }
@@ -134,60 +145,64 @@ const (
 
 	ffjtDynamicGlobalPropertiesID
 
-	ffjtDynamicGlobalPropertiesCurrentWitness
-
-	ffjtDynamicGlobalPropertiesLastBudgetTime
-
-	ffjtDynamicGlobalPropertiesTime
-
-	ffjtDynamicGlobalPropertiesNextMaintenanceTime
-
-	ffjtDynamicGlobalPropertiesAccountsRegisteredThisInterval
-
-	ffjtDynamicGlobalPropertiesDynamicFlags
+	ffjtDynamicGlobalPropertiesHeadBlockNumber
 
 	ffjtDynamicGlobalPropertiesHeadBlockID
 
-	ffjtDynamicGlobalPropertiesRecentSlotsFilled
+	ffjtDynamicGlobalPropertiesTime
 
-	ffjtDynamicGlobalPropertiesHeadBlockNumber
+	ffjtDynamicGlobalPropertiesCurrentWitness
 
-	ffjtDynamicGlobalPropertiesLastIrreversibleBlockNum
+	ffjtDynamicGlobalPropertiesCurrentTransactionCount
 
-	ffjtDynamicGlobalPropertiesCurrentAslot
+	ffjtDynamicGlobalPropertiesNextMaintenanceTime
+
+	ffjtDynamicGlobalPropertiesLastBudgetTime
 
 	ffjtDynamicGlobalPropertiesWitnessBudget
 
+	ffjtDynamicGlobalPropertiesAccountsRegisteredThisInterval
+
 	ffjtDynamicGlobalPropertiesRecentlyMissedCount
+
+	ffjtDynamicGlobalPropertiesCurrentAslot
+
+	ffjtDynamicGlobalPropertiesRecentSlotsFilled
+
+	ffjtDynamicGlobalPropertiesDynamicFlags
+
+	ffjtDynamicGlobalPropertiesLastIrreversibleBlockNum
 )
 
 var ffjKeyDynamicGlobalPropertiesID = []byte("id")
 
-var ffjKeyDynamicGlobalPropertiesCurrentWitness = []byte("current_witness")
-
-var ffjKeyDynamicGlobalPropertiesLastBudgetTime = []byte("last_budget_time")
-
-var ffjKeyDynamicGlobalPropertiesTime = []byte("time")
-
-var ffjKeyDynamicGlobalPropertiesNextMaintenanceTime = []byte("next_maintenance_time")
-
-var ffjKeyDynamicGlobalPropertiesAccountsRegisteredThisInterval = []byte("accounts_registered_this_interval")
-
-var ffjKeyDynamicGlobalPropertiesDynamicFlags = []byte("dynamic_flags")
+var ffjKeyDynamicGlobalPropertiesHeadBlockNumber = []byte("head_block_number")
 
 var ffjKeyDynamicGlobalPropertiesHeadBlockID = []byte("head_block_id")
 
-var ffjKeyDynamicGlobalPropertiesRecentSlotsFilled = []byte("recent_slots_filled")
+var ffjKeyDynamicGlobalPropertiesTime = []byte("time")
 
-var ffjKeyDynamicGlobalPropertiesHeadBlockNumber = []byte("head_block_number")
+var ffjKeyDynamicGlobalPropertiesCurrentWitness = []byte("current_witness")
 
-var ffjKeyDynamicGlobalPropertiesLastIrreversibleBlockNum = []byte("last_irreversible_block_num")
+var ffjKeyDynamicGlobalPropertiesCurrentTransactionCount = []byte("current_transaction_count")
 
-var ffjKeyDynamicGlobalPropertiesCurrentAslot = []byte("current_aslot")
+var ffjKeyDynamicGlobalPropertiesNextMaintenanceTime = []byte("next_maintenance_time")
+
+var ffjKeyDynamicGlobalPropertiesLastBudgetTime = []byte("last_budget_time")
 
 var ffjKeyDynamicGlobalPropertiesWitnessBudget = []byte("witness_budget")
 
+var ffjKeyDynamicGlobalPropertiesAccountsRegisteredThisInterval = []byte("accounts_registered_this_interval")
+
 var ffjKeyDynamicGlobalPropertiesRecentlyMissedCount = []byte("recently_missed_count")
+
+var ffjKeyDynamicGlobalPropertiesCurrentAslot = []byte("current_aslot")
+
+var ffjKeyDynamicGlobalPropertiesRecentSlotsFilled = []byte("recent_slots_filled")
+
+var ffjKeyDynamicGlobalPropertiesDynamicFlags = []byte("dynamic_flags")
+
+var ffjKeyDynamicGlobalPropertiesLastIrreversibleBlockNum = []byte("last_irreversible_block_num")
 
 // UnmarshalJSON umarshall json - template of ffjson
 func (j *DynamicGlobalProperties) UnmarshalJSON(input []byte) error {
@@ -265,6 +280,11 @@ mainparse:
 						state = fflib.FFParse_want_colon
 						goto mainparse
 
+					} else if bytes.Equal(ffjKeyDynamicGlobalPropertiesCurrentTransactionCount, kn) {
+						currentKey = ffjtDynamicGlobalPropertiesCurrentTransactionCount
+						state = fflib.FFParse_want_colon
+						goto mainparse
+
 					} else if bytes.Equal(ffjKeyDynamicGlobalPropertiesCurrentAslot, kn) {
 						currentKey = ffjtDynamicGlobalPropertiesCurrentAslot
 						state = fflib.FFParse_want_colon
@@ -281,13 +301,13 @@ mainparse:
 
 				case 'h':
 
-					if bytes.Equal(ffjKeyDynamicGlobalPropertiesHeadBlockID, kn) {
-						currentKey = ffjtDynamicGlobalPropertiesHeadBlockID
+					if bytes.Equal(ffjKeyDynamicGlobalPropertiesHeadBlockNumber, kn) {
+						currentKey = ffjtDynamicGlobalPropertiesHeadBlockNumber
 						state = fflib.FFParse_want_colon
 						goto mainparse
 
-					} else if bytes.Equal(ffjKeyDynamicGlobalPropertiesHeadBlockNumber, kn) {
-						currentKey = ffjtDynamicGlobalPropertiesHeadBlockNumber
+					} else if bytes.Equal(ffjKeyDynamicGlobalPropertiesHeadBlockID, kn) {
+						currentKey = ffjtDynamicGlobalPropertiesHeadBlockID
 						state = fflib.FFParse_want_colon
 						goto mainparse
 					}
@@ -323,13 +343,13 @@ mainparse:
 
 				case 'r':
 
-					if bytes.Equal(ffjKeyDynamicGlobalPropertiesRecentSlotsFilled, kn) {
-						currentKey = ffjtDynamicGlobalPropertiesRecentSlotsFilled
+					if bytes.Equal(ffjKeyDynamicGlobalPropertiesRecentlyMissedCount, kn) {
+						currentKey = ffjtDynamicGlobalPropertiesRecentlyMissedCount
 						state = fflib.FFParse_want_colon
 						goto mainparse
 
-					} else if bytes.Equal(ffjKeyDynamicGlobalPropertiesRecentlyMissedCount, kn) {
-						currentKey = ffjtDynamicGlobalPropertiesRecentlyMissedCount
+					} else if bytes.Equal(ffjKeyDynamicGlobalPropertiesRecentSlotsFilled, kn) {
+						currentKey = ffjtDynamicGlobalPropertiesRecentSlotsFilled
 						state = fflib.FFParse_want_colon
 						goto mainparse
 					}
@@ -352,44 +372,8 @@ mainparse:
 
 				}
 
-				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesRecentlyMissedCount, kn) {
-					currentKey = ffjtDynamicGlobalPropertiesRecentlyMissedCount
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesWitnessBudget, kn) {
-					currentKey = ffjtDynamicGlobalPropertiesWitnessBudget
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesCurrentAslot, kn) {
-					currentKey = ffjtDynamicGlobalPropertiesCurrentAslot
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesLastIrreversibleBlockNum, kn) {
 					currentKey = ffjtDynamicGlobalPropertiesLastIrreversibleBlockNum
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesHeadBlockNumber, kn) {
-					currentKey = ffjtDynamicGlobalPropertiesHeadBlockNumber
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesRecentSlotsFilled, kn) {
-					currentKey = ffjtDynamicGlobalPropertiesRecentSlotsFilled
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesHeadBlockID, kn) {
-					currentKey = ffjtDynamicGlobalPropertiesHeadBlockID
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -400,20 +384,32 @@ mainparse:
 					goto mainparse
 				}
 
+				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesRecentSlotsFilled, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesRecentSlotsFilled
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesCurrentAslot, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesCurrentAslot
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesRecentlyMissedCount, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesRecentlyMissedCount
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
 				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesAccountsRegisteredThisInterval, kn) {
 					currentKey = ffjtDynamicGlobalPropertiesAccountsRegisteredThisInterval
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
-				if fflib.AsciiEqualFold(ffjKeyDynamicGlobalPropertiesNextMaintenanceTime, kn) {
-					currentKey = ffjtDynamicGlobalPropertiesNextMaintenanceTime
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.SimpleLetterEqualFold(ffjKeyDynamicGlobalPropertiesTime, kn) {
-					currentKey = ffjtDynamicGlobalPropertiesTime
+				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesWitnessBudget, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesWitnessBudget
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -424,8 +420,38 @@ mainparse:
 					goto mainparse
 				}
 
+				if fflib.AsciiEqualFold(ffjKeyDynamicGlobalPropertiesNextMaintenanceTime, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesNextMaintenanceTime
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesCurrentTransactionCount, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesCurrentTransactionCount
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
 				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesCurrentWitness, kn) {
 					currentKey = ffjtDynamicGlobalPropertiesCurrentWitness
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.SimpleLetterEqualFold(ffjKeyDynamicGlobalPropertiesTime, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesTime
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesHeadBlockID, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesHeadBlockID
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyDynamicGlobalPropertiesHeadBlockNumber, kn) {
+					currentKey = ffjtDynamicGlobalPropertiesHeadBlockNumber
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -456,44 +482,47 @@ mainparse:
 				case ffjtDynamicGlobalPropertiesID:
 					goto handle_ID
 
-				case ffjtDynamicGlobalPropertiesCurrentWitness:
-					goto handle_CurrentWitness
-
-				case ffjtDynamicGlobalPropertiesLastBudgetTime:
-					goto handle_LastBudgetTime
-
-				case ffjtDynamicGlobalPropertiesTime:
-					goto handle_Time
-
-				case ffjtDynamicGlobalPropertiesNextMaintenanceTime:
-					goto handle_NextMaintenanceTime
-
-				case ffjtDynamicGlobalPropertiesAccountsRegisteredThisInterval:
-					goto handle_AccountsRegisteredThisInterval
-
-				case ffjtDynamicGlobalPropertiesDynamicFlags:
-					goto handle_DynamicFlags
+				case ffjtDynamicGlobalPropertiesHeadBlockNumber:
+					goto handle_HeadBlockNumber
 
 				case ffjtDynamicGlobalPropertiesHeadBlockID:
 					goto handle_HeadBlockID
 
-				case ffjtDynamicGlobalPropertiesRecentSlotsFilled:
-					goto handle_RecentSlotsFilled
+				case ffjtDynamicGlobalPropertiesTime:
+					goto handle_Time
 
-				case ffjtDynamicGlobalPropertiesHeadBlockNumber:
-					goto handle_HeadBlockNumber
+				case ffjtDynamicGlobalPropertiesCurrentWitness:
+					goto handle_CurrentWitness
 
-				case ffjtDynamicGlobalPropertiesLastIrreversibleBlockNum:
-					goto handle_LastIrreversibleBlockNum
+				case ffjtDynamicGlobalPropertiesCurrentTransactionCount:
+					goto handle_CurrentTransactionCount
 
-				case ffjtDynamicGlobalPropertiesCurrentAslot:
-					goto handle_CurrentAslot
+				case ffjtDynamicGlobalPropertiesNextMaintenanceTime:
+					goto handle_NextMaintenanceTime
+
+				case ffjtDynamicGlobalPropertiesLastBudgetTime:
+					goto handle_LastBudgetTime
 
 				case ffjtDynamicGlobalPropertiesWitnessBudget:
 					goto handle_WitnessBudget
 
+				case ffjtDynamicGlobalPropertiesAccountsRegisteredThisInterval:
+					goto handle_AccountsRegisteredThisInterval
+
 				case ffjtDynamicGlobalPropertiesRecentlyMissedCount:
 					goto handle_RecentlyMissedCount
+
+				case ffjtDynamicGlobalPropertiesCurrentAslot:
+					goto handle_CurrentAslot
+
+				case ffjtDynamicGlobalPropertiesRecentSlotsFilled:
+					goto handle_RecentSlotsFilled
+
+				case ffjtDynamicGlobalPropertiesDynamicFlags:
+					goto handle_DynamicFlags
+
+				case ffjtDynamicGlobalPropertiesLastIrreversibleBlockNum:
+					goto handle_LastIrreversibleBlockNum
 
 				case ffjtDynamicGlobalPropertiesnosuchkey:
 					err = fs.SkipField(tok)
@@ -534,9 +563,9 @@ handle_ID:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_CurrentWitness:
+handle_HeadBlockNumber:
 
-	/* handler: j.CurrentWitness type=types.WitnessID kind=struct quoted=false*/
+	/* handler: j.HeadBlockNumber type=types.UInt32 kind=uint32 quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -548,7 +577,7 @@ handle_CurrentWitness:
 				return fs.WrapErr(err)
 			}
 
-			err = j.CurrentWitness.UnmarshalJSON(tbuf)
+			err = j.HeadBlockNumber.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -559,9 +588,9 @@ handle_CurrentWitness:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_LastBudgetTime:
+handle_HeadBlockID:
 
-	/* handler: j.LastBudgetTime type=types.Time kind=struct quoted=false*/
+	/* handler: j.HeadBlockID type=types.String kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -573,7 +602,7 @@ handle_LastBudgetTime:
 				return fs.WrapErr(err)
 			}
 
-			err = j.LastBudgetTime.UnmarshalJSON(tbuf)
+			err = j.HeadBlockID.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -609,6 +638,56 @@ handle_Time:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
+handle_CurrentWitness:
+
+	/* handler: j.CurrentWitness type=types.WitnessID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.CurrentWitness.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_CurrentTransactionCount:
+
+	/* handler: j.CurrentTransactionCount type=types.UInt32 kind=uint32 quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.CurrentTransactionCount.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
 handle_NextMaintenanceTime:
 
 	/* handler: j.NextMaintenanceTime type=types.Time kind=struct quoted=false*/
@@ -624,6 +703,56 @@ handle_NextMaintenanceTime:
 			}
 
 			err = j.NextMaintenanceTime.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_LastBudgetTime:
+
+	/* handler: j.LastBudgetTime type=types.Time kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.LastBudgetTime.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_WitnessBudget:
+
+	/* handler: j.WitnessBudget type=types.String kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.WitnessBudget.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -664,13 +793,13 @@ handle_AccountsRegisteredThisInterval:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_DynamicFlags:
+handle_RecentlyMissedCount:
 
-	/* handler: j.DynamicFlags type=int kind=int quoted=false*/
+	/* handler: j.RecentlyMissedCount type=int64 kind=int64 quoted=false*/
 
 	{
 		if tok != fflib.FFTok_integer && tok != fflib.FFTok_null {
-			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for int", tok))
+			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for int64", tok))
 		}
 	}
 
@@ -686,109 +815,9 @@ handle_DynamicFlags:
 				return fs.WrapErr(err)
 			}
 
-			j.DynamicFlags = int(tval)
+			j.RecentlyMissedCount = int64(tval)
 
 		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_HeadBlockID:
-
-	/* handler: j.HeadBlockID type=types.String kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.HeadBlockID.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_RecentSlotsFilled:
-
-	/* handler: j.RecentSlotsFilled type=types.String kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.RecentSlotsFilled.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_HeadBlockNumber:
-
-	/* handler: j.HeadBlockNumber type=types.UInt32 kind=uint32 quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.HeadBlockNumber.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_LastIrreversibleBlockNum:
-
-	/* handler: j.LastIrreversibleBlockNum type=types.UInt32 kind=uint32 quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.LastIrreversibleBlockNum.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value
@@ -824,13 +853,38 @@ handle_CurrentAslot:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_WitnessBudget:
+handle_RecentSlotsFilled:
 
-	/* handler: j.WitnessBudget type=int64 kind=int64 quoted=false*/
+	/* handler: j.RecentSlotsFilled type=types.String kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.RecentSlotsFilled.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_DynamicFlags:
+
+	/* handler: j.DynamicFlags type=int kind=int quoted=false*/
 
 	{
 		if tok != fflib.FFTok_integer && tok != fflib.FFTok_null {
-			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for int64", tok))
+			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for int", tok))
 		}
 	}
 
@@ -846,7 +900,7 @@ handle_WitnessBudget:
 				return fs.WrapErr(err)
 			}
 
-			j.WitnessBudget = int64(tval)
+			j.DynamicFlags = int(tval)
 
 		}
 	}
@@ -854,31 +908,26 @@ handle_WitnessBudget:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_RecentlyMissedCount:
+handle_LastIrreversibleBlockNum:
 
-	/* handler: j.RecentlyMissedCount type=int64 kind=int64 quoted=false*/
-
-	{
-		if tok != fflib.FFTok_integer && tok != fflib.FFTok_null {
-			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for int64", tok))
-		}
-	}
+	/* handler: j.LastIrreversibleBlockNum type=types.UInt32 kind=uint32 quoted=false*/
 
 	{
-
 		if tok == fflib.FFTok_null {
 
 		} else {
 
-			tval, err := fflib.ParseInt(fs.Output.Bytes(), 10, 64)
-
+			tbuf, err := fs.CaptureField(tok)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
 
-			j.RecentlyMissedCount = int64(tval)
-
+			err = j.LastIrreversibleBlockNum.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
 		}
+		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value
