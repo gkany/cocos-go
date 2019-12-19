@@ -94,46 +94,49 @@ const (
 	OperationTypeFillOrder                                                  //4
 	OperationTypeAccountCreate                                              //5
 	OperationTypeAccountUpdate                                              //6
-	OperationTypeAccountWhitelist                                           //7
-	OperationTypeAccountUpgrade                                             //8
-	OperationTypeAccountTransfer                                            //9
-	OperationTypeAssetCreate                                                //10
-	OperationTypeAssetUpdate                                                //11
-	OperationTypeAssetUpdateBitasset                                        //12
-	OperationTypeAssetUpdateFeedProducers                                   //13
-	OperationTypeAssetIssue                                                 //14
-	OperationTypeAssetReserve                                               //15
-	OperationTypeAssetFundFeePool                                           //16
-	OperationTypeAssetSettle                                                //17
-	OperationTypeAssetGlobalSettle                                          //18
-	OperationTypeAssetPublishFeed                                           //19
-	OperationTypeWitnessCreate                                              //20
-	OperationTypeWitnessUpdate                                              //21
-	OperationTypeProposalCreate                                             //22
-	OperationTypeProposalUpdate                                             //23
-	OperationTypeProposalDelete                                             //24
-	OperationTypeWithdrawPermissionCreate                                   //25
-	OperationTypeWithdrawPermissionUpdate                                   //26
-	OperationTypeWithdrawPermissionClaim                                    //27
-	OperationTypeWithdrawPermissionDelete                                   //28
-	OperationTypeCommitteeMemberCreate                                      //29
-	OperationTypeCommitteeMemberUpdate                                      //30
-	OperationTypeCommitteeMemberUpdateGlobalParameters                      //31
-	OperationTypeVestingBalanceCreate                                       //32
-	OperationTypeVestingBalanceWithdraw                                     //33
-	OperationTypeWorkerCreate                                               //34
-	OperationTypeCustom                                                     //35
-	OperationTypeAssert                                                     //36
-	OperationTypeBalanceClaim                                               //37
-	OperationTypeOverrideTransfer                                           //38
-	OperationTypeTransferToBlind                                            //39
-	OperationTypeBlindTransfer                                              ///40
-	OperationTypeTransferFromBlind                                          //41
-	OperationTypeAssetSettleCancel                                          ///42
-	OperationTypeAssetClaimFees                                             //43
-	OperationTypeFBADistribute                                              ///44
-	OperationTypeBidCollateral                                              //45
-	OperationTypeExecuteBid                                                 ///46
+	OperationTypeAccountUpgrade                                             //7
+	OperationTypeAssetCreate                                                //8
+	OperationTypeAssetUpdate                                                //9
+	OperationTypeAssetUpdateRestricted                                      //10
+	OperationTypeAssetUpdateBitasset                                        //11
+	OperationTypeAssetUpdateFeedProducers                                   //12
+	OperationTypeAssetIssue                                                 //13
+	OperationTypeAssetReserve                                               //14
+	OperationTypeAssetSettle                                                //15
+	OperationTypeAssetGlobalSettle                                          //16
+	OperationTypeAssetPublishFeed                                           //17
+	OperationTypeWitnessCreate                                              //18
+	OperationTypeWitnessUpdate                                              //19
+	OperationTypeProposalCreate                                             //20
+	OperationTypeProposalUpdate                                             //21
+	OperationTypeProposalDelete                                             //22
+	OperationTypeCommitteeMemberCreate                                      //23
+	OperationTypeCommitteeMemberUpdate                                      //24
+	OperationTypeCommitteeMemberUpdateGlobalParameters                      //25
+	OperationTypeVestingBalanceCreate                                       //26
+	OperationTypeVestingBalanceWithdraw                                     //27
+	OperationTypeWorkerCreate                                               //28
+	OperationTypeBalanceClaim                                               //29
+	OperationTypeAssetSettleCancel                                          //30
+	OperationTypeAssetClaimFees                                             //31
+	OperationTypeBidCollateral                                              //32
+	OperationTypeExecuteBid                                                 //33
+
+	//remove
+	OperationTypeAccountWhitelist         //7
+	OperationTypeAccountTransfer          //9
+	OperationTypeAssetFundFeePool         //16
+	OperationTypeWithdrawPermissionCreate //25
+	OperationTypeWithdrawPermissionUpdate //26
+	OperationTypeWithdrawPermissionClaim  //27
+	OperationTypeWithdrawPermissionDelete //28
+	OperationTypeCustom                   //35
+	OperationTypeAssert                   //36
+	OperationTypeOverrideTransfer         //38
+	OperationTypeTransferToBlind          //39
+	OperationTypeBlindTransfer            //40
+	OperationTypeTransferFromBlind        //41
+	OperationTypeFBADistribute            ///44
 )
 
 func (p OperationType) OperationName() string {
@@ -501,6 +504,10 @@ func (t Time) IsZero() bool {
 type String struct {
 	data string
 }
+
+// func NewString(d string) String {
+// 	return String{data: d}
+// }
 
 func (p String) MarshalJSON() ([]byte, error) {
 	return ffjson.Marshal(p.data)

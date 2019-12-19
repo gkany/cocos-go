@@ -45,28 +45,6 @@ func (j *Account) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"name":`)
-
-	{
-
-		obj, err = j.Name.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"statistics":`)
-
-	{
-
-		obj, err = j.Statistics.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
 	buf.WriteString(`,"membership_expiration_date":`)
 
 	{
@@ -77,108 +55,6 @@ func (j *Account) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		}
 		buf.Write(obj)
 
-	}
-	buf.WriteString(`,"network_fee_percentage":`)
-	fflib.FormatBits2(buf, uint64(j.NetworkFeePercentage), 10, false)
-	buf.WriteString(`,"lifetime_referrer_fee_percentage":`)
-	fflib.FormatBits2(buf, uint64(j.LifetimeReferrerFeePercentage), 10, false)
-	buf.WriteString(`,"referrer_rewards_percentage":`)
-	fflib.FormatBits2(buf, uint64(j.ReferrerRewardsPercentage), 10, false)
-	buf.WriteString(`,"top_n_control_flags":`)
-	fflib.FormatBits2(buf, uint64(j.TopNControlFlags), 10, false)
-	buf.WriteString(`,"whitelisting_accounts":`)
-	if j.WhitelistingAccounts != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.WhitelistingAccounts {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-
-			{
-
-				obj, err = v.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	buf.WriteString(`,"blacklisting_accounts":`)
-	if j.BlacklistingAccounts != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.BlacklistingAccounts {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-
-			{
-
-				obj, err = v.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	buf.WriteString(`,"whitelisted_accounts":`)
-	if j.WhitelistedAccounts != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.WhitelistedAccounts {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-
-			{
-
-				obj, err = v.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	buf.WriteString(`,"blacklisted_accounts":`)
-	if j.BlacklistedAccounts != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.BlacklistedAccounts {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-
-			{
-
-				obj, err = v.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	/* Struct fall back. type=types.AccountOptions kind=struct */
-	buf.WriteString(`,"options":`)
-	err = buf.Encode(&j.Options)
-	if err != nil {
-		return err
 	}
 	buf.WriteString(`,"registrar":`)
 
@@ -191,33 +67,11 @@ func (j *Account) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"referrer":`)
+	buf.WriteString(`,"name":`)
 
 	{
 
-		obj, err = j.Referrer.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"lifetime_referrer":`)
-
-	{
-
-		obj, err = j.LifetimeReferrer.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"cashback_vb":`)
-
-	{
-
-		obj, err = j.CashbackVB.MarshalJSON()
+		obj, err = j.Name.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -235,6 +89,56 @@ func (j *Account) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	err = buf.Encode(&j.Active)
 	if err != nil {
 		return err
+	}
+	/* Struct fall back. type=types.AccountOptions kind=struct */
+	buf.WriteString(`,"options":`)
+	err = buf.Encode(&j.Options)
+	if err != nil {
+		return err
+	}
+	buf.WriteString(`,"statistics":`)
+
+	{
+
+		obj, err = j.Statistics.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"cashback_gas":`)
+
+	{
+
+		obj, err = j.CashbackGAS.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"cashback_vb":`)
+
+	{
+
+		obj, err = j.CashbackVB.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"cashback_vote":`)
+
+	{
+
+		obj, err = j.CashbackVote.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
 	}
 	buf.WriteString(`,"owner_special_authority":`)
 
@@ -258,6 +162,8 @@ func (j *Account) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
+	buf.WriteString(`,"top_n_control_flags":`)
+	fflib.FormatBits2(buf, uint64(j.TopNControlFlags), 10, false)
 	buf.WriteByte('}')
 	return nil
 }
@@ -268,88 +174,60 @@ const (
 
 	ffjtAccountID
 
-	ffjtAccountName
-
-	ffjtAccountStatistics
-
 	ffjtAccountMembershipExpirationDate
-
-	ffjtAccountNetworkFeePercentage
-
-	ffjtAccountLifetimeReferrerFeePercentage
-
-	ffjtAccountReferrerRewardsPercentage
-
-	ffjtAccountTopNControlFlags
-
-	ffjtAccountWhitelistingAccounts
-
-	ffjtAccountBlacklistingAccounts
-
-	ffjtAccountWhitelistedAccounts
-
-	ffjtAccountBlacklistedAccounts
-
-	ffjtAccountOptions
 
 	ffjtAccountRegistrar
 
-	ffjtAccountReferrer
-
-	ffjtAccountLifetimeReferrer
-
-	ffjtAccountCashbackVB
+	ffjtAccountName
 
 	ffjtAccountOwner
 
 	ffjtAccountActive
 
+	ffjtAccountOptions
+
+	ffjtAccountStatistics
+
+	ffjtAccountCashbackGAS
+
+	ffjtAccountCashbackVB
+
+	ffjtAccountCashbackVote
+
 	ffjtAccountOwnerSpecialAuthority
 
 	ffjtAccountActiveSpecialAuthority
+
+	ffjtAccountTopNControlFlags
 )
 
 var ffjKeyAccountID = []byte("id")
 
-var ffjKeyAccountName = []byte("name")
-
-var ffjKeyAccountStatistics = []byte("statistics")
-
 var ffjKeyAccountMembershipExpirationDate = []byte("membership_expiration_date")
-
-var ffjKeyAccountNetworkFeePercentage = []byte("network_fee_percentage")
-
-var ffjKeyAccountLifetimeReferrerFeePercentage = []byte("lifetime_referrer_fee_percentage")
-
-var ffjKeyAccountReferrerRewardsPercentage = []byte("referrer_rewards_percentage")
-
-var ffjKeyAccountTopNControlFlags = []byte("top_n_control_flags")
-
-var ffjKeyAccountWhitelistingAccounts = []byte("whitelisting_accounts")
-
-var ffjKeyAccountBlacklistingAccounts = []byte("blacklisting_accounts")
-
-var ffjKeyAccountWhitelistedAccounts = []byte("whitelisted_accounts")
-
-var ffjKeyAccountBlacklistedAccounts = []byte("blacklisted_accounts")
-
-var ffjKeyAccountOptions = []byte("options")
 
 var ffjKeyAccountRegistrar = []byte("registrar")
 
-var ffjKeyAccountReferrer = []byte("referrer")
-
-var ffjKeyAccountLifetimeReferrer = []byte("lifetime_referrer")
-
-var ffjKeyAccountCashbackVB = []byte("cashback_vb")
+var ffjKeyAccountName = []byte("name")
 
 var ffjKeyAccountOwner = []byte("owner")
 
 var ffjKeyAccountActive = []byte("active")
 
+var ffjKeyAccountOptions = []byte("options")
+
+var ffjKeyAccountStatistics = []byte("statistics")
+
+var ffjKeyAccountCashbackGAS = []byte("cashback_gas")
+
+var ffjKeyAccountCashbackVB = []byte("cashback_vb")
+
+var ffjKeyAccountCashbackVote = []byte("cashback_vote")
+
 var ffjKeyAccountOwnerSpecialAuthority = []byte("owner_special_authority")
 
 var ffjKeyAccountActiveSpecialAuthority = []byte("active_special_authority")
+
+var ffjKeyAccountTopNControlFlags = []byte("top_n_control_flags")
 
 // UnmarshalJSON umarshall json - template of ffjson
 func (j *Account) UnmarshalJSON(input []byte) error {
@@ -425,23 +303,20 @@ mainparse:
 						goto mainparse
 					}
 
-				case 'b':
-
-					if bytes.Equal(ffjKeyAccountBlacklistingAccounts, kn) {
-						currentKey = ffjtAccountBlacklistingAccounts
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountBlacklistedAccounts, kn) {
-						currentKey = ffjtAccountBlacklistedAccounts
-						state = fflib.FFParse_want_colon
-						goto mainparse
-					}
-
 				case 'c':
 
-					if bytes.Equal(ffjKeyAccountCashbackVB, kn) {
+					if bytes.Equal(ffjKeyAccountCashbackGAS, kn) {
+						currentKey = ffjtAccountCashbackGAS
+						state = fflib.FFParse_want_colon
+						goto mainparse
+
+					} else if bytes.Equal(ffjKeyAccountCashbackVB, kn) {
 						currentKey = ffjtAccountCashbackVB
+						state = fflib.FFParse_want_colon
+						goto mainparse
+
+					} else if bytes.Equal(ffjKeyAccountCashbackVote, kn) {
+						currentKey = ffjtAccountCashbackVote
 						state = fflib.FFParse_want_colon
 						goto mainparse
 					}
@@ -450,19 +325,6 @@ mainparse:
 
 					if bytes.Equal(ffjKeyAccountID, kn) {
 						currentKey = ffjtAccountID
-						state = fflib.FFParse_want_colon
-						goto mainparse
-					}
-
-				case 'l':
-
-					if bytes.Equal(ffjKeyAccountLifetimeReferrerFeePercentage, kn) {
-						currentKey = ffjtAccountLifetimeReferrerFeePercentage
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountLifetimeReferrer, kn) {
-						currentKey = ffjtAccountLifetimeReferrer
 						state = fflib.FFParse_want_colon
 						goto mainparse
 					}
@@ -481,22 +343,17 @@ mainparse:
 						currentKey = ffjtAccountName
 						state = fflib.FFParse_want_colon
 						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountNetworkFeePercentage, kn) {
-						currentKey = ffjtAccountNetworkFeePercentage
-						state = fflib.FFParse_want_colon
-						goto mainparse
 					}
 
 				case 'o':
 
-					if bytes.Equal(ffjKeyAccountOptions, kn) {
-						currentKey = ffjtAccountOptions
+					if bytes.Equal(ffjKeyAccountOwner, kn) {
+						currentKey = ffjtAccountOwner
 						state = fflib.FFParse_want_colon
 						goto mainparse
 
-					} else if bytes.Equal(ffjKeyAccountOwner, kn) {
-						currentKey = ffjtAccountOwner
+					} else if bytes.Equal(ffjKeyAccountOptions, kn) {
+						currentKey = ffjtAccountOptions
 						state = fflib.FFParse_want_colon
 						goto mainparse
 
@@ -508,18 +365,8 @@ mainparse:
 
 				case 'r':
 
-					if bytes.Equal(ffjKeyAccountReferrerRewardsPercentage, kn) {
-						currentKey = ffjtAccountReferrerRewardsPercentage
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountRegistrar, kn) {
+					if bytes.Equal(ffjKeyAccountRegistrar, kn) {
 						currentKey = ffjtAccountRegistrar
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountReferrer, kn) {
-						currentKey = ffjtAccountReferrer
 						state = fflib.FFParse_want_colon
 						goto mainparse
 					}
@@ -540,19 +387,12 @@ mainparse:
 						goto mainparse
 					}
 
-				case 'w':
+				}
 
-					if bytes.Equal(ffjKeyAccountWhitelistingAccounts, kn) {
-						currentKey = ffjtAccountWhitelistingAccounts
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountWhitelistedAccounts, kn) {
-						currentKey = ffjtAccountWhitelistedAccounts
-						state = fflib.FFParse_want_colon
-						goto mainparse
-					}
-
+				if fflib.EqualFoldRight(ffjKeyAccountTopNControlFlags, kn) {
+					currentKey = ffjtAccountTopNControlFlags
+					state = fflib.FFParse_want_colon
+					goto mainparse
 				}
 
 				if fflib.EqualFoldRight(ffjKeyAccountActiveSpecialAuthority, kn) {
@@ -563,6 +403,36 @@ mainparse:
 
 				if fflib.EqualFoldRight(ffjKeyAccountOwnerSpecialAuthority, kn) {
 					currentKey = ffjtAccountOwnerSpecialAuthority
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAccountCashbackVote, kn) {
+					currentKey = ffjtAccountCashbackVote
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAccountCashbackVB, kn) {
+					currentKey = ffjtAccountCashbackVB
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAccountCashbackGAS, kn) {
+					currentKey = ffjtAccountCashbackGAS
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAccountStatistics, kn) {
+					currentKey = ffjtAccountStatistics
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAccountOptions, kn) {
+					currentKey = ffjtAccountOptions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -579,20 +449,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAccountCashbackVB, kn) {
-					currentKey = ffjtAccountCashbackVB
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.AsciiEqualFold(ffjKeyAccountLifetimeReferrer, kn) {
-					currentKey = ffjtAccountLifetimeReferrer
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.SimpleLetterEqualFold(ffjKeyAccountReferrer, kn) {
-					currentKey = ffjtAccountReferrer
+				if fflib.SimpleLetterEqualFold(ffjKeyAccountName, kn) {
+					currentKey = ffjtAccountName
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -603,74 +461,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAccountOptions, kn) {
-					currentKey = ffjtAccountOptions
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountBlacklistedAccounts, kn) {
-					currentKey = ffjtAccountBlacklistedAccounts
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountWhitelistedAccounts, kn) {
-					currentKey = ffjtAccountWhitelistedAccounts
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountBlacklistingAccounts, kn) {
-					currentKey = ffjtAccountBlacklistingAccounts
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountWhitelistingAccounts, kn) {
-					currentKey = ffjtAccountWhitelistingAccounts
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountTopNControlFlags, kn) {
-					currentKey = ffjtAccountTopNControlFlags
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountReferrerRewardsPercentage, kn) {
-					currentKey = ffjtAccountReferrerRewardsPercentage
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.AsciiEqualFold(ffjKeyAccountLifetimeReferrerFeePercentage, kn) {
-					currentKey = ffjtAccountLifetimeReferrerFeePercentage
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountNetworkFeePercentage, kn) {
-					currentKey = ffjtAccountNetworkFeePercentage
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyAccountMembershipExpirationDate, kn) {
 					currentKey = ffjtAccountMembershipExpirationDate
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountStatistics, kn) {
-					currentKey = ffjtAccountStatistics
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.SimpleLetterEqualFold(ffjKeyAccountName, kn) {
-					currentKey = ffjtAccountName
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -701,53 +493,14 @@ mainparse:
 				case ffjtAccountID:
 					goto handle_ID
 
-				case ffjtAccountName:
-					goto handle_Name
-
-				case ffjtAccountStatistics:
-					goto handle_Statistics
-
 				case ffjtAccountMembershipExpirationDate:
 					goto handle_MembershipExpirationDate
-
-				case ffjtAccountNetworkFeePercentage:
-					goto handle_NetworkFeePercentage
-
-				case ffjtAccountLifetimeReferrerFeePercentage:
-					goto handle_LifetimeReferrerFeePercentage
-
-				case ffjtAccountReferrerRewardsPercentage:
-					goto handle_ReferrerRewardsPercentage
-
-				case ffjtAccountTopNControlFlags:
-					goto handle_TopNControlFlags
-
-				case ffjtAccountWhitelistingAccounts:
-					goto handle_WhitelistingAccounts
-
-				case ffjtAccountBlacklistingAccounts:
-					goto handle_BlacklistingAccounts
-
-				case ffjtAccountWhitelistedAccounts:
-					goto handle_WhitelistedAccounts
-
-				case ffjtAccountBlacklistedAccounts:
-					goto handle_BlacklistedAccounts
-
-				case ffjtAccountOptions:
-					goto handle_Options
 
 				case ffjtAccountRegistrar:
 					goto handle_Registrar
 
-				case ffjtAccountReferrer:
-					goto handle_Referrer
-
-				case ffjtAccountLifetimeReferrer:
-					goto handle_LifetimeReferrer
-
-				case ffjtAccountCashbackVB:
-					goto handle_CashbackVB
+				case ffjtAccountName:
+					goto handle_Name
 
 				case ffjtAccountOwner:
 					goto handle_Owner
@@ -755,11 +508,29 @@ mainparse:
 				case ffjtAccountActive:
 					goto handle_Active
 
+				case ffjtAccountOptions:
+					goto handle_Options
+
+				case ffjtAccountStatistics:
+					goto handle_Statistics
+
+				case ffjtAccountCashbackGAS:
+					goto handle_CashbackGAS
+
+				case ffjtAccountCashbackVB:
+					goto handle_CashbackVB
+
+				case ffjtAccountCashbackVote:
+					goto handle_CashbackVote
+
 				case ffjtAccountOwnerSpecialAuthority:
 					goto handle_OwnerSpecialAuthority
 
 				case ffjtAccountActiveSpecialAuthority:
 					goto handle_ActiveSpecialAuthority
+
+				case ffjtAccountTopNControlFlags:
+					goto handle_TopNControlFlags
 
 				case ffjtAccountnosuchkey:
 					err = fs.SkipField(tok)
@@ -800,56 +571,6 @@ handle_ID:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Name:
-
-	/* handler: j.Name type=types.String kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Name.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_Statistics:
-
-	/* handler: j.Statistics type=types.ObjectID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Statistics.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
 handle_MembershipExpirationDate:
 
 	/* handler: j.MembershipExpirationDate type=types.Time kind=struct quoted=false*/
@@ -870,418 +591,6 @@ handle_MembershipExpirationDate:
 			}
 		}
 		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_NetworkFeePercentage:
-
-	/* handler: j.NetworkFeePercentage type=types.UInt64 kind=uint64 quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.NetworkFeePercentage.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_LifetimeReferrerFeePercentage:
-
-	/* handler: j.LifetimeReferrerFeePercentage type=types.UInt64 kind=uint64 quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.LifetimeReferrerFeePercentage.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_ReferrerRewardsPercentage:
-
-	/* handler: j.ReferrerRewardsPercentage type=types.UInt64 kind=uint64 quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.ReferrerRewardsPercentage.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_TopNControlFlags:
-
-	/* handler: j.TopNControlFlags type=types.UInt64 kind=uint64 quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.TopNControlFlags.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_WhitelistingAccounts:
-
-	/* handler: j.WhitelistingAccounts type=types.AccountIDs kind=slice quoted=false*/
-
-	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AccountIDs", tok))
-			}
-		}
-
-		if tok == fflib.FFTok_null {
-			j.WhitelistingAccounts = nil
-		} else {
-
-			j.WhitelistingAccounts = []AccountID{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJWhitelistingAccounts AccountID
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJWhitelistingAccounts type=types.AccountID kind=struct quoted=false*/
-
-				{
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tbuf, err := fs.CaptureField(tok)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						err = tmpJWhitelistingAccounts.UnmarshalJSON(tbuf)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-					}
-					state = fflib.FFParse_after_value
-				}
-
-				j.WhitelistingAccounts = append(j.WhitelistingAccounts, tmpJWhitelistingAccounts)
-
-				wantVal = false
-			}
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_BlacklistingAccounts:
-
-	/* handler: j.BlacklistingAccounts type=types.AccountIDs kind=slice quoted=false*/
-
-	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AccountIDs", tok))
-			}
-		}
-
-		if tok == fflib.FFTok_null {
-			j.BlacklistingAccounts = nil
-		} else {
-
-			j.BlacklistingAccounts = []AccountID{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJBlacklistingAccounts AccountID
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJBlacklistingAccounts type=types.AccountID kind=struct quoted=false*/
-
-				{
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tbuf, err := fs.CaptureField(tok)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						err = tmpJBlacklistingAccounts.UnmarshalJSON(tbuf)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-					}
-					state = fflib.FFParse_after_value
-				}
-
-				j.BlacklistingAccounts = append(j.BlacklistingAccounts, tmpJBlacklistingAccounts)
-
-				wantVal = false
-			}
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_WhitelistedAccounts:
-
-	/* handler: j.WhitelistedAccounts type=types.AccountIDs kind=slice quoted=false*/
-
-	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AccountIDs", tok))
-			}
-		}
-
-		if tok == fflib.FFTok_null {
-			j.WhitelistedAccounts = nil
-		} else {
-
-			j.WhitelistedAccounts = []AccountID{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJWhitelistedAccounts AccountID
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJWhitelistedAccounts type=types.AccountID kind=struct quoted=false*/
-
-				{
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tbuf, err := fs.CaptureField(tok)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						err = tmpJWhitelistedAccounts.UnmarshalJSON(tbuf)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-					}
-					state = fflib.FFParse_after_value
-				}
-
-				j.WhitelistedAccounts = append(j.WhitelistedAccounts, tmpJWhitelistedAccounts)
-
-				wantVal = false
-			}
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_BlacklistedAccounts:
-
-	/* handler: j.BlacklistedAccounts type=types.AccountIDs kind=slice quoted=false*/
-
-	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AccountIDs", tok))
-			}
-		}
-
-		if tok == fflib.FFTok_null {
-			j.BlacklistedAccounts = nil
-		} else {
-
-			j.BlacklistedAccounts = []AccountID{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJBlacklistedAccounts AccountID
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJBlacklistedAccounts type=types.AccountID kind=struct quoted=false*/
-
-				{
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tbuf, err := fs.CaptureField(tok)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						err = tmpJBlacklistedAccounts.UnmarshalJSON(tbuf)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-					}
-					state = fflib.FFParse_after_value
-				}
-
-				j.BlacklistedAccounts = append(j.BlacklistedAccounts, tmpJBlacklistedAccounts)
-
-				wantVal = false
-			}
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_Options:
-
-	/* handler: j.Options type=types.AccountOptions kind=struct quoted=false*/
-
-	{
-		/* Falling back. type=types.AccountOptions kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-
-		err = json.Unmarshal(tbuf, &j.Options)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
 	}
 
 	state = fflib.FFParse_after_value
@@ -1312,34 +621,9 @@ handle_Registrar:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Referrer:
+handle_Name:
 
-	/* handler: j.Referrer type=types.AccountID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Referrer.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_LifetimeReferrer:
-
-	/* handler: j.LifetimeReferrer type=types.AccountID kind=struct quoted=false*/
+	/* handler: j.Name type=types.String kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -1351,32 +635,7 @@ handle_LifetimeReferrer:
 				return fs.WrapErr(err)
 			}
 
-			err = j.LifetimeReferrer.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_CashbackVB:
-
-	/* handler: j.CashbackVB type=types.VestingBalanceID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.CashbackVB.UnmarshalJSON(tbuf)
+			err = j.Name.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -1427,6 +686,126 @@ handle_Active:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
+handle_Options:
+
+	/* handler: j.Options type=types.AccountOptions kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.AccountOptions kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.Options)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_Statistics:
+
+	/* handler: j.Statistics type=types.ObjectID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.Statistics.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_CashbackGAS:
+
+	/* handler: j.CashbackGAS type=types.VestingBalanceID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.CashbackGAS.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_CashbackVB:
+
+	/* handler: j.CashbackVB type=types.VestingBalanceID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.CashbackVB.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_CashbackVote:
+
+	/* handler: j.CashbackVote type=types.VestingBalanceID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.CashbackVote.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
 handle_OwnerSpecialAuthority:
 
 	/* handler: j.OwnerSpecialAuthority type=types.OwnerSpecialAuthority kind=struct quoted=false*/
@@ -1467,6 +846,31 @@ handle_ActiveSpecialAuthority:
 			}
 
 			err = j.ActiveSpecialAuthority.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_TopNControlFlags:
+
+	/* handler: j.TopNControlFlags type=types.UInt64 kind=uint64 quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.TopNControlFlags.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}

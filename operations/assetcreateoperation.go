@@ -19,13 +19,13 @@ func init() {
 
 type AssetCreateOperation struct {
 	types.OperationFee
-	BitassetOptions    *types.BitassetOptions `json:"bitasset_opts"`
-	CommonOptions      types.AssetOptions     `json:"common_options"`
-	Extensions         types.Extensions       `json:"extensions"`
-	IsPredictionMarket bool                   `json:"is_prediction_market"`
-	Issuer             types.AccountID        `json:"issuer"`
-	Precision          types.UInt8            `json:"precision"`
-	Symbol             types.String           `json:"symbol"`
+	Issuer          types.AccountID        `json:"issuer"`
+	Symbol          string                 `json:"symbol"`
+	Precision       types.UInt8            `json:"precision"`
+	CommonOptions   types.AssetOptions     `json:"common_options"`
+	BitassetOptions *types.BitassetOptions `json:"bitasset_opts"`
+	Extensions      types.Extensions       `json:"extensions"`
+	// IsPredictionMarket bool                   `json:"is_prediction_market"`
 }
 
 func (p AssetCreateOperation) Type() types.OperationType {
@@ -102,9 +102,9 @@ func (p AssetCreateOperation) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode BitassetOptions")
 	}
 
-	if err := enc.Encode(p.IsPredictionMarket); err != nil {
-		return errors.Annotate(err, "encode IsPredictionMarket")
-	}
+	// if err := enc.Encode(p.IsPredictionMarket); err != nil {
+	// 	return errors.Annotate(err, "encode IsPredictionMarket")
+	// }
 
 	if err := enc.Encode(p.Extensions); err != nil {
 		return errors.Annotate(err, "encode extensions")

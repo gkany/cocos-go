@@ -45,19 +45,17 @@ func (j *AccountCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"referrer":`)
+	buf.WriteString(`,"name":`)
 
 	{
 
-		obj, err = j.Referrer.MarshalJSON()
+		obj, err = j.Name.MarshalJSON()
 		if err != nil {
 			return err
 		}
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"referrer_percent":`)
-	fflib.FormatBits2(buf, uint64(j.ReferrerPercent), 10, false)
 	/* Struct fall back. type=types.Authority kind=struct */
 	buf.WriteString(`,"owner":`)
 	err = buf.Encode(&j.Owner)
@@ -70,26 +68,15 @@ func (j *AccountCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 	if err != nil {
 		return err
 	}
-	buf.WriteString(`,"name":`)
-
-	{
-
-		obj, err = j.Name.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
+	/* Struct fall back. type=types.AccountOptions kind=struct */
+	buf.WriteString(`,"options":`)
+	err = buf.Encode(&j.Options)
+	if err != nil {
+		return err
 	}
 	/* Struct fall back. type=types.AccountCreateExtensions kind=struct */
 	buf.WriteString(`,"extensions":`)
 	err = buf.Encode(&j.Extensions)
-	if err != nil {
-		return err
-	}
-	/* Struct fall back. type=types.AccountOptions kind=struct */
-	buf.WriteString(`,"options":`)
-	err = buf.Encode(&j.Options)
 	if err != nil {
 		return err
 	}
@@ -116,38 +103,30 @@ const (
 
 	ffjtAccountCreateOperationRegistrar
 
-	ffjtAccountCreateOperationReferrer
-
-	ffjtAccountCreateOperationReferrerPercent
+	ffjtAccountCreateOperationName
 
 	ffjtAccountCreateOperationOwner
 
 	ffjtAccountCreateOperationActive
 
-	ffjtAccountCreateOperationName
+	ffjtAccountCreateOperationOptions
 
 	ffjtAccountCreateOperationExtensions
-
-	ffjtAccountCreateOperationOptions
 
 	ffjtAccountCreateOperationFee
 )
 
 var ffjKeyAccountCreateOperationRegistrar = []byte("registrar")
 
-var ffjKeyAccountCreateOperationReferrer = []byte("referrer")
-
-var ffjKeyAccountCreateOperationReferrerPercent = []byte("referrer_percent")
+var ffjKeyAccountCreateOperationName = []byte("name")
 
 var ffjKeyAccountCreateOperationOwner = []byte("owner")
 
 var ffjKeyAccountCreateOperationActive = []byte("active")
 
-var ffjKeyAccountCreateOperationName = []byte("name")
+var ffjKeyAccountCreateOperationOptions = []byte("options")
 
 var ffjKeyAccountCreateOperationExtensions = []byte("extensions")
-
-var ffjKeyAccountCreateOperationOptions = []byte("options")
 
 var ffjKeyAccountCreateOperationFee = []byte("fee")
 
@@ -263,16 +242,6 @@ mainparse:
 						currentKey = ffjtAccountCreateOperationRegistrar
 						state = fflib.FFParse_want_colon
 						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountCreateOperationReferrer, kn) {
-						currentKey = ffjtAccountCreateOperationReferrer
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountCreateOperationReferrerPercent, kn) {
-						currentKey = ffjtAccountCreateOperationReferrerPercent
-						state = fflib.FFParse_want_colon
-						goto mainparse
 					}
 
 				}
@@ -283,20 +252,14 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAccountCreateOperationOptions, kn) {
-					currentKey = ffjtAccountCreateOperationOptions
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyAccountCreateOperationExtensions, kn) {
 					currentKey = ffjtAccountCreateOperationExtensions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
-				if fflib.SimpleLetterEqualFold(ffjKeyAccountCreateOperationName, kn) {
-					currentKey = ffjtAccountCreateOperationName
+				if fflib.EqualFoldRight(ffjKeyAccountCreateOperationOptions, kn) {
+					currentKey = ffjtAccountCreateOperationOptions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -313,14 +276,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.AsciiEqualFold(ffjKeyAccountCreateOperationReferrerPercent, kn) {
-					currentKey = ffjtAccountCreateOperationReferrerPercent
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.SimpleLetterEqualFold(ffjKeyAccountCreateOperationReferrer, kn) {
-					currentKey = ffjtAccountCreateOperationReferrer
+				if fflib.SimpleLetterEqualFold(ffjKeyAccountCreateOperationName, kn) {
+					currentKey = ffjtAccountCreateOperationName
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -351,11 +308,8 @@ mainparse:
 				case ffjtAccountCreateOperationRegistrar:
 					goto handle_Registrar
 
-				case ffjtAccountCreateOperationReferrer:
-					goto handle_Referrer
-
-				case ffjtAccountCreateOperationReferrerPercent:
-					goto handle_ReferrerPercent
+				case ffjtAccountCreateOperationName:
+					goto handle_Name
 
 				case ffjtAccountCreateOperationOwner:
 					goto handle_Owner
@@ -363,14 +317,11 @@ mainparse:
 				case ffjtAccountCreateOperationActive:
 					goto handle_Active
 
-				case ffjtAccountCreateOperationName:
-					goto handle_Name
+				case ffjtAccountCreateOperationOptions:
+					goto handle_Options
 
 				case ffjtAccountCreateOperationExtensions:
 					goto handle_Extensions
-
-				case ffjtAccountCreateOperationOptions:
-					goto handle_Options
 
 				case ffjtAccountCreateOperationFee:
 					goto handle_Fee
@@ -414,34 +365,9 @@ handle_Registrar:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Referrer:
+handle_Name:
 
-	/* handler: j.Referrer type=types.AccountID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Referrer.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_ReferrerPercent:
-
-	/* handler: j.ReferrerPercent type=types.UInt16 kind=uint16 quoted=false*/
+	/* handler: j.Name type=types.String kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -453,7 +379,7 @@ handle_ReferrerPercent:
 				return fs.WrapErr(err)
 			}
 
-			err = j.ReferrerPercent.UnmarshalJSON(tbuf)
+			err = j.Name.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -504,26 +430,21 @@ handle_Active:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Name:
+handle_Options:
 
-	/* handler: j.Name type=types.String kind=struct quoted=false*/
+	/* handler: j.Options type=types.AccountOptions kind=struct quoted=false*/
 
 	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Name.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
+		/* Falling back. type=types.AccountOptions kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
 		}
-		state = fflib.FFParse_after_value
+
+		err = json.Unmarshal(tbuf, &j.Options)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
 	}
 
 	state = fflib.FFParse_after_value
@@ -541,26 +462,6 @@ handle_Extensions:
 		}
 
 		err = json.Unmarshal(tbuf, &j.Extensions)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_Options:
-
-	/* handler: j.Options type=types.AccountOptions kind=struct quoted=false*/
-
-	{
-		/* Falling back. type=types.AccountOptions kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-
-		err = json.Unmarshal(tbuf, &j.Options)
 		if err != nil {
 			return fs.WrapErr(err)
 		}

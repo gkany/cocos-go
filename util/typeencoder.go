@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/binary"
+	"fmt"
 	"io"
 	"reflect"
 	"strings"
@@ -59,9 +60,9 @@ func (p *TypeEncoder) Encode(v interface{}) error {
 	}
 
 	if m, ok := v.(TypeMarshaler); ok {
+		fmt.Printf("v.(TypeMarshaler): %v\n", m)
 		return m.Marshal(p)
 	}
-
 	switch v := v.(type) {
 	case int8:
 		return p.EncodeNumber(v)

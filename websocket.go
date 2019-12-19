@@ -79,6 +79,7 @@ type WebsocketAPI interface {
 	Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error
 	UnsubscribeFromMarket(base, quote types.GrapheneObject) error
 	Get24Volume(base types.GrapheneObject, quote types.GrapheneObject) (*types.Volume24, error)
+	CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error
 }
 
 type websocketAPI struct {
@@ -279,7 +280,6 @@ func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset ty
 	if len(privKeys) == 0 {
 		return nil, types.ErrNoSigningKeyFound
 	}
-
 	if err := signer.Sign(privKeys, config.Current()); err != nil {
 		return nil, errors.Annotate(err, "Sign")
 	}
@@ -952,6 +952,27 @@ func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.
 		} else {
 			op.Memo = []interface{}{0, memo,}
 		}
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error {
+	op := operations.AssetCreateOperation {
+		Issuer:        types.AccountIDFromObject(issuer),
+		Symbol:        symbol,
+		Precision:     types.UInt8(precision),
+		CommonOptions: common,
+		BitassetOptions: bitasset,
 	}
 
 	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)

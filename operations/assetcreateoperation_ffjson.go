@@ -6,7 +6,6 @@ package operations
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
@@ -35,39 +34,7 @@ func (j *AssetCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	var obj []byte
 	_ = obj
 	_ = err
-	if j.BitassetOptions != nil {
-		/* Struct fall back. type=types.BitassetOptions kind=struct */
-		buf.WriteString(`{ "bitasset_opts":`)
-		err = buf.Encode(j.BitassetOptions)
-		if err != nil {
-			return err
-		}
-	} else {
-		buf.WriteString(`{ "bitasset_opts":null`)
-	}
-	/* Struct fall back. type=types.AssetOptions kind=struct */
-	buf.WriteString(`,"common_options":`)
-	err = buf.Encode(&j.CommonOptions)
-	if err != nil {
-		return err
-	}
-	buf.WriteString(`,"extensions":`)
-
-	{
-
-		obj, err = j.Extensions.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	if j.IsPredictionMarket {
-		buf.WriteString(`,"is_prediction_market":true`)
-	} else {
-		buf.WriteString(`,"is_prediction_market":false`)
-	}
-	buf.WriteString(`,"issuer":`)
+	buf.WriteString(`{ "issuer":`)
 
 	{
 
@@ -78,13 +45,31 @@ func (j *AssetCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
+	buf.WriteString(`,"symbol":`)
+	fflib.WriteJsonString(buf, string(j.Symbol))
 	buf.WriteString(`,"precision":`)
 	fflib.FormatBits2(buf, uint64(j.Precision), 10, false)
-	buf.WriteString(`,"symbol":`)
+	/* Struct fall back. type=types.AssetOptions kind=struct */
+	buf.WriteString(`,"common_options":`)
+	err = buf.Encode(&j.CommonOptions)
+	if err != nil {
+		return err
+	}
+	if j.BitassetOptions != nil {
+		/* Struct fall back. type=types.BitassetOptions kind=struct */
+		buf.WriteString(`,"bitasset_opts":`)
+		err = buf.Encode(j.BitassetOptions)
+		if err != nil {
+			return err
+		}
+	} else {
+		buf.WriteString(`,"bitasset_opts":null`)
+	}
+	buf.WriteString(`,"extensions":`)
 
 	{
 
-		obj, err = j.Symbol.MarshalJSON()
+		obj, err = j.Extensions.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -112,36 +97,32 @@ const (
 	ffjtAssetCreateOperationbase = iota
 	ffjtAssetCreateOperationnosuchkey
 
-	ffjtAssetCreateOperationBitassetOptions
-
-	ffjtAssetCreateOperationCommonOptions
-
-	ffjtAssetCreateOperationExtensions
-
-	ffjtAssetCreateOperationIsPredictionMarket
-
 	ffjtAssetCreateOperationIssuer
+
+	ffjtAssetCreateOperationSymbol
 
 	ffjtAssetCreateOperationPrecision
 
-	ffjtAssetCreateOperationSymbol
+	ffjtAssetCreateOperationCommonOptions
+
+	ffjtAssetCreateOperationBitassetOptions
+
+	ffjtAssetCreateOperationExtensions
 
 	ffjtAssetCreateOperationFee
 )
 
-var ffjKeyAssetCreateOperationBitassetOptions = []byte("bitasset_opts")
-
-var ffjKeyAssetCreateOperationCommonOptions = []byte("common_options")
-
-var ffjKeyAssetCreateOperationExtensions = []byte("extensions")
-
-var ffjKeyAssetCreateOperationIsPredictionMarket = []byte("is_prediction_market")
-
 var ffjKeyAssetCreateOperationIssuer = []byte("issuer")
+
+var ffjKeyAssetCreateOperationSymbol = []byte("symbol")
 
 var ffjKeyAssetCreateOperationPrecision = []byte("precision")
 
-var ffjKeyAssetCreateOperationSymbol = []byte("symbol")
+var ffjKeyAssetCreateOperationCommonOptions = []byte("common_options")
+
+var ffjKeyAssetCreateOperationBitassetOptions = []byte("bitasset_opts")
+
+var ffjKeyAssetCreateOperationExtensions = []byte("extensions")
 
 var ffjKeyAssetCreateOperationFee = []byte("fee")
 
@@ -240,12 +221,7 @@ mainparse:
 
 				case 'i':
 
-					if bytes.Equal(ffjKeyAssetCreateOperationIsPredictionMarket, kn) {
-						currentKey = ffjtAssetCreateOperationIsPredictionMarket
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAssetCreateOperationIssuer, kn) {
+					if bytes.Equal(ffjKeyAssetCreateOperationIssuer, kn) {
 						currentKey = ffjtAssetCreateOperationIssuer
 						state = fflib.FFParse_want_colon
 						goto mainparse
@@ -275,32 +251,14 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationSymbol, kn) {
-					currentKey = ffjtAssetCreateOperationSymbol
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationPrecision, kn) {
-					currentKey = ffjtAssetCreateOperationPrecision
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationIssuer, kn) {
-					currentKey = ffjtAssetCreateOperationIssuer
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationIsPredictionMarket, kn) {
-					currentKey = ffjtAssetCreateOperationIsPredictionMarket
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationExtensions, kn) {
 					currentKey = ffjtAssetCreateOperationExtensions
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationBitassetOptions, kn) {
+					currentKey = ffjtAssetCreateOperationBitassetOptions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -311,8 +269,20 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationBitassetOptions, kn) {
-					currentKey = ffjtAssetCreateOperationBitassetOptions
+				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationPrecision, kn) {
+					currentKey = ffjtAssetCreateOperationPrecision
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationSymbol, kn) {
+					currentKey = ffjtAssetCreateOperationSymbol
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAssetCreateOperationIssuer, kn) {
+					currentKey = ffjtAssetCreateOperationIssuer
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -334,26 +304,23 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
-				case ffjtAssetCreateOperationBitassetOptions:
-					goto handle_BitassetOptions
-
-				case ffjtAssetCreateOperationCommonOptions:
-					goto handle_CommonOptions
-
-				case ffjtAssetCreateOperationExtensions:
-					goto handle_Extensions
-
-				case ffjtAssetCreateOperationIsPredictionMarket:
-					goto handle_IsPredictionMarket
-
 				case ffjtAssetCreateOperationIssuer:
 					goto handle_Issuer
+
+				case ffjtAssetCreateOperationSymbol:
+					goto handle_Symbol
 
 				case ffjtAssetCreateOperationPrecision:
 					goto handle_Precision
 
-				case ffjtAssetCreateOperationSymbol:
-					goto handle_Symbol
+				case ffjtAssetCreateOperationCommonOptions:
+					goto handle_CommonOptions
+
+				case ffjtAssetCreateOperationBitassetOptions:
+					goto handle_BitassetOptions
+
+				case ffjtAssetCreateOperationExtensions:
+					goto handle_Extensions
 
 				case ffjtAssetCreateOperationFee:
 					goto handle_Fee
@@ -371,106 +338,6 @@ mainparse:
 			}
 		}
 	}
-
-handle_BitassetOptions:
-
-	/* handler: j.BitassetOptions type=types.BitassetOptions kind=struct quoted=false*/
-
-	{
-		/* Falling back. type=types.BitassetOptions kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-
-		err = json.Unmarshal(tbuf, &j.BitassetOptions)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_CommonOptions:
-
-	/* handler: j.CommonOptions type=types.AssetOptions kind=struct quoted=false*/
-
-	{
-		/* Falling back. type=types.AssetOptions kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-
-		err = json.Unmarshal(tbuf, &j.CommonOptions)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_Extensions:
-
-	/* handler: j.Extensions type=types.Extensions kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Extensions.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_IsPredictionMarket:
-
-	/* handler: j.IsPredictionMarket type=bool kind=bool quoted=false*/
-
-	{
-		if tok != fflib.FFTok_bool && tok != fflib.FFTok_null {
-			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for bool", tok))
-		}
-	}
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-			tmpb := fs.Output.Bytes()
-
-			if bytes.Compare([]byte{'t', 'r', 'u', 'e'}, tmpb) == 0 {
-
-				j.IsPredictionMarket = true
-
-			} else if bytes.Compare([]byte{'f', 'a', 'l', 's', 'e'}, tmpb) == 0 {
-
-				j.IsPredictionMarket = false
-
-			} else {
-				err = errors.New("unexpected bytes for true/false value")
-				return fs.WrapErr(err)
-			}
-
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
 
 handle_Issuer:
 
@@ -492,6 +359,32 @@ handle_Issuer:
 			}
 		}
 		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_Symbol:
+
+	/* handler: j.Symbol type=string kind=string quoted=false*/
+
+	{
+
+		{
+			if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
+			}
+		}
+
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			outBuf := fs.Output.Bytes()
+
+			j.Symbol = string(string(outBuf))
+
+		}
 	}
 
 	state = fflib.FFParse_after_value
@@ -522,9 +415,49 @@ handle_Precision:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Symbol:
+handle_CommonOptions:
 
-	/* handler: j.Symbol type=types.String kind=struct quoted=false*/
+	/* handler: j.CommonOptions type=types.AssetOptions kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.AssetOptions kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.CommonOptions)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_BitassetOptions:
+
+	/* handler: j.BitassetOptions type=types.BitassetOptions kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.BitassetOptions kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.BitassetOptions)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_Extensions:
+
+	/* handler: j.Extensions type=types.Extensions kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -536,7 +469,7 @@ handle_Symbol:
 				return fs.WrapErr(err)
 			}
 
-			err = j.Symbol.UnmarshalJSON(tbuf)
+			err = j.Extensions.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}

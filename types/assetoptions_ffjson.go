@@ -36,12 +36,20 @@ func (j *AssetOptions) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	_ = err
 	buf.WriteString(`{"max_supply":`)
 	fflib.FormatBits2(buf, uint64(j.MaxSupply), 10, j.MaxSupply < 0)
-	buf.WriteString(`,"max_market_fee":`)
-	fflib.FormatBits2(buf, uint64(j.MaxMarketFee), 10, j.MaxMarketFee < 0)
 	buf.WriteString(`,"market_fee_percent":`)
 	fflib.FormatBits2(buf, uint64(j.MarketFeePercent), 10, false)
+	buf.WriteString(`,"max_market_fee":`)
+	fflib.FormatBits2(buf, uint64(j.MaxMarketFee), 10, j.MaxMarketFee < 0)
+	buf.WriteString(`,"issuer_permissions":`)
+	fflib.FormatBits2(buf, uint64(j.IssuerPermissions), 10, false)
 	buf.WriteString(`,"flags":`)
 	fflib.FormatBits2(buf, uint64(j.Flags), 10, false)
+	/* Struct fall back. type=types.Price kind=struct */
+	buf.WriteString(`,"core_exchange_rate":`)
+	err = buf.Encode(&j.CoreExchangeRate)
+	if err != nil {
+		return err
+	}
 	buf.WriteString(`,"description":`)
 
 	{
@@ -52,102 +60,6 @@ func (j *AssetOptions) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		}
 		buf.Write(obj)
 
-	}
-	/* Struct fall back. type=types.Price kind=struct */
-	buf.WriteString(`,"core_exchange_rate":`)
-	err = buf.Encode(&j.CoreExchangeRate)
-	if err != nil {
-		return err
-	}
-	buf.WriteString(`,"issuer_permissions":`)
-	fflib.FormatBits2(buf, uint64(j.IssuerPermissions), 10, false)
-	buf.WriteString(`,"blacklist_authorities":`)
-	if j.BlacklistAuthorities != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.BlacklistAuthorities {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-
-			{
-
-				obj, err = v.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	buf.WriteString(`,"whitelist_authorities":`)
-	if j.WhitelistAuthorities != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.WhitelistAuthorities {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-
-			{
-
-				obj, err = v.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	buf.WriteString(`,"blacklist_markets":`)
-	if j.BlacklistMarkets != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.BlacklistMarkets {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-
-			{
-
-				obj, err = v.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	buf.WriteString(`,"whitelist_markets":`)
-	if j.WhitelistMarkets != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.WhitelistMarkets {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-
-			{
-
-				obj, err = v.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
 	}
 	buf.WriteString(`,"extensions":`)
 
@@ -170,50 +82,34 @@ const (
 
 	ffjtAssetOptionsMaxSupply
 
-	ffjtAssetOptionsMaxMarketFee
-
 	ffjtAssetOptionsMarketFeePercent
 
-	ffjtAssetOptionsFlags
-
-	ffjtAssetOptionsDescription
-
-	ffjtAssetOptionsCoreExchangeRate
+	ffjtAssetOptionsMaxMarketFee
 
 	ffjtAssetOptionsIssuerPermissions
 
-	ffjtAssetOptionsBlacklistAuthorities
+	ffjtAssetOptionsFlags
 
-	ffjtAssetOptionsWhitelistAuthorities
+	ffjtAssetOptionsCoreExchangeRate
 
-	ffjtAssetOptionsBlacklistMarkets
-
-	ffjtAssetOptionsWhitelistMarkets
+	ffjtAssetOptionsDescription
 
 	ffjtAssetOptionsExtensions
 )
 
 var ffjKeyAssetOptionsMaxSupply = []byte("max_supply")
 
-var ffjKeyAssetOptionsMaxMarketFee = []byte("max_market_fee")
-
 var ffjKeyAssetOptionsMarketFeePercent = []byte("market_fee_percent")
 
-var ffjKeyAssetOptionsFlags = []byte("flags")
-
-var ffjKeyAssetOptionsDescription = []byte("description")
-
-var ffjKeyAssetOptionsCoreExchangeRate = []byte("core_exchange_rate")
+var ffjKeyAssetOptionsMaxMarketFee = []byte("max_market_fee")
 
 var ffjKeyAssetOptionsIssuerPermissions = []byte("issuer_permissions")
 
-var ffjKeyAssetOptionsBlacklistAuthorities = []byte("blacklist_authorities")
+var ffjKeyAssetOptionsFlags = []byte("flags")
 
-var ffjKeyAssetOptionsWhitelistAuthorities = []byte("whitelist_authorities")
+var ffjKeyAssetOptionsCoreExchangeRate = []byte("core_exchange_rate")
 
-var ffjKeyAssetOptionsBlacklistMarkets = []byte("blacklist_markets")
-
-var ffjKeyAssetOptionsWhitelistMarkets = []byte("whitelist_markets")
+var ffjKeyAssetOptionsDescription = []byte("description")
 
 var ffjKeyAssetOptionsExtensions = []byte("extensions")
 
@@ -278,19 +174,6 @@ mainparse:
 			} else {
 				switch kn[0] {
 
-				case 'b':
-
-					if bytes.Equal(ffjKeyAssetOptionsBlacklistAuthorities, kn) {
-						currentKey = ffjtAssetOptionsBlacklistAuthorities
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAssetOptionsBlacklistMarkets, kn) {
-						currentKey = ffjtAssetOptionsBlacklistMarkets
-						state = fflib.FFParse_want_colon
-						goto mainparse
-					}
-
 				case 'c':
 
 					if bytes.Equal(ffjKeyAssetOptionsCoreExchangeRate, kn) {
@@ -338,26 +221,13 @@ mainparse:
 						state = fflib.FFParse_want_colon
 						goto mainparse
 
-					} else if bytes.Equal(ffjKeyAssetOptionsMaxMarketFee, kn) {
-						currentKey = ffjtAssetOptionsMaxMarketFee
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
 					} else if bytes.Equal(ffjKeyAssetOptionsMarketFeePercent, kn) {
 						currentKey = ffjtAssetOptionsMarketFeePercent
 						state = fflib.FFParse_want_colon
 						goto mainparse
-					}
 
-				case 'w':
-
-					if bytes.Equal(ffjKeyAssetOptionsWhitelistAuthorities, kn) {
-						currentKey = ffjtAssetOptionsWhitelistAuthorities
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAssetOptionsWhitelistMarkets, kn) {
-						currentKey = ffjtAssetOptionsWhitelistMarkets
+					} else if bytes.Equal(ffjKeyAssetOptionsMaxMarketFee, kn) {
+						currentKey = ffjtAssetOptionsMaxMarketFee
 						state = fflib.FFParse_want_colon
 						goto mainparse
 					}
@@ -370,32 +240,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAssetOptionsWhitelistMarkets, kn) {
-					currentKey = ffjtAssetOptionsWhitelistMarkets
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetOptionsBlacklistMarkets, kn) {
-					currentKey = ffjtAssetOptionsBlacklistMarkets
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetOptionsWhitelistAuthorities, kn) {
-					currentKey = ffjtAssetOptionsWhitelistAuthorities
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetOptionsBlacklistAuthorities, kn) {
-					currentKey = ffjtAssetOptionsBlacklistAuthorities
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetOptionsIssuerPermissions, kn) {
-					currentKey = ffjtAssetOptionsIssuerPermissions
+				if fflib.EqualFoldRight(ffjKeyAssetOptionsDescription, kn) {
+					currentKey = ffjtAssetOptionsDescription
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -406,26 +252,26 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAssetOptionsDescription, kn) {
-					currentKey = ffjtAssetOptionsDescription
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyAssetOptionsFlags, kn) {
 					currentKey = ffjtAssetOptionsFlags
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAssetOptionsMarketFeePercent, kn) {
-					currentKey = ffjtAssetOptionsMarketFeePercent
+				if fflib.EqualFoldRight(ffjKeyAssetOptionsIssuerPermissions, kn) {
+					currentKey = ffjtAssetOptionsIssuerPermissions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
 				if fflib.EqualFoldRight(ffjKeyAssetOptionsMaxMarketFee, kn) {
 					currentKey = ffjtAssetOptionsMaxMarketFee
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAssetOptionsMarketFeePercent, kn) {
+					currentKey = ffjtAssetOptionsMarketFeePercent
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -456,35 +302,23 @@ mainparse:
 				case ffjtAssetOptionsMaxSupply:
 					goto handle_MaxSupply
 
-				case ffjtAssetOptionsMaxMarketFee:
-					goto handle_MaxMarketFee
-
 				case ffjtAssetOptionsMarketFeePercent:
 					goto handle_MarketFeePercent
 
-				case ffjtAssetOptionsFlags:
-					goto handle_Flags
-
-				case ffjtAssetOptionsDescription:
-					goto handle_Description
-
-				case ffjtAssetOptionsCoreExchangeRate:
-					goto handle_CoreExchangeRate
+				case ffjtAssetOptionsMaxMarketFee:
+					goto handle_MaxMarketFee
 
 				case ffjtAssetOptionsIssuerPermissions:
 					goto handle_IssuerPermissions
 
-				case ffjtAssetOptionsBlacklistAuthorities:
-					goto handle_BlacklistAuthorities
+				case ffjtAssetOptionsFlags:
+					goto handle_Flags
 
-				case ffjtAssetOptionsWhitelistAuthorities:
-					goto handle_WhitelistAuthorities
+				case ffjtAssetOptionsCoreExchangeRate:
+					goto handle_CoreExchangeRate
 
-				case ffjtAssetOptionsBlacklistMarkets:
-					goto handle_BlacklistMarkets
-
-				case ffjtAssetOptionsWhitelistMarkets:
-					goto handle_WhitelistMarkets
+				case ffjtAssetOptionsDescription:
+					goto handle_Description
 
 				case ffjtAssetOptionsExtensions:
 					goto handle_Extensions
@@ -528,6 +362,31 @@ handle_MaxSupply:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
+handle_MarketFeePercent:
+
+	/* handler: j.MarketFeePercent type=types.UInt16 kind=uint16 quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.MarketFeePercent.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
 handle_MaxMarketFee:
 
 	/* handler: j.MaxMarketFee type=types.Int64 kind=int64 quoted=false*/
@@ -553,9 +412,9 @@ handle_MaxMarketFee:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_MarketFeePercent:
+handle_IssuerPermissions:
 
-	/* handler: j.MarketFeePercent type=types.UInt16 kind=uint16 quoted=false*/
+	/* handler: j.IssuerPermissions type=types.UInt16 kind=uint16 quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -567,7 +426,7 @@ handle_MarketFeePercent:
 				return fs.WrapErr(err)
 			}
 
-			err = j.MarketFeePercent.UnmarshalJSON(tbuf)
+			err = j.IssuerPermissions.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -603,31 +462,6 @@ handle_Flags:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Description:
-
-	/* handler: j.Description type=types.String kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Description.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
 handle_CoreExchangeRate:
 
 	/* handler: j.CoreExchangeRate type=types.Price kind=struct quoted=false*/
@@ -648,9 +482,9 @@ handle_CoreExchangeRate:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_IssuerPermissions:
+handle_Description:
 
-	/* handler: j.IssuerPermissions type=types.UInt16 kind=uint16 quoted=false*/
+	/* handler: j.Description type=types.String kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -662,304 +496,12 @@ handle_IssuerPermissions:
 				return fs.WrapErr(err)
 			}
 
-			err = j.IssuerPermissions.UnmarshalJSON(tbuf)
+			err = j.Description.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
 		}
 		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_BlacklistAuthorities:
-
-	/* handler: j.BlacklistAuthorities type=types.AccountIDs kind=slice quoted=false*/
-
-	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AccountIDs", tok))
-			}
-		}
-
-		if tok == fflib.FFTok_null {
-			j.BlacklistAuthorities = nil
-		} else {
-
-			j.BlacklistAuthorities = []AccountID{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJBlacklistAuthorities AccountID
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJBlacklistAuthorities type=types.AccountID kind=struct quoted=false*/
-
-				{
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tbuf, err := fs.CaptureField(tok)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						err = tmpJBlacklistAuthorities.UnmarshalJSON(tbuf)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-					}
-					state = fflib.FFParse_after_value
-				}
-
-				j.BlacklistAuthorities = append(j.BlacklistAuthorities, tmpJBlacklistAuthorities)
-
-				wantVal = false
-			}
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_WhitelistAuthorities:
-
-	/* handler: j.WhitelistAuthorities type=types.AccountIDs kind=slice quoted=false*/
-
-	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AccountIDs", tok))
-			}
-		}
-
-		if tok == fflib.FFTok_null {
-			j.WhitelistAuthorities = nil
-		} else {
-
-			j.WhitelistAuthorities = []AccountID{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJWhitelistAuthorities AccountID
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJWhitelistAuthorities type=types.AccountID kind=struct quoted=false*/
-
-				{
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tbuf, err := fs.CaptureField(tok)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						err = tmpJWhitelistAuthorities.UnmarshalJSON(tbuf)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-					}
-					state = fflib.FFParse_after_value
-				}
-
-				j.WhitelistAuthorities = append(j.WhitelistAuthorities, tmpJWhitelistAuthorities)
-
-				wantVal = false
-			}
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_BlacklistMarkets:
-
-	/* handler: j.BlacklistMarkets type=types.AccountIDs kind=slice quoted=false*/
-
-	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AccountIDs", tok))
-			}
-		}
-
-		if tok == fflib.FFTok_null {
-			j.BlacklistMarkets = nil
-		} else {
-
-			j.BlacklistMarkets = []AccountID{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJBlacklistMarkets AccountID
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJBlacklistMarkets type=types.AccountID kind=struct quoted=false*/
-
-				{
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tbuf, err := fs.CaptureField(tok)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						err = tmpJBlacklistMarkets.UnmarshalJSON(tbuf)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-					}
-					state = fflib.FFParse_after_value
-				}
-
-				j.BlacklistMarkets = append(j.BlacklistMarkets, tmpJBlacklistMarkets)
-
-				wantVal = false
-			}
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_WhitelistMarkets:
-
-	/* handler: j.WhitelistMarkets type=types.AccountIDs kind=slice quoted=false*/
-
-	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AccountIDs", tok))
-			}
-		}
-
-		if tok == fflib.FFTok_null {
-			j.WhitelistMarkets = nil
-		} else {
-
-			j.WhitelistMarkets = []AccountID{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJWhitelistMarkets AccountID
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJWhitelistMarkets type=types.AccountID kind=struct quoted=false*/
-
-				{
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tbuf, err := fs.CaptureField(tok)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						err = tmpJWhitelistMarkets.UnmarshalJSON(tbuf)
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-					}
-					state = fflib.FFParse_after_value
-				}
-
-				j.WhitelistMarkets = append(j.WhitelistMarkets, tmpJWhitelistMarkets)
-
-				wantVal = false
-			}
-		}
 	}
 
 	state = fflib.FFParse_after_value
