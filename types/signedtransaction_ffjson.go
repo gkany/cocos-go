@@ -33,7 +33,21 @@ func (j *SignedTransaction) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{"signatures":`)
+	buf.WriteByte('{')
+	if true {
+		buf.WriteString(`"agreed_task":`)
+
+		{
+
+			err = j.AgreedTask.MarshalJSONBuf(buf)
+			if err != nil {
+				return err
+			}
+
+		}
+		buf.WriteByte(',')
+	}
+	buf.WriteString(`"signatures":`)
 	if j.Signatures != nil {
 		buf.WriteString(`[`)
 		for i, v := range j.Signatures {
@@ -100,6 +114,8 @@ const (
 	ffjtSignedTransactionbase = iota
 	ffjtSignedTransactionnosuchkey
 
+	ffjtSignedTransactionAgreedTask
+
 	ffjtSignedTransactionSignatures
 
 	ffjtSignedTransactionRefBlockNum
@@ -112,6 +128,8 @@ const (
 
 	ffjtSignedTransactionExtensions
 )
+
+var ffjKeySignedTransactionAgreedTask = []byte("agreed_task")
 
 var ffjKeySignedTransactionSignatures = []byte("signatures")
 
@@ -185,6 +203,14 @@ mainparse:
 				goto mainparse
 			} else {
 				switch kn[0] {
+
+				case 'a':
+
+					if bytes.Equal(ffjKeySignedTransactionAgreedTask, kn) {
+						currentKey = ffjtSignedTransactionAgreedTask
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
 
 				case 'e':
 
@@ -266,6 +292,12 @@ mainparse:
 					goto mainparse
 				}
 
+				if fflib.EqualFoldRight(ffjKeySignedTransactionAgreedTask, kn) {
+					currentKey = ffjtSignedTransactionAgreedTask
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
 				currentKey = ffjtSignedTransactionnosuchkey
 				state = fflib.FFParse_want_colon
 				goto mainparse
@@ -282,6 +314,9 @@ mainparse:
 
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
+
+				case ffjtSignedTransactionAgreedTask:
+					goto handle_AgreedTask
 
 				case ffjtSignedTransactionSignatures:
 					goto handle_Signatures
@@ -314,6 +349,26 @@ mainparse:
 			}
 		}
 	}
+
+handle_AgreedTask:
+
+	/* handler: j.AgreedTask type=types.AgreedTask kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			err = j.AgreedTask.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
+			if err != nil {
+				return err
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
 
 handle_Signatures:
 

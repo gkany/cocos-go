@@ -1,0 +1,131 @@
+ websocket api exception :{"code":3030001,"name":"tx_missing_active_auth","message":"missing required active authority","stack":[{"context":{"level":"error","file":"transaction.cpp","line":326,"method":"verify_authority","hostname":"","thread_name":"th_a","timestamp":"2019-12-19T02:17:42"},"format":"Missing Active Authority ${id}","data":{"id":"1.2.17","auth":{"weight_threshold":1,"account_auths":[],"key_auths":[["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",1]],"address_auths":[]},"owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",1]],"address_auths":[]}}},{"context":{"level":"warn","file":"transaction.cpp","line":338,"method":"verify_authority","hostname":"","thread_name":"th_a","timestamp":"2019-12-19T02:17:42"},"format":"","data":{"ops":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"sigs":["COCOS7T7dkE5PoLzKVHYvKF2vYhYrQurHpAGgm6SZBCovRwNS3NDGT9"]}},{"context":{"level":"warn","file":"transaction.cpp","line":436,"method":"verify_authority","hostname":"","thread_name":"th_a","timestamp":"2019-12-19T02:17:42"},"format":"","data":{"*this":{"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["1f26477d31181a0f8f813ad573aa04d68f8eab7f17157682eddd6d9bcffbfab0ea07f8ad07766a406fad393142398feb0d8a1b5b55862e065e476e0335ad3e42df"]}}},{"context":{"level":"warn","file":"db_block.cpp","line":805,"method":"_apply_transaction","hostname":"","thread_name":"th_a","timestamp":"2019-12-19T02:17:42"},"format":"","data":{"trx":{"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["1f26477d31181a0f8f813ad573aa04d68f8eab7f17157682eddd6d9bcffbfab0ea07f8ad07766a406fad393142398feb0d8a1b5b55862e065e476e0335ad3e42df"]}}},{"context":{"level":"warn","file":"db_block.cpp","line":258,"method":"push_transaction","hostname":"","thread_name":"th_a","timestamp":"2019-12-19T02:17:42"},"format":"","data":{"trx":{"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["1f26477d31181a0f8f813ad573aa04d68f8eab7f17157682eddd6d9bcffbfab0ea07f8ad07766a406fad393142398feb0d8a1b5b55862e065e476e0335ad3e42df"]}}},{"context":{"level":"warn","file":"websocket_api.cpp","line":144,"method":"on_message","hostname":"","thread_name":"th_a","timestamp":"2019-12-19T02:17:42"},"format":"","data":{"call.method":"call","call.params":[4,"broadcast_transaction",[{"signatures":["1f26477d31181a0f8f813ad573aa04d68f8eab7f17157682eddd6d9bcffbfab0ea07f8ad07766a406fad393142398feb0d8a1b5b55862e065e476e0335ad3e42df"],"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}]]}}]}
+
+
+// trx:
+{"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["1f26477d31181a0f8f813ad573aa04d68f8eab7f17157682eddd6d9bcffbfab0ea07f8ad07766a406fad393142398feb0d8a1b5b55862e065e476e0335ad3e42df"]}
+
+// 原始 trx:
+// 1. 
+{"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":[]}
+
+// 2. 
+{"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+
+// --> trx 序列化
+// 1. 
+unlocked >>> serialize_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":[]}
+serialize_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":[]}
+"e09828de0856e2ddfa5d0100110000000000000012000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000"
+unlocked >>> 
+
+// 2. 
+unlocked >>> serialize_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+serialize_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+"e09828de0856e2ddfa5d0100110000000000000012000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000"
+unlocked >>> 
+
+// --> trx 签名
+// 1. 
+unlocked >>> sign_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":[]} false
+sign_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":[]} false
+[
+  "231511a5e369c9d43ca1bb11f03f1430e72e3f7d75bc622f9d52e9e229b31388",{
+    "ref_block_num": 39297,
+    "ref_block_prefix": 3872860111,
+    "expiration": "2019-12-19T02:44:22",
+    "operations": [[
+        0,{
+          "from": "1.2.17",
+          "to": "1.2.18",
+          "amount": {
+            "amount": 100,
+            "asset_id": "1.3.0"
+          },
+          "memo": [
+            0,
+            "memo test false"
+          ],
+          "extensions": []
+        }
+      ]
+    ],
+    "extensions": [],
+    "signatures": [
+      "204dafebb8d632276bfc07b626d6a742266f1bbf23a7d1133fde44136b69779ab60ee4c308cb076da1b9ecf294b3f310d773340a4c7c0e4d60b274e9fe613f744b"
+    ]
+  }
+]
+
+// 已签名的trx 压缩
+{"ref_block_num":39297,"ref_block_prefix":3872860111,"expiration":"2019-12-19T02:44:22","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["204dafebb8d632276bfc07b626d6a742266f1bbf23a7d1133fde44136b69779ab60ee4c308cb076da1b9ecf294b3f310d773340a4c7c0e4d60b274e9fe613f744b"]}
+
+// 从已签名的trx中获取签名的公钥
+unlocked >>> get_signature_keys {"ref_block_num":39297,"ref_block_prefix":3872860111,"expiration":"2019-12-19T02:44:22","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["204dafebb8d632276bfc07b626d6a742266f1bbf23a7d1133fde44136b69779ab60ee4c308cb076da1b9ecf294b3f310d773340a4c7c0e4d60b274e9fe613f744b"]}
+get_signature_keys {"ref_block_num":39297,"ref_block_prefix":3872860111,"expiration":"2019-12-19T02:44:22","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["204dafebb8d632276bfc07b626d6a742266f1bbf23a7d1133fde44136b69779ab60ee4c308cb076da1b9ecf294b3f310d773340a4c7c0e4d60b274e9fe613f744b"]}
+[
+  "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+]
+unlocked >>> 
+
+// 2. 
+unlocked >>> sign_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]} false
+sign_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]} false
+[
+  "679d88e1c143fdcba5d6672b4178a76464766decff1c78e1d349b372f2f52d89",{
+    "ref_block_num": 39306,
+    "ref_block_prefix": 1865491085,
+    "expiration": "2019-12-19T02:44:40",
+    "operations": [[
+        0,{
+          "from": "1.2.17",
+          "to": "1.2.18",
+          "amount": {
+            "amount": 100,
+            "asset_id": "1.3.0"
+          },
+          "memo": [
+            0,
+            "memo test false"
+          ],
+          "extensions": []
+        }
+      ]
+    ],
+    "extensions": [],
+    "signatures": [
+      "20437be641f8397c4668eea051e03381b3bdcecc971f23a9d117fae29be3ef8f4808795a6ec88186cb991b053001eb9ff5198bcebcfcc25e630337f7d4aa8adca5"
+    ]
+  }
+]
+unlocked >>> 
+
+// 已签名的trx 压缩
+{"ref_block_num":39306,"ref_block_prefix":1865491085,"expiration":"2019-12-19T02:44:40","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["20437be641f8397c4668eea051e03381b3bdcecc971f23a9d117fae29be3ef8f4808795a6ec88186cb991b053001eb9ff5198bcebcfcc25e630337f7d4aa8adca5"]}
+
+// 从已签名的trx中获取签名的公钥
+unlocked >>> get_signature_keys {"ref_block_num":39306,"ref_block_prefix":1865491085,"expiration":"2019-12-19T02:44:40","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["20437be641f8397c4668eea051e03381b3bdcecc971f23a9d117fae29be3ef8f4808795a6ec88186cb991b053001eb9ff5198bcebcfcc25e630337f7d4aa8adca5"]}
+get_signature_keys {"ref_block_num":39306,"ref_block_prefix":1865491085,"expiration":"2019-12-19T02:44:40","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["20437be641f8397c4668eea051e03381b3bdcecc971f23a9d117fae29be3ef8f4808795a6ec88186cb991b053001eb9ff5198bcebcfcc25e630337f7d4aa8adca5"]}
+[
+  "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+]
+unlocked >>> 
+
+
+可以使用cli_wallet的几个命令和代码签出来的对比：
+a. serialize_transaction trx  未签名的trx序列化，序列化后才进行私钥签名
+示例：
+serialize_transaction {"ref_block_num":39136,"ref_block_prefix":1443421736,"expiration":"2019-12-19T02:18:10","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+"e09828de0856e2ddfa5d0100110000000000000012000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000"
+
+b. sign_transaction trx false 结果的signatures字段是否和go-sdk签名的一致，
+    trx和a中的相同，false是只测试不上链，执行成功后trx会出现签名的数据：<cli_wallet需要先导入私钥>
+    "signatures": [
+        "20437be641f8397c4668eea051e03381b3bdcecc971f23a9d117fae29be3ef8f4808795a6ec88186cb991b053001eb9ff5198bcebcfcc25e630337f7d4aa8adca5"
+      ]
+
+c. get_signature_keys查看已签名的公钥是否和签名的公钥一致
+示例：
+get_signature_keys {"ref_block_num":52407,"ref_block_prefix":3389197625,"expiration":"2019-12-19T10:27:03","operations":[[8,{"issuer":"1.2.17","symbol":"USDT","precision":5,"common_options":{"max_supply":100000000,"market_fee_percent":0,"max_market_fee":0,"issuer_permissions":0,"flags":0,"core_exchange_rate":{"base":{"amount":1,"asset_id":"1.3.0"},"quote":{"amount":1,"asset_id":"1.3.2"}},"description":"","extensions":[]},"extensions":[]}]],"extensions":[],"signatures":["206697fb5caf076316409106b250a1e4c63e0ae49ae6746085ac5c5b0f3193fb3466544ebe24649d732d7aebc3abec2f5a994acbcf1a44d7f0cb4d2f915996328a"]}
+[
+  "COCOS8R2R2NcibwVKnZmxLQkgsS1e4CmkjbzmmXbMo7kzGNqZ1QXdeC"
+]

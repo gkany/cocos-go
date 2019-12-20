@@ -45,4 +45,7 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Printf("info: %v", info)
+
+	block, err := walletAPI.GetBlock(uint64(76565))
+	log.Printf("block: %v, err: %v\n", block, err)
 }

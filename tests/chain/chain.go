@@ -57,13 +57,25 @@ func transfer(api graphSDK.WebsocketAPI) {
 	// err := api.Transfer(localKeyBag, from, to, coreAsset, amount, memo, true)
 	// fmt.Println(err)
 
-	// memo := string("memo test false")
-	// err := api.Transfer(localKeyBag, from, to, coreAsset, amount, memo, false)
-	// fmt.Println(err)
+	memo1 := string("memo test false")
+	err1 := api.Transfer(localKeyBag, from, to, coreAsset, amount, memo1, true)
+	// {"ref_block_num":53683,"ref_block_prefix":4187846010,"expiration":"2019-12-19T11:13:43","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[1,{"from":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","to":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","nonce":5577006791947779410,"message":"8ea26a387aa8c4c4aa2ab6175177a5c70eb3637da62d0748e17d29a286d65d9f"}],"extensions":[]}]],"extensions":[]}
+	fmt.Println(err1)
+	// unlocked >>> read_memo {"from":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","to":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","nonce":"5577006791947779410","message":"8ea26a387aa8c4c4aa2ab6175177a5c70eb3637da62d0748e17d29a286d65d9f"}
+	// read_memo {"from":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","to":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","nonce":"5577006791947779410","message":"8ea26a387aa8c4c4aa2ab6175177a5c70eb3637da62d0748e17d29a286d65d9f"}
+	// "memo test false"
+	// unlocked >>>
 
-	// memo := string("memo test false")
-	err := api.Transfer(localKeyBag, from, to, coreAsset, amount, "", false)
-	fmt.Println(err)
+	// 2. false
+	// memo2 := string("memo test false")
+	// err2 := api.Transfer(localKeyBag, from, to, coreAsset, amount, memo2, false)
+	// fmt.Println(err2)
+	// {"ref_block_num":53627,"ref_block_prefix":3375976042,"expiration":"2019-12-19T11:11:40","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+
+	// 3. no memo
+	// err3 := api.Transfer(localKeyBag, from, to, coreAsset, amount, "", false)
+	// {"ref_block_num":53539,"ref_block_prefix":2200014947,"expiration":"2019-12-19T11:08:29","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"extensions":[]}]],"extensions":[]}
+	// fmt.Println(err3)
 }
 
 func test_broadcast(api graphSDK.WebsocketAPI) {
@@ -120,9 +132,22 @@ func test_createAsset(api graphSDK.WebsocketAPI) {
 	}
 }
 
+func testGetBlock(api graphSDK.WebsocketAPI, from, to uint64) {
+	for i := from; i <= to; i++ {
+		log.Printf("block: %v ", i)
+		block, err := api.GetBlock(i)
+		if err != nil {
+			log.Fatal(err)
+			continue
+		}
+		log.Printf("block %v: %v", i, block)
+	}
+}
+
 func main() {
-	config.SetCurrent(config.ChainIDBCXDev)
+	// config.SetCurrent(config.ChainIDBCXTest)
 	// wsURL := "ws://test.cocosbcx.net"
+	config.SetCurrent(config.ChainIDBCXDev)
 	wsURL := "ws://127.0.0.1:8049"
 
 	// chain api 测试
@@ -132,8 +157,10 @@ func main() {
 		log.Println(err)
 	}
 	// getData(api)
-	// transfer(api)
+	transfer(api)
 
 	// test_ListAssets(api)  // success
-	test_createAsset(api)
+	// test_createAsset(api)
+
+	// testGetBlock(api, 76564, 76566)
 }
