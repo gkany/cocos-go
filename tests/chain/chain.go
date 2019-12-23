@@ -157,10 +157,10 @@ func main() {
 		log.Println(err)
 	}
 	// getData(api)
-	transfer(api)
+	// transfer(api)
 
 	// test_ListAssets(api)  // success
 	// test_createAsset(api)
 
-	// testGetBlock(api, 76564, 76566)
+	testGetBlock(api, 4495, 4499)
 }

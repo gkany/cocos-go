@@ -24,6 +24,8 @@ type Operation interface {
 	MarshalFeeScheduleParams(M, *util.TypeEncoder) error
 }
 
+type OperationResults []OperationResult 
+
 type OperationResult interface {
 }
 

@@ -45,7 +45,7 @@ type SignedTransactions []SignedTransaction
 
 type SignedTransaction struct {
 	Transaction
-	AgreedTask AgreedTask `json:"agreed_task,omitempty"`
+	// Agreedtask AgreedTask `json:"agreed_task,omitempty"`
 	Signatures Signatures `json:"signatures"`
 }
 
@@ -54,13 +54,13 @@ func (p SignedTransaction) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.Encode(p.Transaction); err != nil {
 		return errors.Annotate(err, "encode Transaction")
 	}
-	agreeTask, err := ffjson.Marshal(p.AgreedTask)
-	if err != nil {
-		return errors.Annotate(err, "ffjson Marshal agreeTask")
-	}
-	if err := enc.Encode(agreeTask); err != nil {
-		return errors.Annotate(err, "encode AgreedTask")
-	}
+	// agreeTask, err := p.Agreedtask.MarshalJSON()
+	// if err != nil {
+	// 	return errors.Annotate(err, "Agreedtask MarshalJSON")
+	// }
+	// if err := enc.Encode(agreeTask); err != nil {
+	// 	return errors.Annotate(err, "encode AgreedTask")
+	// }
 
 	if err := enc.Encode(p.Signatures); err != nil {
 		return errors.Annotate(err, "encode Signatures")
@@ -166,7 +166,7 @@ func NewSignedTransactionWithBlockData(props *DynamicGlobalProperties) (*SignedT
 			Expiration:     props.Time.Add(TxExpirationDefault),
 			RefBlockPrefix: prefix,
 		},
-		AgreedTask: AgreedTask{},
+		// Agreedtask: AgreedTask{},
 		Signatures: Signatures{},
 	}
 
@@ -181,26 +181,41 @@ func NewSignedTransaction() *SignedTransaction {
 			Extensions: Extensions{},
 			Expiration: Time{tm},
 		},
-		AgreedTask: AgreedTask{},
+		// Agreedtask: AgreedTask{},
 		Signatures: Signatures{},
 	}
 
 	return &tx
 }
 
-type AgreedTask struct {
-	TransactionID    string
-	ObjectID         ObjectID
-
+type ProcessedTransaction struct {
+	SignedTransaction
+	Operationresults  OperationResults `json: "operation_results"`
 }
-func (p AgreedTask) Marshal(enc *util.TypeEncoder) error {
-	// type is marshaled by operation
-	if err := enc.Encode(p); err != nil {
-		return errors.Annotate(err, "Encode AgreedTask")
+
+func (p ProcessedTransaction) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(p.SignedTransaction); err != nil {
+		return errors.Annotate(err, "encode Transaction")
+	}
+
+	if err := enc.Encode(p.Operationresults); err != nil {
+		return errors.Annotate(err, "encode Signatures")
 	}
 
 	return nil
 }
+
+type AgreedTask struct {
+	TransactionID    string
+	ObjectID         string
+}
+// func (p AgreedTask) Marshal(enc *util.TypeEncoder) error {
+// 	if err := enc.Encode(p); err != nil {
+// 		return errors.Annotate(err, "Encode AgreedTask")
+// 	}
+
+// 	return nil
+// }
 
 func (p AgreedTask) MarshalJSON() ([]byte, error) {
 	return ffjson.Marshal([]interface{}{
@@ -234,9 +249,11 @@ func (p *AgreedTask) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+type SignedTransactionsWithTrxID []SignedTransactionWithTransactionId
+
 type SignedTransactionWithTransactionId struct {
 	TransactionId     string
-	SignedTransaction SignedTransaction
+	SignedTransaction ProcessedTransaction
 }
 
 func (p SignedTransactionWithTransactionId) Marshal(enc *util.TypeEncoder) error {
