@@ -51,7 +51,24 @@ func (j *ProcessedTransaction) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	} else {
 		buf.WriteString(`null`)
 	}
-	buf.WriteString(`,"signatures":`)
+	buf.WriteByte(',')
+	if len(j.AgreedTask) != 0 {
+		buf.WriteString(`"agreed_task":`)
+		if j.AgreedTask != nil {
+			buf.WriteString(`[`)
+			for i, v := range j.AgreedTask {
+				if i != 0 {
+					buf.WriteString(`,`)
+				}
+				fflib.WriteJsonString(buf, string(v))
+			}
+			buf.WriteString(`]`)
+		} else {
+			buf.WriteString(`null`)
+		}
+		buf.WriteByte(',')
+	}
+	buf.WriteString(`"signatures":`)
 	if j.Signatures != nil {
 		buf.WriteString(`[`)
 		for i, v := range j.Signatures {
@@ -120,6 +137,8 @@ const (
 
 	ffjtProcessedTransactionOperationresults
 
+	ffjtProcessedTransactionAgreedTask
+
 	ffjtProcessedTransactionSignatures
 
 	ffjtProcessedTransactionRefBlockNum
@@ -134,6 +153,8 @@ const (
 )
 
 var ffjKeyProcessedTransactionOperationresults = []byte("Operationresults")
+
+var ffjKeyProcessedTransactionAgreedTask = []byte("agreed_task")
 
 var ffjKeyProcessedTransactionSignatures = []byte("signatures")
 
@@ -212,6 +233,14 @@ mainparse:
 
 					if bytes.Equal(ffjKeyProcessedTransactionOperationresults, kn) {
 						currentKey = ffjtProcessedTransactionOperationresults
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
+
+				case 'a':
+
+					if bytes.Equal(ffjKeyProcessedTransactionAgreedTask, kn) {
+						currentKey = ffjtProcessedTransactionAgreedTask
 						state = fflib.FFParse_want_colon
 						goto mainparse
 					}
@@ -296,6 +325,12 @@ mainparse:
 					goto mainparse
 				}
 
+				if fflib.EqualFoldRight(ffjKeyProcessedTransactionAgreedTask, kn) {
+					currentKey = ffjtProcessedTransactionAgreedTask
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
 				if fflib.EqualFoldRight(ffjKeyProcessedTransactionOperationresults, kn) {
 					currentKey = ffjtProcessedTransactionOperationresults
 					state = fflib.FFParse_want_colon
@@ -321,6 +356,9 @@ mainparse:
 
 				case ffjtProcessedTransactionOperationresults:
 					goto handle_Operationresults
+
+				case ffjtProcessedTransactionAgreedTask:
+					goto handle_AgreedTask
 
 				case ffjtProcessedTransactionSignatures:
 					goto handle_Signatures
@@ -413,6 +451,80 @@ handle_Operationresults:
 				}
 
 				j.Operationresults = append(j.Operationresults, tmpJOperationresults)
+
+				wantVal = false
+			}
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_AgreedTask:
+
+	/* handler: j.AgreedTask type=types.AgreedTaskPair kind=slice quoted=false*/
+
+	{
+
+		{
+			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AgreedTaskPair", tok))
+			}
+		}
+
+		if tok == fflib.FFTok_null {
+			j.AgreedTask = nil
+		} else {
+
+			j.AgreedTask = []string{}
+
+			wantVal := true
+
+			for {
+
+				var tmpJAgreedTask string
+
+				tok = fs.Scan()
+				if tok == fflib.FFTok_error {
+					goto tokerror
+				}
+				if tok == fflib.FFTok_right_brace {
+					break
+				}
+
+				if tok == fflib.FFTok_comma {
+					if wantVal == true {
+						// TODO(pquerna): this isn't an ideal error message, this handles
+						// things like [,,,] as an array value.
+						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
+					}
+					continue
+				} else {
+					wantVal = true
+				}
+
+				/* handler: tmpJAgreedTask type=string kind=string quoted=false*/
+
+				{
+
+					{
+						if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
+							return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
+						}
+					}
+
+					if tok == fflib.FFTok_null {
+
+					} else {
+
+						outBuf := fs.Output.Bytes()
+
+						tmpJAgreedTask = string(string(outBuf))
+
+					}
+				}
+
+				j.AgreedTask = append(j.AgreedTask, tmpJAgreedTask)
 
 				wantVal = false
 			}
@@ -662,7 +774,24 @@ func (j *SignedTransaction) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{"signatures":`)
+	buf.WriteByte('{')
+	if len(j.AgreedTask) != 0 {
+		buf.WriteString(`"agreed_task":`)
+		if j.AgreedTask != nil {
+			buf.WriteString(`[`)
+			for i, v := range j.AgreedTask {
+				if i != 0 {
+					buf.WriteString(`,`)
+				}
+				fflib.WriteJsonString(buf, string(v))
+			}
+			buf.WriteString(`]`)
+		} else {
+			buf.WriteString(`null`)
+		}
+		buf.WriteByte(',')
+	}
+	buf.WriteString(`"signatures":`)
 	if j.Signatures != nil {
 		buf.WriteString(`[`)
 		for i, v := range j.Signatures {
@@ -729,6 +858,8 @@ const (
 	ffjtSignedTransactionbase = iota
 	ffjtSignedTransactionnosuchkey
 
+	ffjtSignedTransactionAgreedTask
+
 	ffjtSignedTransactionSignatures
 
 	ffjtSignedTransactionRefBlockNum
@@ -741,6 +872,8 @@ const (
 
 	ffjtSignedTransactionExtensions
 )
+
+var ffjKeySignedTransactionAgreedTask = []byte("agreed_task")
 
 var ffjKeySignedTransactionSignatures = []byte("signatures")
 
@@ -814,6 +947,14 @@ mainparse:
 				goto mainparse
 			} else {
 				switch kn[0] {
+
+				case 'a':
+
+					if bytes.Equal(ffjKeySignedTransactionAgreedTask, kn) {
+						currentKey = ffjtSignedTransactionAgreedTask
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
 
 				case 'e':
 
@@ -895,6 +1036,12 @@ mainparse:
 					goto mainparse
 				}
 
+				if fflib.EqualFoldRight(ffjKeySignedTransactionAgreedTask, kn) {
+					currentKey = ffjtSignedTransactionAgreedTask
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
 				currentKey = ffjtSignedTransactionnosuchkey
 				state = fflib.FFParse_want_colon
 				goto mainparse
@@ -911,6 +1058,9 @@ mainparse:
 
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
+
+				case ffjtSignedTransactionAgreedTask:
+					goto handle_AgreedTask
 
 				case ffjtSignedTransactionSignatures:
 					goto handle_Signatures
@@ -943,6 +1093,80 @@ mainparse:
 			}
 		}
 	}
+
+handle_AgreedTask:
+
+	/* handler: j.AgreedTask type=types.AgreedTaskPair kind=slice quoted=false*/
+
+	{
+
+		{
+			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for AgreedTaskPair", tok))
+			}
+		}
+
+		if tok == fflib.FFTok_null {
+			j.AgreedTask = nil
+		} else {
+
+			j.AgreedTask = []string{}
+
+			wantVal := true
+
+			for {
+
+				var tmpJAgreedTask string
+
+				tok = fs.Scan()
+				if tok == fflib.FFTok_error {
+					goto tokerror
+				}
+				if tok == fflib.FFTok_right_brace {
+					break
+				}
+
+				if tok == fflib.FFTok_comma {
+					if wantVal == true {
+						// TODO(pquerna): this isn't an ideal error message, this handles
+						// things like [,,,] as an array value.
+						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
+					}
+					continue
+				} else {
+					wantVal = true
+				}
+
+				/* handler: tmpJAgreedTask type=string kind=string quoted=false*/
+
+				{
+
+					{
+						if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
+							return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
+						}
+					}
+
+					if tok == fflib.FFTok_null {
+
+					} else {
+
+						outBuf := fs.Output.Bytes()
+
+						tmpJAgreedTask = string(string(outBuf))
+
+					}
+				}
+
+				j.AgreedTask = append(j.AgreedTask, tmpJAgreedTask)
+
+				wantVal = false
+			}
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
 
 handle_Signatures:
 

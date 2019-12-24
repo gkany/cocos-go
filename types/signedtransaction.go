@@ -42,11 +42,12 @@ const (
 // return hexlify(h[:20]).decode("ascii")
 
 type SignedTransactions []SignedTransaction
+type AgreedTaskPair []string
 
 type SignedTransaction struct {
 	Transaction
-	// Agreedtask AgreedTask `json:"agreed_task,omitempty"`
-	Signatures Signatures `json:"signatures"`
+	AgreedTask AgreedTaskPair  `json:"agreed_task,omitempty"`
+	Signatures Signatures      `json:"signatures"`
 }
 
 func (p SignedTransaction) Marshal(enc *util.TypeEncoder) error {
@@ -54,13 +55,10 @@ func (p SignedTransaction) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.Encode(p.Transaction); err != nil {
 		return errors.Annotate(err, "encode Transaction")
 	}
-	// agreeTask, err := p.Agreedtask.MarshalJSON()
-	// if err != nil {
-	// 	return errors.Annotate(err, "Agreedtask MarshalJSON")
-	// }
-	// if err := enc.Encode(agreeTask); err != nil {
-	// 	return errors.Annotate(err, "encode AgreedTask")
-	// }
+
+	if err := enc.Encode(p.AgreedTask); err != nil {
+		return errors.Annotate(err, "encode AgreedTask")
+	}
 
 	if err := enc.Encode(p.Signatures); err != nil {
 		return errors.Annotate(err, "encode Signatures")
@@ -166,7 +164,6 @@ func NewSignedTransactionWithBlockData(props *DynamicGlobalProperties) (*SignedT
 			Expiration:     props.Time.Add(TxExpirationDefault),
 			RefBlockPrefix: prefix,
 		},
-		// Agreedtask: AgreedTask{},
 		Signatures: Signatures{},
 	}
 
@@ -181,7 +178,6 @@ func NewSignedTransaction() *SignedTransaction {
 			Extensions: Extensions{},
 			Expiration: Time{tm},
 		},
-		// Agreedtask: AgreedTask{},
 		Signatures: Signatures{},
 	}
 
@@ -200,50 +196,6 @@ func (p ProcessedTransaction) Marshal(enc *util.TypeEncoder) error {
 
 	if err := enc.Encode(p.Operationresults); err != nil {
 		return errors.Annotate(err, "encode Signatures")
-	}
-
-	return nil
-}
-
-type AgreedTask struct {
-	TransactionID    string
-	ObjectID         string
-}
-// func (p AgreedTask) Marshal(enc *util.TypeEncoder) error {
-// 	if err := enc.Encode(p); err != nil {
-// 		return errors.Annotate(err, "Encode AgreedTask")
-// 	}
-
-// 	return nil
-// }
-
-func (p AgreedTask) MarshalJSON() ([]byte, error) {
-	return ffjson.Marshal([]interface{}{
-		p.TransactionID,
-		p.ObjectID,
-	})
-}
-
-func (p *AgreedTask) UnmarshalJSON(data []byte) error {
-	raw := make([]json.RawMessage, 2)
-	if err := ffjson.Unmarshal(data, &raw); err != nil {
-		return errors.Annotate(err, "Unmarshal [raw]")
-	}
-
-	if len(raw) != 2 {
-		return ErrInvalidInputLength
-	}
-
-	if err := ffjson.Unmarshal(raw[0], &p.TransactionID); err != nil {
-		return errors.Annotate(err, "Unmarshal [TransactionID]")
-	}
-
-	if err := ffjson.Unmarshal(raw[1], &p.ObjectID); err != nil {
-		logging.DDumpUnmarshaled(
-			fmt.Sprintf("TransactionID %s", p.TransactionID),
-			raw[1],
-		)
-		return errors.Annotatef(err, "Unmarshal SignedTransaction %v", p.ObjectID)
 	}
 
 	return nil
