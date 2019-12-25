@@ -42,25 +42,11 @@ func _() {
 	_ = x[OperationTypeAssetClaimFees-31]
 	_ = x[OperationTypeBidCollateral-32]
 	_ = x[OperationTypeExecuteBid-33]
-	_ = x[OperationTypeAccountWhitelist-34]
-	_ = x[OperationTypeAccountTransfer-35]
-	_ = x[OperationTypeAssetFundFeePool-36]
-	_ = x[OperationTypeWithdrawPermissionCreate-37]
-	_ = x[OperationTypeWithdrawPermissionUpdate-38]
-	_ = x[OperationTypeWithdrawPermissionClaim-39]
-	_ = x[OperationTypeWithdrawPermissionDelete-40]
-	_ = x[OperationTypeCustom-41]
-	_ = x[OperationTypeAssert-42]
-	_ = x[OperationTypeOverrideTransfer-43]
-	_ = x[OperationTypeTransferToBlind-44]
-	_ = x[OperationTypeBlindTransfer-45]
-	_ = x[OperationTypeTransferFromBlind-46]
-	_ = x[OperationTypeFBADistribute-47]
 }
 
-const _OperationType_name = "OperationTypeTransferOperationTypeLimitOrderCreateOperationTypeLimitOrderCancelOperationTypeCallOrderUpdateOperationTypeFillOrderOperationTypeAccountCreateOperationTypeAccountUpdateOperationTypeAccountUpgradeOperationTypeAssetCreateOperationTypeAssetUpdateOperationTypeAssetUpdateRestrictedOperationTypeAssetUpdateBitassetOperationTypeAssetUpdateFeedProducersOperationTypeAssetIssueOperationTypeAssetReserveOperationTypeAssetSettleOperationTypeAssetGlobalSettleOperationTypeAssetPublishFeedOperationTypeWitnessCreateOperationTypeWitnessUpdateOperationTypeProposalCreateOperationTypeProposalUpdateOperationTypeProposalDeleteOperationTypeCommitteeMemberCreateOperationTypeCommitteeMemberUpdateOperationTypeCommitteeMemberUpdateGlobalParametersOperationTypeVestingBalanceCreateOperationTypeVestingBalanceWithdrawOperationTypeWorkerCreateOperationTypeBalanceClaimOperationTypeAssetSettleCancelOperationTypeAssetClaimFeesOperationTypeBidCollateralOperationTypeExecuteBidOperationTypeAccountWhitelistOperationTypeAccountTransferOperationTypeAssetFundFeePoolOperationTypeWithdrawPermissionCreateOperationTypeWithdrawPermissionUpdateOperationTypeWithdrawPermissionClaimOperationTypeWithdrawPermissionDeleteOperationTypeCustomOperationTypeAssertOperationTypeOverrideTransferOperationTypeTransferToBlindOperationTypeBlindTransferOperationTypeTransferFromBlindOperationTypeFBADistribute"
+const _OperationType_name = "OperationTypeTransferOperationTypeLimitOrderCreateOperationTypeLimitOrderCancelOperationTypeCallOrderUpdateOperationTypeFillOrderOperationTypeAccountCreateOperationTypeAccountUpdateOperationTypeAccountUpgradeOperationTypeAssetCreateOperationTypeAssetUpdateOperationTypeAssetUpdateRestrictedOperationTypeAssetUpdateBitassetOperationTypeAssetUpdateFeedProducersOperationTypeAssetIssueOperationTypeAssetReserveOperationTypeAssetSettleOperationTypeAssetGlobalSettleOperationTypeAssetPublishFeedOperationTypeWitnessCreateOperationTypeWitnessUpdateOperationTypeProposalCreateOperationTypeProposalUpdateOperationTypeProposalDeleteOperationTypeCommitteeMemberCreateOperationTypeCommitteeMemberUpdateOperationTypeCommitteeMemberUpdateGlobalParametersOperationTypeVestingBalanceCreateOperationTypeVestingBalanceWithdrawOperationTypeWorkerCreateOperationTypeBalanceClaimOperationTypeAssetSettleCancelOperationTypeAssetClaimFeesOperationTypeBidCollateralOperationTypeExecuteBid"
 
-var _OperationType_index = [...]uint16{0, 21, 50, 79, 107, 129, 155, 181, 208, 232, 256, 290, 322, 359, 382, 407, 431, 461, 490, 516, 542, 569, 596, 623, 657, 691, 741, 774, 809, 834, 859, 889, 916, 942, 965, 994, 1022, 1051, 1088, 1125, 1161, 1198, 1217, 1236, 1265, 1293, 1319, 1349, 1375}
+var _OperationType_index = [...]uint16{0, 21, 50, 79, 107, 129, 155, 181, 208, 232, 256, 290, 322, 359, 382, 407, 431, 461, 490, 516, 542, 569, 596, 623, 657, 691, 741, 774, 809, 834, 859, 889, 916, 942, 965}
 
 func (i OperationType) String() string {
 	if i >= OperationType(len(_OperationType_index)-1) {

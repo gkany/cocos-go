@@ -339,12 +339,12 @@ func testSign(api graphSDK.WebsocketAPI) {
 }
 
 func main() {
-	// config.SetCurrent(config.ChainIDBCXTest)
-	// wsURL := "ws://test.cocosbcx.net"
-	chainID := config.ChainIDBCXDev
-	fmt.Println("chain id: ", chainID)
-	config.SetCurrent(chainID)
-	wsURL := "ws://127.0.0.1:8049"
+	config.SetCurrent(config.ChainIDTestnet)
+	wsURL := "ws://test.cocosbcx.net"
+
+	// chainID := config.ChainIDLocal
+	// wsURL := "ws://127.0.0.1:8049"
+	// config.SetCurrent(chainID)
 
 	// chain api 测试
 	log.Println("------- chain api test ----------")
@@ -352,7 +352,7 @@ func main() {
 	if err := api.Connect(); err != nil {
 		log.Println(err)
 	}
-	// getData(api)
+	getData(api)
 	// transfer(api)
 	// transfer2(api)
 
@@ -364,5 +364,5 @@ func main() {
 	// testBroadcastTrx(api)
 	// testBroadcastTrx2(api)
 
-	testSign(api)
+	// testSign(api)
 }

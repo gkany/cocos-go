@@ -122,21 +122,21 @@ const (
 	OperationTypeBidCollateral                                              //32
 	OperationTypeExecuteBid                                                 //33
 
-	//remove
-	OperationTypeAccountWhitelist         //7
-	OperationTypeAccountTransfer          //9
-	OperationTypeAssetFundFeePool         //16
-	OperationTypeWithdrawPermissionCreate //25
-	OperationTypeWithdrawPermissionUpdate //26
-	OperationTypeWithdrawPermissionClaim  //27
-	OperationTypeWithdrawPermissionDelete //28
-	OperationTypeCustom                   //35
-	OperationTypeAssert                   //36
-	OperationTypeOverrideTransfer         //38
-	OperationTypeTransferToBlind          //39
-	OperationTypeBlindTransfer            //40
-	OperationTypeTransferFromBlind        //41
-	OperationTypeFBADistribute            ///44
+	// //remove
+	// OperationTypeAccountWhitelist         //7
+	// OperationTypeAccountTransfer          //9
+	// OperationTypeAssetFundFeePool         //16
+	// OperationTypeWithdrawPermissionCreate //25
+	// OperationTypeWithdrawPermissionUpdate //26
+	// OperationTypeWithdrawPermissionClaim  //27
+	// OperationTypeWithdrawPermissionDelete //28
+	// OperationTypeCustom                   //35
+	// OperationTypeAssert                   //36
+	// OperationTypeOverrideTransfer         //38
+	// OperationTypeTransferToBlind          //39
+	// OperationTypeBlindTransfer            //40
+	// OperationTypeTransferFromBlind        //41
+	// OperationTypeFBADistribute            ///44
 )
 
 func (p OperationType) OperationName() string {
