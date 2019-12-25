@@ -46,6 +46,6 @@ func main() {
 	}
 	log.Printf("info: %v", info)
 
-	block, err := walletAPI.GetBlock(uint64(76565))
+	block, err := walletAPI.GetBlock(uint64(4497))
 	log.Printf("block: %v, err: %v\n", block, err)
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/gkany/graphSDK"
 	"github.com/gkany/graphSDK/config"
 	"github.com/gkany/graphSDK/crypto"
+	"github.com/gkany/graphSDK/operations"
 	"github.com/gkany/graphSDK/types"
 )
 
@@ -41,13 +42,9 @@ func transfer(api graphSDK.WebsocketAPI) {
 	// publicKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
 	localKeyBag := crypto.NewKeyBag()
 	localKeyBag.Add(privateKey)
-	// localKeyBag.Add("5Jdvatdk3qpZ8Ek9tQyqh3QwQ5mWNZ7kfnwSVwMUsLLmdUAfUwo")
-	// if err != nil {
-	// 	log.Println(err)
-	// }
 
-	from := types.NewAccountID("1.2.17") // init6 1.2.11
-	to := types.NewAccountID("1.2.18")   // nicotest 1.2.16
+	from := types.NewAccountID("1.2.16") // nicotest 1.2.16
+	to := types.NewAccountID("1.2.5")
 	coreAsset := types.NewAssetID("1.3.0")
 	amount := types.AssetAmount{
 		Amount: types.Int64(100),
@@ -67,9 +64,10 @@ func transfer(api graphSDK.WebsocketAPI) {
 	// unlocked >>>
 
 	// 2. false
-	// memo2 := string("memo test false")
-	// err2 := api.Transfer(localKeyBag, from, to, coreAsset, amount, memo2, false)
-	// fmt.Println(err2)
+	fmt.Println("\n-------> 2. transfer memo false")
+	memo2 := string("memo test false")
+	err2 := api.Transfer(localKeyBag, from, to, coreAsset, amount, memo2, false)
+	fmt.Println(err2)
 	// {"ref_block_num":53627,"ref_block_prefix":3375976042,"expiration":"2019-12-19T11:11:40","operations":[[0,{"from":"1.2.17","to":"1.2.18","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
 
 	// 3. no memo
@@ -108,7 +106,7 @@ func test_createAsset(api graphSDK.WebsocketAPI) {
 	// 	log.Println(err)
 	// }
 
-	issuer := types.NewAccountID("1.2.17") // nicotest
+	issuer := types.NewAccountID("1.2.16") // nicotest
 	coreAsset := types.NewAssetID("1.3.0")
 
 	rate := types.Price{
@@ -141,13 +139,61 @@ func testGetBlock(api graphSDK.WebsocketAPI, from, to uint64) {
 			continue
 		}
 		log.Printf("block %v: %v", i, block)
+		log.Printf("block operations: %v\n", block.Transactions)
+		for _, trx := range block.Transactions {
+			// TransactionId     string
+			// SignedTransaction ProcessedTransaction
+			fmt.Printf("trx id: %v, SignedTransaction: %v\n", trx.TransactionId, trx.SignedTransaction)
+		}
 	}
+}
+
+//test
+func NewTransferOperation() operations.TransferOperation {
+	from := types.NewAccountID("1.2.16") // nicotest 1.2.16
+	to := types.NewAccountID("1.2.10")
+	coreAsset := types.NewAssetID("1.3.0")
+	amount := types.AssetAmount{
+		Amount: types.Int64(100),
+		Asset:  types.AssetIDFromObject(coreAsset),
+	}
+
+	op := operations.TransferOperation{
+		Amount:     amount,
+		Extensions: types.Extensions{},
+		From:       types.AccountIDFromObject(from),
+		To:         types.AccountIDFromObject(to),
+		Memo:       []interface{}{0, "test trx"},
+	}
+	return op
+}
+
+func testBroadcastTransaction(api graphSDK.WebsocketAPI) {
+	// transferOP := NewTransferOperation()
+	// operations := types.Operations(transferOP)
+
+	// props, err := api.GetDynamicGlobalProperties()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// trx, err := types.NewSignedTransactionWithBlockData(props)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// trx.Operations = operations
+
+	// if err := api.BroadcastTransaction(trx); err != nil {
+	// 	fmt.Println(err)
+	// }
 }
 
 func main() {
 	// config.SetCurrent(config.ChainIDBCXTest)
 	// wsURL := "ws://test.cocosbcx.net"
-	config.SetCurrent(config.ChainIDBCXDev)
+	chainID := config.ChainIDBCXDev
+	fmt.Println("chain id: %s\n", chainID)
+	config.SetCurrent(chainID)
 	wsURL := "ws://127.0.0.1:8049"
 
 	// chain api 测试
@@ -157,10 +203,10 @@ func main() {
 		log.Println(err)
 	}
 	// getData(api)
-	// transfer(api)
+	transfer(api)
 
 	// test_ListAssets(api)  // success
 	// test_createAsset(api)
 
-	testGetBlock(api, 4495, 4499)
+	// testGetBlock(api, 7997, 7998)
 }
