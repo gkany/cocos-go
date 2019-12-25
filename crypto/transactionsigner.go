@@ -32,22 +32,20 @@ func NewTransactionSigner(tx *types.SignedTransaction) *TransactionSigner {
 func (tx *TransactionSigner) Sign(privKeys types.PrivateKeys, chain *config.ChainConfig) error {
 	for _, prv := range privKeys {
 		ecdsaKey := prv.ToECDSA()
-		fmt.Printf("ecdsaKey: %v\n", ecdsaKey)
-		fmt.Printf("privKeys: %v\n", prv.ToWIF())
-		fmt.Printf("tx: %v\n", tx)
+		fmt.Printf("private Key: %s, public key: %s\n", prv.ToWIF(), prv.PublicKey().String())
 
 		if ecdsaKey.Curve != btcec.S256() {
 			return types.ErrInvalidPrivateKeyCurve
 		}
 
 		for {
-			digest, err := tx.Digest(chain)
+			digest, err := tx.Digest(chain) // 1. transaction hash 序列化
 			if err != nil {
 				return errors.Annotate(err, "Digest")
 			}
 			fmt.Printf("tx digest: %v\n", digest)
 
-			sig, err := prv.SignCompact(digest)
+			sig, err := prv.SignCompact(digest) // 2. 私钥签名
 			if err != nil {
 				return errors.Annotate(err, "SignCompact")
 			}
