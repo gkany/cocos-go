@@ -4,13 +4,14 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 
 	// "github.com/gkany/graphSDK"
 	// "github.com/gkany/graphSDK/config"
 	// "github.com/gkany/graphSDK/crypto"
-	// "github.com/gkany/graphSDK/types"
+	"github.com/gkany/graphSDK/types"
 
 	"log"
 )
@@ -256,6 +257,44 @@ func testByte() {
 	fmt.Printf("%v, %v", str, bytes)
 }
 
+func testDecodeString() {
+	chainID := "dd896d2d415224156f95e61c93687ccc3fb38a7ec16e02bc509b6510a952936d"
+	rawChainID, err := hex.DecodeString(chainID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(rawChainID)
+	fmt.Printf("%T\n", rawChainID)
+}
+
+func testDecodeJson() {
+	rawMessage := `
+	{
+		"id":"2.1.0",
+		"head_block_number":1349,
+		"head_block_id":"0000054575ed56b5e2f8547ad3d6cd9ab309a386",
+		"time":"2019-12-25T07:58:54",
+		"current_witness":"1.6.6",
+		"current_transaction_count":0,
+		"next_maintenance_time":"2019-12-25T08:00:00",
+		"last_budget_time":"2019-12-25T07:09:12",
+		"witness_budget":0,
+		"accounts_registered_this_interval":0,
+		"recently_missed_count":0,
+		"current_aslot":8855924,
+		"recent_slots_filled":"319014556689469546759347944519926545855",
+		"dynamic_flags":0,
+		"last_irreversible_block_num":1340
+	}
+	`
+	var dgp types.DynamicGlobalProperties
+	err := json.Unmarshal([]byte(rawMessage), &dgp)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(dgp)
+}
+
 func main() {
 
 	// var a = make(interface{})
@@ -268,5 +307,9 @@ func main() {
 	// test()
 	// test_crypto_ecdsa()
 	// testJSON()
-	testByte()
+	// testByte()
+
+	// testDecodeString()
+
+	testDecodeJson()
 }

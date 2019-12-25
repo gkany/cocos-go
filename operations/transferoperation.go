@@ -3,10 +3,11 @@ package operations
 //go:generate ffjson $GOFILE
 
 import (
+	"fmt"
+
 	"github.com/gkany/graphSDK/types"
 	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
-	"github.com/pquerna/ffjson/ffjson"
 )
 
 func init() {
@@ -21,7 +22,7 @@ type TransferOperation struct {
 	From       types.AccountID   `json:"from"`
 	To         types.AccountID   `json:"to"`
 	Amount     types.AssetAmount `json:"amount"`
-	Memo       []interface{}     `json:"memo,omitempty"`
+	Memo       *types.Memo       `json:"memo,omitempty"`
 	Extensions types.Extensions  `json:"extensions"`
 }
 
@@ -70,11 +71,7 @@ func (p TransferOperation) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode have Memo")
 	}
 
-	memo, err := ffjson.Marshal(p.Memo)
-	if err != nil {
-		return errors.Annotate(err, "ffjson Marshal memo")
-	}
-	if err := enc.Encode(memo); err != nil {
+	if err := enc.Encode(p.Memo); err != nil {
 		return errors.Annotate(err, "encode memo")
 	}
 
@@ -83,4 +80,12 @@ func (p TransferOperation) Marshal(enc *util.TypeEncoder) error {
 	}
 
 	return nil
+}
+
+func (p *TransferOperation) SetFee(fee types.AssetAmount) {
+	fmt.Println(fee)
+}
+
+func (p TransferOperation) GetFee() types.AssetAmount {
+	return types.AssetAmount{}
 }

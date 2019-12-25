@@ -1,6 +1,7 @@
 package crypto
 
 import (
+	"encoding/hex"
 	"fmt"
 	"time"
 
@@ -59,6 +60,31 @@ func (tx *TransactionSigner) Sign(privKeys types.PrivateKeys, chain *config.Chai
 			}
 			fmt.Printf("tx: %v\n", tx)
 		}
+	}
+
+	return nil
+}
+
+func (tx *TransactionSigner) SignTest(privKeys types.PrivateKeys, serializeTrx string) error {
+	for _, prv := range privKeys {
+		ecdsaKey := prv.ToECDSA()
+		fmt.Printf("private Key: %s, public key: %s\n", prv.ToWIF(), prv.PublicKey().String())
+
+		if ecdsaKey.Curve != btcec.S256() {
+			return types.ErrInvalidPrivateKeyCurve
+		}
+
+		digest, err := hex.DecodeString(serializeTrx)
+		if err != nil {
+			return errors.Annotatef(err, "failed to decode serializeTransaction: %v", serializeTrx)
+		}
+
+		sig, err := prv.SignCompact(digest) // 2. 私钥签名
+		if err != nil {
+			return errors.Annotate(err, "SignCompact")
+		}
+		tx.Signatures = append(tx.Signatures, types.Buffer(sig))
+		fmt.Printf("tx: %v\n", tx)
 	}
 
 	return nil

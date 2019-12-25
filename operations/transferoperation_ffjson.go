@@ -63,25 +63,16 @@ func (j *TransferOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		return err
 	}
 	buf.WriteByte(',')
-	if len(j.Memo) != 0 {
-		buf.WriteString(`"memo":`)
-		if j.Memo != nil {
-			buf.WriteString(`[`)
-			for i, v := range j.Memo {
-				if i != 0 {
-					buf.WriteString(`,`)
-				}
-				/* Interface types must use runtime reflection. type=interface {} kind=interface */
-				err = buf.Encode(v)
-				if err != nil {
-					return err
-				}
+	if j.Memo != nil {
+		if true {
+			/* Struct fall back. type=types.Memo kind=struct */
+			buf.WriteString(`"memo":`)
+			err = buf.Encode(j.Memo)
+			if err != nil {
+				return err
 			}
-			buf.WriteString(`]`)
-		} else {
-			buf.WriteString(`null`)
+			buf.WriteByte(',')
 		}
-		buf.WriteByte(',')
 	}
 	buf.WriteString(`"extensions":`)
 
@@ -405,66 +396,18 @@ handle_Amount:
 
 handle_Memo:
 
-	/* handler: j.Memo type=[]interface {} kind=slice quoted=false*/
+	/* handler: j.Memo type=types.Memo kind=struct quoted=false*/
 
 	{
-
-		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for ", tok))
-			}
+		/* Falling back. type=types.Memo kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
 		}
 
-		if tok == fflib.FFTok_null {
-			j.Memo = nil
-		} else {
-
-			j.Memo = []interface{}{}
-
-			wantVal := true
-
-			for {
-
-				var tmpJMemo interface{}
-
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJMemo type=interface {} kind=interface quoted=false*/
-
-				{
-					/* Falling back. type=interface {} kind=interface */
-					tbuf, err := fs.CaptureField(tok)
-					if err != nil {
-						return fs.WrapErr(err)
-					}
-
-					err = json.Unmarshal(tbuf, &tmpJMemo)
-					if err != nil {
-						return fs.WrapErr(err)
-					}
-				}
-
-				j.Memo = append(j.Memo, tmpJMemo)
-
-				wantVal = false
-			}
+		err = json.Unmarshal(tbuf, &j.Memo)
+		if err != nil {
+			return fs.WrapErr(err)
 		}
 	}
 

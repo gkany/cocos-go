@@ -104,16 +104,7 @@ func (j *DynamicGlobalProperties) MarshalJSONBuf(buf fflib.EncodingBuffer) error
 
 	}
 	buf.WriteString(`,"witness_budget":`)
-
-	{
-
-		obj, err = j.WitnessBudget.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
+	fflib.FormatBits2(buf, uint64(j.WitnessBudget), 10, j.WitnessBudget < 0)
 	buf.WriteString(`,"accounts_registered_this_interval":`)
 	fflib.FormatBits2(buf, uint64(j.AccountsRegisteredThisInterval), 10, j.AccountsRegisteredThisInterval < 0)
 	buf.WriteString(`,"recently_missed_count":`)
@@ -740,24 +731,29 @@ handle_LastBudgetTime:
 
 handle_WitnessBudget:
 
-	/* handler: j.WitnessBudget type=types.String kind=struct quoted=false*/
+	/* handler: j.WitnessBudget type=int64 kind=int64 quoted=false*/
 
 	{
+		if tok != fflib.FFTok_integer && tok != fflib.FFTok_null {
+			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for int64", tok))
+		}
+	}
+
+	{
+
 		if tok == fflib.FFTok_null {
 
 		} else {
 
-			tbuf, err := fs.CaptureField(tok)
+			tval, err := fflib.ParseInt(fs.Output.Bytes(), 10, 64)
+
 			if err != nil {
 				return fs.WrapErr(err)
 			}
 
-			err = j.WitnessBudget.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
+			j.WitnessBudget = int64(tval)
+
 		}
-		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value
