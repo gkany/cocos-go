@@ -51,7 +51,6 @@ type SignedTransaction struct {
 }
 
 func (p SignedTransaction) Marshal(enc *util.TypeEncoder) error {
-	fmt.Println("SignedTransaction) Marshal")
 	if err := enc.Encode(p.Transaction); err != nil {
 		return errors.Annotate(err, "encode Transaction")
 	}
@@ -75,10 +74,6 @@ func (p SignedTransaction) SerializeTrx() ([]byte, error) {
 		return nil, errors.Annotate(err, "encode Transaction")
 	}
 
-	trxJSON, _ := json.Marshal(p.Transaction)
-	fmt.Printf("SerializeTrx: %v\n Transaction: %v\n", 
-		hex.EncodeToString(b.Bytes()), string(trxJSON))
-
 	return b.Bytes(), nil
 }
 
@@ -93,22 +88,6 @@ func (p SignedTransaction) ToHex() (string, error) {
 	return hex.EncodeToString(b.Bytes()), nil
 }
 
-/* 
-digest_type transaction::sig_digest(const chain_id_type &chain_id) const
-{
-      digest_type::encoder enc;
-      fc::raw::pack(enc, chain_id);
-      fc::raw::pack(enc, *this);
-      return enc.result();
-}
-
-const signature_type &graphene::chain::signed_transaction::sign(const private_key_type &key, const chain_id_type &chain_id)
-{
-      digest_type h = sig_digest(chain_id);
-      signatures.push_back(key.sign_compact(h));
-      return signatures.back();
-}
-*/
 //Digest calculates ths sha256 hash of the transaction.
 func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 	if chain == nil {
@@ -116,13 +95,12 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 	}
 
 	writer := sha256.New()
-	// hex.DecodeString(chain.CocosBCXChain.Properties.ChainID)
 	rawChainID, err := hex.DecodeString(chain.ID)
 	if err != nil {
 		return nil, errors.Annotatef(err, "failed to decode chain ID: %v", chain.ID)
 	}
 
-	// digestChainID := sha256.Sum256(rawChainID)
+	//	digestChainID := sha256.Sum256(rawChainID)
 	//	util.Dump("digest chainID", hex.EncodeToString(digestChainID[:]))
 
 	if _, err := writer.Write(rawChainID); err != nil {
@@ -133,7 +111,6 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Annotatef(err, "Serialize")
 	}
-	fmt.Printf("rawTrx: %v,\ntoString: %v\n", rawTrx, hex.EncodeToString(rawTrx[:]))
 
 	//	digestTrx := sha256.Sum256(rawTrx)
 	//	util.Dump("digest trx", hex.EncodeToString(digestTrx[:]))
@@ -144,7 +121,6 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 
 	digest := writer.Sum(nil)
 	//	util.Dump("digest trx all", hex.EncodeToString(digest[:]))
-	fmt.Printf("hex.EncodeToString(digest[:]: %v\n", hex.EncodeToString(digest[:]))
 
 	return digest[:], nil
 }
