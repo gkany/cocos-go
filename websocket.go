@@ -1,17 +1,17 @@
 package graphSDK
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/gkany/graphSDK/api"
 	"github.com/gkany/graphSDK/config"
 	"github.com/gkany/graphSDK/crypto"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/operations"
 	"github.com/gkany/graphSDK/types"
 	"github.com/gkany/graphSDK/util"
-	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 
@@ -83,7 +83,7 @@ type WebsocketAPI interface {
 	Get24Volume(base types.GrapheneObject, quote types.GrapheneObject) (*types.Volume24, error)
 	CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error
 
-	BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error) 
+	BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error)
 	SignTest(keyBag *crypto.KeyBag, hashTrx string) error
 }
 
@@ -292,7 +292,7 @@ func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset ty
 	return tx, nil
 }
 
-func (p *websocketAPI) BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error)  {
+func (p *websocketAPI) BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error) {
 	var operations types.Operations
 	// fees, err := p.GetRequiredFees(operations, feeAsset)
 	// if err != nil {
@@ -322,8 +322,7 @@ func (p *websocketAPI) BuildSignedTransactionTest(keyBag *crypto.KeyBag, seriali
 
 	signer := crypto.NewTransactionSigner(tx)
 
-
-	privKeys := keyBag.Privates()  // 
+	privKeys := keyBag.Privates() //
 	if len(privKeys) == 0 {
 		return nil, types.ErrNoSigningKeyFound
 	}
@@ -983,7 +982,7 @@ func (p *websocketAPI) GetObjects(ids ...types.GrapheneObject) ([]interface{}, e
 // Transfer transfers a certain amount between two accounts. Fees are paid in feeAsset.
 // The transaction is signed with private keys in keyBag.
 func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error {
-	op := operations.TransferOperation {
+	op := operations.TransferOperation{
 		Amount:     amount,
 		Extensions: types.Extensions{},
 		From:       types.AccountIDFromObject(from),
@@ -1016,7 +1015,7 @@ func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.
 }
 
 func (p *websocketAPI) Transfer2(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string) error {
-	op := operations.TransferOperation {
+	op := operations.TransferOperation{
 		Amount:     amount,
 		Extensions: types.Extensions{},
 		From:       types.AccountIDFromObject(from),
@@ -1024,12 +1023,12 @@ func (p *websocketAPI) Transfer2(keyBag *crypto.KeyBag, from, to, feeAsset types
 	}
 
 	if memo != "" {
-			builder := p.NewMemoBuilder(from, to, memo)
-			m, err := builder.Encrypt(keyBag)
-			if err != nil {
-				return errors.Annotate(err, "Encrypt [memo]")
-			}
-			op.Memo = m
+		builder := p.NewMemoBuilder(from, to, memo)
+		m, err := builder.Encrypt(keyBag)
+		if err != nil {
+			return errors.Annotate(err, "Encrypt [memo]")
+		}
+		op.Memo = m
 	}
 
 	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)
@@ -1058,11 +1057,11 @@ func (p *websocketAPI) SignTest(keyBag *crypto.KeyBag, hashTrx string) error {
 }
 
 func (p *websocketAPI) CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error {
-	op := operations.AssetCreateOperation {
-		Issuer:        types.AccountIDFromObject(issuer),
-		Symbol:        symbol,
-		Precision:     types.UInt8(precision),
-		CommonOptions: common,
+	op := operations.AssetCreateOperation{
+		Issuer:          types.AccountIDFromObject(issuer),
+		Symbol:          symbol,
+		Precision:       types.UInt8(precision),
+		CommonOptions:   common,
 		BitassetOptions: bitasset,
 	}
 

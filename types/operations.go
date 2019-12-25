@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/util"
-	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )
@@ -24,7 +24,7 @@ type Operation interface {
 	MarshalFeeScheduleParams(M, *util.TypeEncoder) error
 }
 
-type OperationResults []OperationResult 
+type OperationResults []OperationResult
 
 type OperationResult interface {
 }

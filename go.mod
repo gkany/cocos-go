@@ -11,7 +11,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 
 	github.com/denkhaus/gojson v1.0.0
-	github.com/denkhaus/logging v0.0.0-20180714213349-14bfb935047c
+	// github.com/gkany/graphSDK/logging v0.0.0-20180714213349-14bfb935047c
 	github.com/emirpasic/gods v1.12.0
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.7 // indirect

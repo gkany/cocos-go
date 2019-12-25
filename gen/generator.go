@@ -10,11 +10,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gkany/graphSDK"
 	"github.com/gkany/graphSDK/gen/data"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/tests"
 	"github.com/gkany/graphSDK/types"
-	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 	"github.com/stretchr/objx"

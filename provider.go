@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/denkhaus/logging"
 	"github.com/gkany/graphSDK/api"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/juju/errors"
 	deadlock "github.com/sasha-s/go-deadlock"
 	"github.com/tevino/abool"

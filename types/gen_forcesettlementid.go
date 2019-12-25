@@ -7,8 +7,8 @@ package types
 import (
 	"fmt"
 
+	"github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/util"
-	"github.com/gkany/graphSDK/util/logging"
 	"github.com/juju/errors"
 )
 

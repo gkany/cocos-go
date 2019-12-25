@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/gkany/graphSDK/config"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/util"
-	"github.com/denkhaus/logging"
 	"github.com/pquerna/ffjson/ffjson"
 
 	"github.com/juju/errors"
@@ -46,8 +46,8 @@ type AgreedTaskPair []string
 
 type SignedTransaction struct {
 	Transaction
-	AgreedTask AgreedTaskPair  `json:"agreed_task,omitempty"`
-	Signatures Signatures      `json:"signatures"`
+	AgreedTask AgreedTaskPair `json:"agreed_task,omitempty"`
+	Signatures Signatures     `json:"signatures"`
 }
 
 func (p SignedTransaction) Marshal(enc *util.TypeEncoder) error {
@@ -162,7 +162,7 @@ func NewSignedTransaction() *SignedTransaction {
 
 type ProcessedTransaction struct {
 	SignedTransaction
-	Operationresults  OperationResults `json: "operation_results"`
+	Operationresults OperationResults `json: "operation_results"`
 }
 
 func (p ProcessedTransaction) Marshal(enc *util.TypeEncoder) error {

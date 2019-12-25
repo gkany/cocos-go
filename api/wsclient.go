@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/denkhaus/logging"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 	"github.com/tevino/abool"

@@ -6,7 +6,7 @@ import (
 
 	"github.com/gkany/graphSDK"
 	"github.com/gkany/graphSDK/util"
-	"github.com/denkhaus/logging"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/stretchr/testify/suite"
 	"gopkg.in/cheggaaa/pb.v1"
 )
