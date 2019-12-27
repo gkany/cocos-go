@@ -44,13 +44,19 @@ func (j *AssetOptions) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	fflib.FormatBits2(buf, uint64(j.IssuerPermissions), 10, false)
 	buf.WriteString(`,"flags":`)
 	fflib.FormatBits2(buf, uint64(j.Flags), 10, false)
-	/* Struct fall back. type=types.Price kind=struct */
-	buf.WriteString(`,"core_exchange_rate":`)
-	err = buf.Encode(&j.CoreExchangeRate)
-	if err != nil {
-		return err
+	buf.WriteByte(',')
+	if j.CoreExchangeRate != nil {
+		if true {
+			/* Struct fall back. type=types.Price kind=struct */
+			buf.WriteString(`"core_exchange_rate":`)
+			err = buf.Encode(j.CoreExchangeRate)
+			if err != nil {
+				return err
+			}
+			buf.WriteByte(',')
+		}
 	}
-	buf.WriteString(`,"description":`)
+	buf.WriteString(`"description":`)
 
 	{
 

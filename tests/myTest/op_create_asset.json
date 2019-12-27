@@ -1,0 +1,270 @@
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":22753,"ref_block_prefix":2766799191,"expiration":"2019-12-27T10:25:38","operations":[[8,{"issuer":"1.2.16","symbol":"USDT","precision":5,"common_options":{"max_supply":100000000,"market_fee_percent":0,"max_market_fee":0,"issuer_permissions":0,"flags":0,"core_exchange_rate":{"base":{"amount":1,"asset_id":"1.3.2"},"quote":{"amount":1,"asset_id":"1.3.0"}},"description":"","extensions":[]},"bitasset_opts":null,"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  22753
+    EncodeNumber: 22753, Hex: e158
+  ->RefBlockPrefix:  2766799191
+    EncodeNumber: 2766799191, Hex: 5701eaa4
+  ->Expiration[trx]:  2019-12-27 10:25:38 +0000 UTC
+    EncodeNumber: 1577442338, Hex: 22dc055e
+  ->Operations:  [0xc0000d60a0]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+    EncodeNumber: 8, Hex: 08
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeString: USDT
+    writeBytes:  [4] , Hex:  04
+    writeString:  USDT
+    EncodeNumber: 5, Hex: 05
+    EncodeNumber: 100000000, Hex: 00e1f50500000000
+    EncodeNumber: 0, Hex: 0000
+    EncodeNumber: 0, Hex: 0000000000000000
+    EncodeNumber: 0, Hex: 0000
+    EncodeNumber: 0, Hex: 0000
+    EncodeNumber: 1, Hex: 0100000000000000
+    writeBytes:  [2] , Hex:  02
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeNumber: 1, Hex: 0100000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeString: 
+    writeBytes:  [0] , Hex:  00
+    writeString:  
+    writeBytes:  [0] , Hex:  00
+    EncodeNumber: 0, Hex: 00
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: e1585701eaa422dc055e0108100000000000000004555344540500e1f50500000000000000000000000000000000000001000000000000000200000000000000010000000000000000000000000000000000000000
+digest: [224 113 19 133 12 221 160 154 171 37 28 254 94 148 162 103 26 212 216 73 38 124 41 166 208 71 60 157 4 61 55 251], hex: e07113850cdda09aab251cfe5e94a2671ad4d849267c29a6d0473c9d043d37fb
+tx digest: [224 113 19 133 12 221 160 154 171 37 28 254 94 148 162 103 26 212 216 73 38 124 41 166 208 71 60 157 4 61 55 251]
+rawMessage: %!s(*json.RawMessage=<nil>)
+BroadcastTransaction: CallAPI: call api error: missing required active authority: Missing Active Authority 1.2.16
+
+unlocked >>> serialize_transaction  {"signatures":[],"ref_block_num":22753,"ref_block_prefix":2766799191,"expiration":"2019-12-27T10:25:38","operations":[[8,{"issuer":"1.2.16","symbol":"USDT","precision":5,"common_options":{"max_supply":100000000,"market_fee_percent":0,"max_market_fee":0,"issuer_permissions":0,"flags":0,"core_exchange_rate":{"base":{"amount":1,"asset_id":"1.3.2"},"quote":{"amount":1,"asset_id":"1.3.0"}},"description":"","extensions":[]},"bitasset_opts":null,"extensions":[]}]],"extensions":[]}  
+serialize_transaction  {"signatures":[],"ref_block_num":22753,"ref_block_prefix":2766799191,"expiration":"2019-12-27T10:25:38","operations":[[8,{"issuer":"1.2.16","symbol":"USDT","precision":5,"common_options":{"max_supply":100000000,"market_fee_percent":0,"max_market_fee":0,"issuer_permissions":0,"flags":0,"core_exchange_rate":{"base":{"amount":1,"asset_id":"1.3.2"},"quote":{"amount":1,"asset_id":"1.3.0"}},"description":"","extensions":[]},"bitasset_opts":null,"extensions":[]}]],"extensions":[]}  
+"e1585701eaa422dc055e0108100000000000000004555344540500e1f50500000000000000000000000000000000000001010000000000000002000000000000000100000000000000000000000000000000000000000000"
+
+
+a. 
+e1585701eaa422dc055e0108100000000000000004555344540500e1f50500000000
+0000000000000000000000000000 
+01
+0100000000000000
+0200000000000000
+0100000000000000000000000000000000000000000000
+
+b. 
+e1585701eaa422dc055e0108100000000000000004555344540500e1f50500000000
+0000000000000000000000000000
+0100000000000000
+0200000000000000
+010000000000000000000000000000000000000000
+
+
+{
+    "signatures":[
+
+    ],
+    "ref_block_num":22753,
+    "ref_block_prefix":2766799191,
+    "expiration":"2019-12-27T10:25:38",
+    "operations":[
+        [
+            8,
+            {
+                "issuer":"1.2.16",
+                "symbol":"USDT",
+                "precision":5,
+                "common_options":{
+                    "max_supply":100000000,
+                    "market_fee_percent":0,
+                    "max_market_fee":0,
+                    "issuer_permissions":0,
+                    "flags":0,
+                    "core_exchange_rate":{
+                        "base":{
+                            "amount":1,
+                            "asset_id":"1.3.2"
+                        },
+                        "quote":{
+                            "amount":1,
+                            "asset_id":"1.3.0"
+                        }
+                    },
+                    "description":"",
+                    "extensions":[
+
+                    ]
+                },
+                "bitasset_opts":null,
+                "extensions":[
+
+                ]
+            }
+        ]
+    ],
+    "extensions":[
+
+    ]
+}
+
+
+---> success
+2019/12/27 19:01:58 ------- chain api test ----------
+rawMessage: &true
+rawMessage: &2
+rawMessage: &3
+rawMessage: &4
+rawMessage: &"179db3c6a2e08d610f718f05e9cc2aabad62aff80305b9621b162b8b6f2fd79f"
+rawMessage: &{"id":"2.1.0","head_block_number":23760,"head_block_id":"00005cd055ddaec132ad356dd1f649343c4a6948","time":"2019-12-27T11:01:58","current_witness":"1.6.9","current_transaction_count":0,"next_maintenance_time":"2019-12-27T12:00:00","last_budget_time":"2019-12-27T10:23:22","witness_budget":"18470000000","accounts_registered_this_interval":0,"recently_missed_count":414587,"current_aslot":11980382,"recent_slots_filled":"338951800285810145864819679984000892895","dynamic_flags":0,"last_irreversible_block_num":23753}
+&[123 34 105 100 34 58 34 50 46 49 46 48 34 44 34 104 101 97 100 95 98 108 111 99 107 95 110 117 109 98 101 114 34 58 50 51 55 54 48 44 34 104 101 97 100 95 98 108 111 99 107 95 105 100 34 58 34 48 48 48 48 53 99 100 48 53 53 100 100 97 101 99 49 51 50 97 100 51 53 54 100 100 49 102 54 52 57 51 52 51 99 52 97 54 57 52 56 34 44 34 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 49 49 58 48 49 58 53 56 34 44 34 99 117 114 114 101 110 116 95 119 105 116 110 101 115 115 34 58 34 49 46 54 46 57 34 44 34 99 117 114 114 101 110 116 95 116 114 97 110 115 97 99 116 105 111 110 95 99 111 117 110 116 34 58 48 44 34 110 101 120 116 95 109 97 105 110 116 101 110 97 110 99 101 95 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 49 50 58 48 48 58 48 48 34 44 34 108 97 115 116 95 98 117 100 103 101 116 95 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 49 48 58 50 51 58 50 50 34 44 34 119 105 116 110 101 115 115 95 98 117 100 103 101 116 34 58 34 49 56 52 55 48 48 48 48 48 48 48 34 44 34 97 99 99 111 117 110 116 115 95 114 101 103 105 115 116 101 114 101 100 95 116 104 105 115 95 105 110 116 101 114 118 97 108 34 58 48 44 34 114 101 99 101 110 116 108 121 95 109 105 115 115 101 100 95 99 111 117 110 116 34 58 52 49 52 53 56 55 44 34 99 117 114 114 101 110 116 95 97 115 108 111 116 34 58 49 49 57 56 48 51 56 50 44 34 114 101 99 101 110 116 95 115 108 111 116 115 95 102 105 108 108 101 100 34 58 34 51 51 56 57 53 49 56 48 48 50 56 53 56 49 48 49 52 53 56 54 52 56 49 57 54 55 57 57 56 52 48 48 48 56 57 50 56 57 53 34 44 34 100 121 110 97 109 105 99 95 102 108 97 103 115 34 58 48 44 34 108 97 115 116 95 105 114 114 101 118 101 114 115 105 98 108 101 95 98 108 111 99 107 95 110 117 109 34 58 50 51 55 53 51 125]
+tx: &{{23760 3249462613 2019-12-27 11:02:28 +0000 UTC [0xc0000e8140] {<nil>}} [] []}
+rawMessage: &["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"]
+rawMessage: &["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"]
+reqPk: [COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx]
+private Key: 5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo, public key: COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":23760,"ref_block_prefix":3249462613,"expiration":"2019-12-27T11:02:28","operations":[[8,{"issuer":"1.2.16","symbol":"USDT","precision":5,"common_options":{"max_supply":100000000,"market_fee_percent":0,"max_market_fee":0,"issuer_permissions":0,"flags":0,"core_exchange_rate":{"base":{"amount":1,"asset_id":"1.3.2"},"quote":{"amount":1,"asset_id":"1.3.0"}},"description":"","extensions":[]},"bitasset_opts":null,"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  23760
+    EncodeNumber: 23760, Hex: d05c
+  ->RefBlockPrefix:  3249462613
+    EncodeNumber: 3249462613, Hex: 55ddaec1
+  ->Expiration[trx]:  2019-12-27 11:02:28 +0000 UTC
+    EncodeNumber: 1577444548, Hex: c4e4055e
+  ->Operations:  [0xc0000e8140]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+    EncodeNumber: 8, Hex: 08
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeString: USDT
+    writeBytes:  [4] , Hex:  04
+    writeString:  USDT
+    EncodeNumber: 5, Hex: 05
+    EncodeNumber: 100000000, Hex: 00e1f50500000000
+    EncodeNumber: 0, Hex: 0000
+    EncodeNumber: 0, Hex: 0000000000000000
+    EncodeNumber: 0, Hex: 0000
+    EncodeNumber: 0, Hex: 0000
+  ->p.CoreExchangeRate != nil:  true
+    EncodeNumber: 1, Hex: 01
+    EncodeNumber: 1, Hex: 0100000000000000
+    writeBytes:  [2] , Hex:  02
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeNumber: 1, Hex: 0100000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeString: 
+    writeBytes:  [0] , Hex:  00
+    writeString:  
+    writeBytes:  [0] , Hex:  00
+    EncodeNumber: 0, Hex: 00
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: d05c55ddaec1c4e4055e0108100000000000000004555344540500e1f5050000000000000000000000000000000000000101000000000000000200000000000000010000000000000000000000000000000000000000
+digest: [41 96 177 227 225 27 130 127 238 86 185 216 207 76 194 173 182 80 80 171 116 144 141 152 192 48 36 177 80 232 205 132], hex: 2960b1e3e11b827fee56b9d8cf4cc2adb65050ab74908d98c03024b150e8cd84
+tx digest: [41 96 177 227 225 27 130 127 238 86 185 216 207 76 194 173 182 80 80 171 116 144 141 152 192 48 36 177 80 232 205 132]
+tx: &{0xc000182180}
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":23760,"ref_block_prefix":3249462613,"expiration":"2019-12-27T11:02:29","operations":[[8,{"issuer":"1.2.16","symbol":"USDT","precision":5,"common_options":{"max_supply":100000000,"market_fee_percent":0,"max_market_fee":0,"issuer_permissions":0,"flags":0,"core_exchange_rate":{"base":{"amount":1,"asset_id":"1.3.2"},"quote":{"amount":1,"asset_id":"1.3.0"}},"description":"","extensions":[]},"bitasset_opts":null,"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  23760
+    EncodeNumber: 23760, Hex: d05c
+  ->RefBlockPrefix:  3249462613
+    EncodeNumber: 3249462613, Hex: 55ddaec1
+  ->Expiration[trx]:  2019-12-27 11:02:29 +0000 UTC
+    EncodeNumber: 1577444549, Hex: c5e4055e
+  ->Operations:  [0xc0000e8140]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+    EncodeNumber: 8, Hex: 08
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeString: USDT
+    writeBytes:  [4] , Hex:  04
+    writeString:  USDT
+    EncodeNumber: 5, Hex: 05
+    EncodeNumber: 100000000, Hex: 00e1f50500000000
+    EncodeNumber: 0, Hex: 0000
+    EncodeNumber: 0, Hex: 0000000000000000
+    EncodeNumber: 0, Hex: 0000
+    EncodeNumber: 0, Hex: 0000
+  ->p.CoreExchangeRate != nil:  true
+    EncodeNumber: 1, Hex: 01
+    EncodeNumber: 1, Hex: 0100000000000000
+    writeBytes:  [2] , Hex:  02
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeNumber: 1, Hex: 0100000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeString: 
+    writeBytes:  [0] , Hex:  00
+    writeString:  
+    writeBytes:  [0] , Hex:  00
+    EncodeNumber: 0, Hex: 00
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: d05c55ddaec1c5e4055e0108100000000000000004555344540500e1f5050000000000000000000000000000000000000101000000000000000200000000000000010000000000000000000000000000000000000000
+digest: [1 227 194 249 85 229 242 5 207 196 139 177 26 176 199 162 215 176 199 185 156 131 84 48 164 221 166 58 240 112 89 203], hex: 01e3c2f955e5f205cfc48bb11ab0c7a2d7b0c7b99c835430a4dda63af07059cb
+tx digest: [1 227 194 249 85 229 242 5 207 196 139 177 26 176 199 162 215 176 199 185 156 131 84 48 164 221 166 58 240 112 89 203]
+rawMessage: &"b8c332a57deeadaf1c13c7c3b0e1a8a9eff2d78f967148294abef8234b10159b"
+

@@ -55,17 +55,19 @@ func (j *AssetCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	if err != nil {
 		return err
 	}
+	buf.WriteByte(',')
 	if j.BitassetOptions != nil {
-		/* Struct fall back. type=types.BitassetOptions kind=struct */
-		buf.WriteString(`,"bitasset_opts":`)
-		err = buf.Encode(j.BitassetOptions)
-		if err != nil {
-			return err
+		if true {
+			/* Struct fall back. type=types.BitassetOptions kind=struct */
+			buf.WriteString(`"bitasset_opts":`)
+			err = buf.Encode(j.BitassetOptions)
+			if err != nil {
+				return err
+			}
+			buf.WriteByte(',')
 		}
-	} else {
-		buf.WriteString(`,"bitasset_opts":null`)
 	}
-	buf.WriteString(`,"extensions":`)
+	buf.WriteString(`"extensions":`)
 
 	{
 

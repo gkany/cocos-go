@@ -13,14 +13,9 @@ type AssetOptions struct {
 	MaxMarketFee      Int64      `json:"max_market_fee"`
 	IssuerPermissions UInt16     `json:"issuer_permissions"`
 	Flags             UInt16     `json:"flags"`
-	CoreExchangeRate  Price      `json:"core_exchange_rate"`
+	CoreExchangeRate  *Price     `json:"core_exchange_rate,omitempty"`
 	Description       String     `json:"description"`
 	Extensions        Extensions `json:"extensions"`
-
-	// BlacklistAuthorities AccountIDs `json:"blacklist_authorities"`
-	// WhitelistAuthorities AccountIDs `json:"whitelist_authorities"`
-	// BlacklistMarkets     AccountIDs `json:"blacklist_markets"`
-	// WhitelistMarkets     AccountIDs `json:"whitelist_markets"`
 }
 
 func (p AssetOptions) Marshal(enc *util.TypeEncoder) error {
@@ -44,25 +39,13 @@ func (p AssetOptions) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode Flags")
 	}
 
+	if err := enc.Encode(p.CoreExchangeRate != nil); err != nil {
+		return errors.Annotate(err, "encode have CoreExchangeRate")
+	}
+
 	if err := enc.Encode(p.CoreExchangeRate); err != nil {
 		return errors.Annotate(err, "encode CoreExchangeRate")
 	}
-
-	// if err := enc.Encode(p.WhitelistAuthorities); err != nil {
-	// 	return errors.Annotate(err, "encode WhitelistAuthorities")
-	// }
-
-	// if err := enc.Encode(p.BlacklistAuthorities); err != nil {
-	// 	return errors.Annotate(err, "encode BlacklistAuthorities")
-	// }
-
-	// if err := enc.Encode(p.WhitelistMarkets); err != nil {
-	// 	return errors.Annotate(err, "encode WhitelistMarkets")
-	// }
-
-	// if err := enc.Encode(p.BlacklistMarkets); err != nil {
-	// 	return errors.Annotate(err, "encode BlacklistMarkets")
-	// }
 
 	if err := enc.Encode(p.Description); err != nil {
 		return errors.Annotate(err, "encode Description")

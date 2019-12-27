@@ -146,7 +146,7 @@ func test_createAsset(api graphSDK.WebsocketAPI) {
 	rate := types.Price{
 		Base: types.AssetAmount{
 			Amount: types.Int64(1),
-			Asset:  types.AssetIDFromObject(types.NewAssetID("1.3.2")),
+			Asset:  types.AssetIDFromObject(types.NewAssetID("1.3.3")),
 		},
 		Quote: types.AssetAmount{
 			Amount: types.Int64(1),
@@ -155,10 +155,10 @@ func test_createAsset(api graphSDK.WebsocketAPI) {
 	}
 
 	common := types.AssetOptions{
-		MaxSupply:        100000000,
-		CoreExchangeRate: rate,
+		MaxSupply:        210000000000,
+		CoreExchangeRate: &rate,
 	}
-	err := api.CreateAsset(keyBag, issuer, coreAsset, "USDT", 5, common, nil)
+	err := api.CreateAsset(keyBag, issuer, coreAsset, "USDC", 5, common, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -391,11 +391,11 @@ func main() {
 		log.Println(err)
 	}
 	// getData(api)
-	transfer(api)
-	// transfer2(api)
+	// transfer(api)
+	// transfer2(api)  // old version
 
 	// test_ListAssets(api)  // success
-	// test_createAsset(api)
+	test_createAsset(api)
 
 	// testGetBlock(api, 7997, 7998)
 

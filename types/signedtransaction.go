@@ -143,12 +143,13 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 		return nil, ErrChainConfigIsUndefined
 	}
 
-	fmt.Println("-------------> Digest: ")
-	if txJSON, err := tx.MarshalJSON(); err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Printf("tx: %s\n", string(txJSON))
-	}
+	// test
+	// fmt.Println("-------------> Digest: ")
+	// if txJSON, err := tx.MarshalJSON(); err != nil {
+	// 	fmt.Println(err)
+	// } else {
+	// 	fmt.Printf("tx: %s\n", string(txJSON))
+	// }
 
 	writer := sha256.New()
 	rawChainID, err := hex.DecodeString(chain.ID)
@@ -169,32 +170,10 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 	}
 	fmt.Printf("rawTrx - Hex: %v\n", hex.EncodeToString(rawTrx[:]))
 
-	//test
-	/*
-	rawTrxHex := hex.EncodeToString(rawTrx[:])
-	rawTrxHex1 := rawTrxHex[0:25] + "000000000000000000" + rawTrxHex[25:] + "000000"
-	fmt.Println("rawTrxHex1: ", rawTrxHex1)
-	rawTrxHex2, err := hex.DecodeString(rawTrxHex1)
-	if err != nil {
-		return nil, errors.Annotatef(err, "failed to hex.DecodeString(%v)", rawTrxHex1)
-	}
-	*/
-/*
-532e19fbb776ee4f045e01000000000000000000000f056400000000000000000000000000
-532e19fbb776ee4f045e01000f056400000000000000000000
-
-532e19fbb776ee4f045e01000 000000000000000000 f056400000000000000000000 000000
-532e19fbb776ee4f045e01000 ------------------ f056400000000000000000000 ------
-
-
-6b3104e542e3b656045e01000000000000000000000f056400000000000000000000000000
-6b3104e542e3b656045e01000000000000000000000f056400000000000000000000000000
-*/
 	//	digestTrx := sha256.Sum256(rawTrx)
 	//	util.Dump("digest trx", hex.EncodeToString(digestTrx[:]))
 
 	if _, err := writer.Write(rawTrx); err != nil {
-	// if _, err := writer.Write(rawTrxHex2); err != nil {
 		return nil, errors.Annotate(err, "Write [trx]")
 	}
 
@@ -204,11 +183,7 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 	
 	return digest[:], nil
 }
-/*
-3dade25d8fe23b2ee427c6702ae5a3e04e1524319ad8b073d9e85320aa3e8962
 
-d32d84886064d84e045e01000000000000000000000f056400000000000000000000000000
-*/
 //NewSignedTransactionWithBlockData creates a new SignedTransaction and initializes
 //relevant Blockdata fields and expiration.
 func NewSignedTransactionWithBlockData(props *DynamicGlobalProperties) (*SignedTransaction, error) {

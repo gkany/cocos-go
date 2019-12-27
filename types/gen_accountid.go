@@ -20,13 +20,8 @@ func (p AccountID) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.EncodeUVarint(uint64(p.Instance())); err != nil {
 		return errors.Annotate(err, "encode instance")
 	}
-	// var byte64 []byte
-	// var byte8 []byte
-	// binary.PutUvarint(byte8, uint64(p.Instance()))
-	// if err := enc.Encode(byte8); err != nil {
-	// 	return errors.Annotate(err, "encode object id bytes")
-	// }
-	for i := 1; i < 8; i++ {
+
+	for i :=1; i < 8; i++ {
 		if err := enc.EncodeUVarint(uint64(0)); err != nil {
 			return errors.Annotate(err, "encode instance")
 		}
