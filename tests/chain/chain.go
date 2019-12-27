@@ -1,6 +1,9 @@
 package main
 
 import (
+	"bytes"
+	"encoding/binary"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -80,6 +83,7 @@ func transfer(api graphSDK.WebsocketAPI) {
 	// fmt.Println(err3)
 }
 
+/*
 func transfer2(api graphSDK.WebsocketAPI) {
 	privateKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
 	// publicKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
@@ -94,6 +98,7 @@ func transfer2(api graphSDK.WebsocketAPI) {
 		Asset:  types.AssetIDFromObject(coreAsset),
 	}
 
+	fmt.Println("\n-------> 1. transfer ")
 	memo1 := string("memo test false")
 	err1 := api.Transfer2(localKeyBag, from, to, coreAsset, amount, memo1)
 	fmt.Println(err1)
@@ -103,6 +108,7 @@ func transfer2(api graphSDK.WebsocketAPI) {
 	err2 := api.Transfer2(localKeyBag, from, to, coreAsset, amount, "")
 	fmt.Println(err2)
 }
+*/
 
 func test_broadcast(api graphSDK.WebsocketAPI) {
 
@@ -176,6 +182,36 @@ func testGetBlock(api graphSDK.WebsocketAPI, from, to uint64) {
 	}
 }
 
+func testHeadBlockPrefix(api graphSDK.WebsocketAPI) {
+	fmt.Println("\nGetDynamicGlobalProperties: ")
+	gdp, err := api.GetDynamicGlobalProperties()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	rawBlockID, err := hex.DecodeString(gdp.HeadBlockID.String())
+	if err != nil {
+		return
+	}
+	fmt.Println("HeadBlockID: ", gdp.HeadBlockID.String(), ", rawBlockID: ", rawBlockID)
+	if len(rawBlockID) < 8 {
+		return
+	}
+
+	rawPrefix := rawBlockID[4:8]
+	fmt.Println("rawPrefix: ", rawPrefix)
+
+	var prefix uint32
+	//binary.LittleEndian 小端序
+	if err := binary.Read(bytes.NewReader(rawPrefix), binary.LittleEndian, &prefix); err != nil {
+		fmt.Println(err)
+		return
+	}
+	// fmt.Println("prefix: ", types.UInt32(prefix))
+	fmt.Println("prefix: ", prefix)
+}
+
 //test
 func NewTransferOperation() operations.TransferOperation {
 	from := types.NewAccountID("1.2.16") // nicotest 1.2.16
@@ -238,7 +274,7 @@ func testBroadcastTrx(api graphSDK.WebsocketAPI) {
 		fmt.Println(err)
 		return
 	}
-	transferOp.Memo = &memo
+	// transferOp.Memo = &memo
 	fmt.Println(transferOp)
 
 	fmt.Println("\nUnmarshal trx")
@@ -324,6 +360,7 @@ func testBroadcastTrx2(api graphSDK.WebsocketAPI) {
 	*/
 }
 
+/*
 func testSign(api graphSDK.WebsocketAPI) {
 	privateKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
 	// publicKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
@@ -337,14 +374,15 @@ func testSign(api graphSDK.WebsocketAPI) {
 		fmt.Println(error)
 	}
 }
+*/
 
 func main() {
-	config.SetCurrent(config.ChainIDTestnet)
-	wsURL := "ws://test.cocosbcx.net"
+	// config.SetCurrent(config.ChainIDTestnet)
+	// wsURL := "ws://test.cocosbcx.net"
 
-	// chainID := config.ChainIDLocal
-	// wsURL := "ws://127.0.0.1:8049"
-	// config.SetCurrent(chainID)
+	chainID := config.ChainIDLocal
+	wsURL := "ws://127.0.0.1:8049"
+	config.SetCurrent(chainID)
 
 	// chain api 测试
 	log.Println("------- chain api test ----------")
@@ -352,8 +390,8 @@ func main() {
 	if err := api.Connect(); err != nil {
 		log.Println(err)
 	}
-	getData(api)
-	// transfer(api)
+	// getData(api)
+	transfer(api)
 	// transfer2(api)
 
 	// test_ListAssets(api)  // success
@@ -365,4 +403,6 @@ func main() {
 	// testBroadcastTrx2(api)
 
 	// testSign(api)
+
+	// testHeadBlockPrefix(api)
 }

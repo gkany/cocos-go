@@ -78,13 +78,13 @@ type WebsocketAPI interface {
 	SubscribeToMarket(base, quote types.GrapheneObject, onMarketData api.SubscribeCallback) error
 	SubscribeToPendingTransactions(onPendingTransaction api.SubscribeCallback) error
 	Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error
-	Transfer2(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string) error
+	// Transfer2(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string) error
 	UnsubscribeFromMarket(base, quote types.GrapheneObject) error
 	Get24Volume(base types.GrapheneObject, quote types.GrapheneObject) (*types.Volume24, error)
 	CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error
 
-	BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error)
-	SignTest(keyBag *crypto.KeyBag, hashTrx string) error
+	// BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error)
+	// SignTest(keyBag *crypto.KeyBag, hashTrx string) error
 }
 
 type websocketAPI struct {
@@ -261,7 +261,6 @@ func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset ty
 	// if err := operations.ApplyFees(fees); err != nil {
 	// 	return nil, errors.Annotate(err, "ApplyFees")
 	// }
-
 	props, err := p.GetDynamicGlobalProperties()
 	if err != nil {
 		return nil, errors.Annotate(err, "GetDynamicGlobalProperties")
@@ -273,18 +272,22 @@ func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset ty
 	}
 
 	tx.Operations = operations
+	fmt.Printf("tx: %v\n", tx)
 
 	reqPk, err := p.RequiredSigningKeys(tx)
 	if err != nil {
 		return nil, errors.Annotate(err, "RequiredSigningKeys")
 	}
-
+	fmt.Printf("reqPk: %v\n", reqPk)
+	
 	signer := crypto.NewTransactionSigner(tx)
 
 	privKeys := keyBag.PrivatesByPublics(reqPk)
 	if len(privKeys) == 0 {
 		return nil, types.ErrNoSigningKeyFound
 	}
+	// fmt.Printf("privKeys: %v\n", privKeys)
+
 	if err := signer.Sign(privKeys, config.Current()); err != nil {
 		return nil, errors.Annotate(err, "Sign")
 	}
@@ -292,6 +295,7 @@ func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset ty
 	return tx, nil
 }
 
+/*
 func (p *websocketAPI) BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error) {
 	var operations types.Operations
 	// fees, err := p.GetRequiredFees(operations, feeAsset)
@@ -333,6 +337,7 @@ func (p *websocketAPI) BuildSignedTransactionTest(keyBag *crypto.KeyBag, seriali
 	}
 	return nil, nil
 }
+*/
 
 //RequiredSigningKeys is a convenience call to retrieve the minimum subset of public keys to sign a transaction.
 //If the transaction is already signed, the result is empty.
@@ -989,18 +994,18 @@ func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.
 		To:         types.AccountIDFromObject(to),
 	}
 
-	// if memo != "" {
-	// 	if isEncrypt {
-	// 		builder := p.NewMemoBuilder(from, to, memo)
-	// 		m, err := builder.Encrypt(keyBag)
-	// 		if err != nil {
-	// 			return errors.Annotate(err, "Encrypt [memo]")
-	// 		}
-	// 		op.Memo = []interface{}{uint64(1), m,}
-	// 	} else {
-	// 		op.Memo = []interface{}{uint64(0), memo,}
-	// 	}
-	// }
+	if memo != "" {
+		if isEncrypt {
+			builder := p.NewMemoBuilder(from, to, memo)
+			m, err := builder.Encrypt(keyBag)
+			if err != nil {
+				return errors.Annotate(err, "Encrypt [memo]")
+			}
+			op.Memo = types.MemoPair{uint8(1), m,}
+		} else {
+			op.Memo = types.MemoPair{uint8(0), memo,}
+		}
+	}
 
 	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)
 	if err != nil {
@@ -1014,6 +1019,7 @@ func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.
 	return nil
 }
 
+/*
 func (p *websocketAPI) Transfer2(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string) error {
 	op := operations.TransferOperation{
 		Amount:     amount,
@@ -1021,15 +1027,17 @@ func (p *websocketAPI) Transfer2(keyBag *crypto.KeyBag, from, to, feeAsset types
 		From:       types.AccountIDFromObject(from),
 		To:         types.AccountIDFromObject(to),
 	}
+	op.SetFee(types.NewAsset(21154, "1.3.0"))
 
 	if memo != "" {
-		builder := p.NewMemoBuilder(from, to, memo)
-		m, err := builder.Encrypt(keyBag)
-		if err != nil {
-			return errors.Annotate(err, "Encrypt [memo]")
-		}
-		op.Memo = m
+		// builder := p.NewMemoBuilder(from, to, memo)
+		// m, err := builder.Encrypt(keyBag)
+		// if err != nil {
+		// 	return errors.Annotate(err, "Encrypt [memo]")
+		// }
+		// // op.Memo = m
 	}
+	fmt.Println("transfer op: ", op)
 
 	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)
 	if err != nil {
@@ -1055,6 +1063,7 @@ func (p *websocketAPI) SignTest(keyBag *crypto.KeyBag, hashTrx string) error {
 
 	return nil
 }
+*/
 
 func (p *websocketAPI) CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error {
 	op := operations.AssetCreateOperation{

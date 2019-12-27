@@ -9,10 +9,14 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
+	// "encoding/json"
+	"fmt"
 	"strconv"
 
+	// "github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
+	// "github.com/pquerna/ffjson/ffjson"
 )
 
 type Memo struct {
@@ -22,8 +26,8 @@ type Memo struct {
 	Message Buffer    `json:"message"`
 }
 
-
 func (p Memo) Marshal(enc *util.TypeEncoder) error {
+	fmt.Println("Memo Marshal")
 	if err := enc.Encode(p.From); err != nil {
 		return errors.Annotate(err, "encode from")
 	}
@@ -178,3 +182,63 @@ func pad(buf []byte, length int) []byte {
 	buf = append(buf, bytes.Repeat([]byte{byte(cnt)}, cnt)...)
 	return buf
 }
+
+
+type MemoPair []interface{}
+
+func (v MemoPair) Marshal(enc *util.TypeEncoder) error {
+	fmt.Println("MemoPair Marshal")
+
+	if len(v) != 2 {
+		return errors.Errorf("MemoPair length error. %v", len(v))
+	}
+
+	if err := enc.Encode(v[0]); err != nil {
+		return errors.Annotate(err, "encode MemoPair[0]")
+	}
+
+	if err := enc.Encode(v[1]); err != nil {
+		return errors.Annotate(err, "encode MemoPair[1]")
+	}
+
+	return nil
+}
+
+/*
+func (v MemoPair) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal(v)
+}
+
+func (v *MemoPair) UnmarshalJSON(data []byte) error {
+	raw := make([]json.RawMessage, 2)
+	if err := ffjson.Unmarshal(data, &raw); err != nil {
+		return errors.Annotate(err, "unmarshal raw object")
+	}
+
+	var encryptType uint8
+	if err := ffjson.Unmarshal(raw[0], &encryptType); err != nil {
+		return errors.Annotate(err, "unmarshal encryptType")
+	}
+
+	desc := fmt.Sprintf("encrypt type %s", encryptType)
+	if encryptType == 0 {
+		var memo string
+		if err := ffjson.Unmarshal(raw[1], &memo); err != nil {
+			logging.DDumpUnmarshaled(desc, raw[1])
+			return errors.Annotatef(err, "unmarshal encrypt type %v", encryptType)
+		}
+		v = &MemoPair{encryptType, memo,}
+	} else if encryptType == 1 {
+		var memo Memo
+		if err := ffjson.Unmarshal(raw[1], &memo); err != nil {
+			logging.DDumpUnmarshaled(desc, raw[1])
+			return errors.Annotatef(err, "unmarshal encrypt type %v", encryptType)
+		}
+		v = &MemoPair{encryptType, memo,}
+	} else {
+		return errors.Errorf("unmarshal memo error, encryptType(%v) unknown", encryptType)
+	}
+
+	return nil
+}
+*/

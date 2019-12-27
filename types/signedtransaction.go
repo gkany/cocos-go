@@ -40,7 +40,56 @@ const (
 
 // 	# Return properly truncated tx hash
 // return hexlify(h[:20]).decode("ascii")
+// type AgreedTaskPair []string
 
+/*
+// optional<std::pair<tx_hash_type,object_id_type>> agreed_task={};
+type AgreedTaskPair struct {
+	TxHash      []byte
+	ObjectId    ObjectID
+}
+
+func (p AgreedTaskPair) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(p); err != nil {
+		return errors.Annotate(err, "Encode AgreedTaskPair")
+	}
+
+	return nil
+}
+
+func (p AgreedTaskPair) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal([]interface{}{
+		p.TxHash,
+		p.ObjectId,
+	})
+}
+
+func (p *AgreedTaskPair) UnmarshalJSON(data []byte) error {
+	raw := make([]json.RawMessage, 2)
+	if err := ffjson.Unmarshal(data, &raw); err != nil {
+		return errors.Annotate(err, "Unmarshal [raw]")
+	}
+
+	if len(raw) != 2 {
+		return ErrInvalidInputLength
+	}
+
+	if err := ffjson.Unmarshal(raw[0], &p.TxHash); err != nil {
+		return errors.Annotate(err, "Unmarshal [TxHash]")
+	}
+
+	if err := ffjson.Unmarshal(raw[1], &p.ObjectId); err != nil {
+		logging.DDumpUnmarshaled(
+			fmt.Sprintf("tx hash %s", p.TxHash),
+			raw[1],
+		)
+		return errors.Annotatef(err, "Unmarshal object id %v", p.ObjectId)
+	}
+
+	return nil
+}
+
+*/
 type SignedTransactions []SignedTransaction
 type AgreedTaskPair []string
 
@@ -94,6 +143,13 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 		return nil, ErrChainConfigIsUndefined
 	}
 
+	fmt.Println("-------------> Digest: ")
+	if txJSON, err := tx.MarshalJSON(); err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("tx: %s\n", string(txJSON))
+	}
+
 	writer := sha256.New()
 	rawChainID, err := hex.DecodeString(chain.ID)
 	if err != nil {
@@ -111,20 +167,48 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Annotatef(err, "Serialize")
 	}
+	fmt.Printf("rawTrx - Hex: %v\n", hex.EncodeToString(rawTrx[:]))
 
+	//test
+	/*
+	rawTrxHex := hex.EncodeToString(rawTrx[:])
+	rawTrxHex1 := rawTrxHex[0:25] + "000000000000000000" + rawTrxHex[25:] + "000000"
+	fmt.Println("rawTrxHex1: ", rawTrxHex1)
+	rawTrxHex2, err := hex.DecodeString(rawTrxHex1)
+	if err != nil {
+		return nil, errors.Annotatef(err, "failed to hex.DecodeString(%v)", rawTrxHex1)
+	}
+	*/
+/*
+532e19fbb776ee4f045e01000000000000000000000f056400000000000000000000000000
+532e19fbb776ee4f045e01000f056400000000000000000000
+
+532e19fbb776ee4f045e01000 000000000000000000 f056400000000000000000000 000000
+532e19fbb776ee4f045e01000 ------------------ f056400000000000000000000 ------
+
+
+6b3104e542e3b656045e01000000000000000000000f056400000000000000000000000000
+6b3104e542e3b656045e01000000000000000000000f056400000000000000000000000000
+*/
 	//	digestTrx := sha256.Sum256(rawTrx)
 	//	util.Dump("digest trx", hex.EncodeToString(digestTrx[:]))
 
 	if _, err := writer.Write(rawTrx); err != nil {
+	// if _, err := writer.Write(rawTrxHex2); err != nil {
 		return nil, errors.Annotate(err, "Write [trx]")
 	}
 
 	digest := writer.Sum(nil)
 	//	util.Dump("digest trx all", hex.EncodeToString(digest[:]))
-
+	fmt.Printf("digest: %v, hex: %s\n", digest[:], hex.EncodeToString(digest[:]))
+	
 	return digest[:], nil
 }
+/*
+3dade25d8fe23b2ee427c6702ae5a3e04e1524319ad8b073d9e85320aa3e8962
 
+d32d84886064d84e045e01000000000000000000000f056400000000000000000000000000
+*/
 //NewSignedTransactionWithBlockData creates a new SignedTransaction and initializes
 //relevant Blockdata fields and expiration.
 func NewSignedTransactionWithBlockData(props *DynamicGlobalProperties) (*SignedTransaction, error) {
@@ -140,6 +224,7 @@ func NewSignedTransactionWithBlockData(props *DynamicGlobalProperties) (*SignedT
 			Expiration:     props.Time.Add(TxExpirationDefault),
 			RefBlockPrefix: prefix,
 		},
+		AgreedTask: AgreedTaskPair{},
 		Signatures: Signatures{},
 	}
 

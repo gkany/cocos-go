@@ -4,3 +4,818 @@
 {"ref_block_num":28504,"ref_block_prefix":2701106264,"expiration":"2019-12-25T05:24:20","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["1f3ada7d225ec91ebe95f24b73cc8a33dc4c799fc12be7fe927af24da3684190fc5439026d5801f4956eecc069eb837122c158afc5eced1b2b6510d28af39390d1"]}}},{"context":{"level":"warn","file":"db_block.cpp","line":805,"method":"_apply_transaction","hostname":"","thread_name":"th_a","timestamp":"2019-12-25T05:23:50"},"format":"","data":{"trx":
     
     {"ref_block_num":28504,"ref_block_prefix":2701106264,"expiration":"2019-12-25T05:24:20","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[],"signatures":["1f3ada7d225ec91ebe95f24b73cc8a33dc4c799fc12be7fe927af24da3684190fc5439026d5801f4956eecc069eb837122c158afc5eced1b2b6510d28af39390d1"]}
+
+
+--- tranfer test1:
+-------------> Digest:
+tx: {"signatures":[],"ref_block_num":17949,"ref_block_prefix":1328841145,"expiration":"2019-12-27T01:57:18","operations":[[0,{"from":"1.2.15","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  17949
+    EncodeNumber: 17949
+  ->RefBlockPrefix:  1328841145
+    EncodeNumber: 1328841145
+  ->Expiration[trx]:  2019-12-27 01:57:18 +0000 UTC
+    EncodeNumber: 1577411838
+  ->Operations:  [0xc0001ee0c0]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0
+  ->Fee:  <nil>
+  ->From:  1.2.15
+    writeBytes:  [15] , Hex:  0f
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  false
+    EncodeNumber: 0
+  ->Memo:  <nil>
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 1d46b981344ffe64055e01000f05640000000000000000000000
+digest: [137 97 214 20 64 56 168 69 41 220 171 57 223 239 103 255 245 82 225 100 163 255 207 8 231 186 62 129 71 14 97 112], hex: 8961d6144038a84529dcab39dfef67fff552e164a3ffcf08e7ba3e81470e6170
+tx digest: [137 97 214 20 64 56 168 69 41 220 171 57 223 239 103 255 245 82 225 100 163 255 207 8 231 186 62 129 71 14 97 112]
+rawMessage: %!s(*json.RawMessage=<nil>)
+BroadcastTransaction: CallAPI: call api error: missing required active authority: Missing Active Authority 1.2.15
+
+
+1. serialize_transaction
+locked >>> serialize_transaction {"signatures":[],"ref_block_num":17949,"ref_block_prefix":1328841145,"expiration":"2019-12-27T01:57:18","operations":[[0,{"from":"1.2.15","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"extensions":[]}]],"extensions":[]}
+serialize_transaction {"signatures":[],"ref_block_num":17949,"ref_block_prefix":1328841145,"expiration":"2019-12-27T01:57:18","operations":[[0,{"from":"1.2.15","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"extensions":[]}]],"extensions":[]}
+1d46b981344ffe64055e0100 000000000000000000 0f05640000000000000000000000 0000
+
+1d46b981344ffe64055e0100                    0f05640000000000000000000000
+
+
+--> transfer test2:
+tx: {"signatures":[],"ref_block_num":18903,"ref_block_prefix":1323367562,"expiration":"2019-12-27T02:32:28","operations":[[0,{"from":"1.2.15","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  18903
+    EncodeNumber: 18903
+  ->RefBlockPrefix:  1323367562
+    EncodeNumber: 1323367562
+  ->Expiration[trx]:  2019-12-27 02:32:28 +0000 UTC
+    EncodeNumber: 1577413948
+  ->Operations:  [0xc00006e040]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0
+  ->Fee:  &{0 1.3.0}
+    EncodeNumber: 0
+    writeBytes:  [0] , Hex:  00
+  ->From:  1.2.15
+    writeBytes:  [15] , Hex:  0f
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  false
+    EncodeNumber: 0
+  ->Memo:  <nil>
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: d7498afce04e3c6d055e01000000000000000000000f05640000000000000000000000
+digest: [246 54 219 144 142 76 220 205 239 0 246 227 80 22 57 88 124 21 207 68 64 211 145 248 30 156 33 107 168 46 126 10], hex: f636db908e4cdccdef00f6e3501639587c15cf4440d391f81e9c216ba82e7e0a
+tx digest: [246 54 219 144 142 76 220 205 239 0 246 227 80 22 57 88 124 21 207 68 64 211 145 248 30 156 33 107 168 46 126 10]
+rawMessage: %!s(*json.RawMessage=<nil>)
+BroadcastTransaction: CallAPI: call api error: insufficient fee: Insufficient Fee Paid
+
+1. locked >>> serialize_transaction {"signatures":[],"ref_block_num":18903,"ref_block_prefix":1323367562,"expiration":"2019-12-27T02:32:28","operations":[[0,{"from":"1.2.15","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]} 
+serialize_transaction {"signatures":[],"ref_block_num":18903,"ref_block_prefix":1323367562,"expiration":"2019-12-27T02:32:28","operations":[[0,{"from":"1.2.15","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]} 
+"d7498afce04e3c6d055e01000000000000000000000f056400000000000000000000000000" 
+
+
+
+3b4bdaf47f0a4870055e01000000000000000000000f0564000000000000000001021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c6024bc0412e636f8b2801764c94f734391bc05d0f5ef528f4bdb6b01257737cc44352fdfc072182654d2097123a1dee36e81f1101329b1a695758c3c2f6a7c6c29ee81f78eb9efebd3e3d0000 0000 
+
+3b4bdaf47f0a4870055e01000000000000000000000f0564000000000000000001021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c6024bc0412e636f8b2801764c94f734391bc05d0f5ef528f4bdb6b01257737cc44352fdfc072182654d2097123a1dee36e81f1101329b1a695758c3c2f6a7c6c29ee81f78eb9efebd3e3d0000
+
+
+
+
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":18580,"ref_block_prefix":3915381342,"expiration":"2019-12-27T06:58:25","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[],"fee":{"amount":28154,"asset_id":"1.3.0"}}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  18580
+    EncodeNumber: 18580
+  ->RefBlockPrefix:  3915381342
+    EncodeNumber: 3915381342
+  ->Expiration[trx]:  2019-12-27 06:58:25 +0000 UTC
+    EncodeNumber: 1577429905
+  ->Operations:  [0xc0001ce410]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0
+  ->Fee:  &{28154 1.3.0}
+    EncodeNumber: 28154
+    writeBytes:  [0] , Hex:  00
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1
+  ->Memo:  [0 memo test false]
+MemoPair Marshal
+    EncodeNumber: 0
+    EncodeString: memo test false
+    writeBytes:  [15] , Hex:  0f
+    writeString:  memo test false
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 94485efa5fe991ab055e0100fa6d0000000000000010056400000000000000000100000000000000000f6d656d6f20746573742066616c73650000
+digest: [165 106 62 210 192 59 186 137 230 36 68 123 130 69 199 120 95 78 47 119 142 159 127 94 83 115 137 241 188 219 221 62], hex: a56a3ed2c03bba89e624447b8245c7785f4e2f778e9f7f5e537389f1bcdbdd3e
+tx digest: [165 106 62 210 192 59 186 137 230 36 68 123 130 69 199 120 95 78 47 119 142 159 127 94 83 115 137 241 188 219 221 62]
+rawMessage: %!s(*json.RawMessage=<nil>)
+BroadcastTransaction: CallAPI: call api error: missing required active authority: Missing Active Authority 1.2.16
+
+
+-->: 
+94485efa5fe991ab055e0100 100000000000000005000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000 
+
+94485efa5fe991ab055e0100 
+fa6d0000000000000010056400000000000000000100000000000000000 
+
+f6d656d6f20746573742066616c73650000
+
+
+
+
+
+----- 3
+locked >>> serialize_transaction  {"signatures":[],"ref_block_num":18765,"ref_block_prefix":431077720,"expiration":"2019-12-27T07:05:16","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]}
+serialize_transaction  {"signatures":[],"ref_block_num":18765,"ref_block_prefix":431077720,"expiration":"2019-12-27T07:05:16","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]}
+"4d4958b9b1192cad055e0100100000000000000005000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000"
+
+
+4d4958b9b1192cad055e0100100000000000000005000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000  
+
+
+4d4958b9b1192cad055e010000000000000000000010056400000000000000000100000000000000000f6d656d6f20746573742066616c73650000
+
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":18765,"ref_block_prefix":431077720,"expiration":"2019-12-27T07:05:16","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  18765
+    EncodeNumber: 18765
+  ->RefBlockPrefix:  431077720
+    EncodeNumber: 431077720
+  ->Expiration[trx]:  2019-12-27 07:05:16 +0000 UTC
+    EncodeNumber: 1577430316
+  ->Operations:  [0xc0001e00f0]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0
+  ->Fee:  &{0 1.3.0}
+    EncodeNumber: 0
+    writeBytes:  [0] , Hex:  00
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1
+  ->Memo:  [0 memo test false]
+MemoPair Marshal
+    EncodeNumber: 0
+    EncodeString: memo test false
+    writeBytes:  [15] , Hex:  0f
+    writeString:  memo test false
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 4d4958b9b1192cad055e010000000000000000000010056400000000000000000100000000000000000f6d656d6f20746573742066616c73650000
+digest: [242 12 101 90 247 36 184 31 84 232 142 198 79 77 182 90 42 172 162 178 142 63 9 224 19 155 165 182 39 196 74 72], hex: f20c655af724b81f54e88ec64f4db65a2aaca2b28e3f09e0139ba5b627c44a48
+tx digest: [242 12 101 90 247 36 184 31 84 232 142 198 79 77 182 90 42 172 162 178 142 63 9 224 19 155 165 182 39 196 74 72]
+rawMessage: %!s(*json.RawMessage=<nil>)
+BroadcastTransaction: CallAPI: call api error: missing required active authority: Missing Active Authority 1.2.16
+
+
+
+----- 4
+
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":19071,"ref_block_prefix":2248325209,"expiration":"2019-12-27T07:16:24","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  19071
+    EncodeNumber: 19071, Hex: 7f4a
+  ->RefBlockPrefix:  2248325209
+    EncodeNumber: 2248325209, Hex: 59b80286
+  ->Expiration[trx]:  2019-12-27 07:16:24 +0000 UTC
+    EncodeNumber: 1577430984, Hex: c8af055e
+  ->Operations:  [0xc0002002d0]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  &{0 1.3.0}
+    EncodeNumber: 0, Hex: 0000000000000000
+    writeBytes:  [0] , Hex:  00
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [0 memo test false]
+MemoPair Marshal
+    EncodeNumber: 0, Hex: 0000000000000000
+    EncodeString: memo test false
+    writeBytes:  [15] , Hex:  0f
+    writeString:  memo test false
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 7f4a59b80286c8af055e010000000000000000000010056400000000000000000100000000000000000f6d656d6f20746573742066616c73650000
+digest: [249 2 216 107 42 79 228 9 74 128 14 99 238 249 93 69 206 4 158 208 186 88 207 151 32 41 239 11 195 40 204 232], hex: f902d86b2a4fe4094a800e63eef95d45ce049ed0ba58cf972029ef0bc328cce8
+tx digest: [249 2 216 107 42 79 228 9 74 128 14 99 238 249 93 69 206 4 158 208 186 88 207 151 32 41 239 11 195 40 204 232]
+rawMessage: %!s(*json.RawMessage=<nil>)
+BroadcastTransaction: CallAPI: call api error: missing required active authority: Missing Active Authority 1.2.16
+
+
+locked >>> serialize_transaction  {"signatures":[],"ref_block_num":19071,"ref_block_prefix":2248325209,"expiration":"2019-12-27T07:16:24","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]}
+serialize_transaction  {"signatures":[],"ref_block_num":19071,"ref_block_prefix":2248325209,"expiration":"2019-12-27T07:16:24","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[],"fee":{"amount":0,"asset_id":"1.3.0"}}]],"extensions":[]}
+"7f4a59b80286c8af055e0100100000000000000005000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000"
+
+a. 
+7f4a59b80286c8af055e01 --> len(op)
+00 transfer_op=0
+1000000000000000 0500000000000000 
+6400000000000000 0000000000000000  --> Amount
+01
+00
+
+0f6d656d6f20746573742066616c736500000000
+
+b. 
+7f4a59b80286c8af055e01 
+00
+0000000000000000 00     -- transfer fee                  [remove]
+10 05                   -- 10 from  05 to                [modify] objectID 8字节 调整为64字节
+6400000000000000 00     -- Amount{  AssetID}             [modify] AssetID: 8字节 调整为64字节
+01                      -- p.Memo != nil: true bool类型不变
+0000000000000000 
+
+0f6d656d6f20746573742066616c73650000
+
+
+----> 5
+
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":20765,"ref_block_prefix":3572180180,"expiration":"2019-12-27T08:18:41","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  20765
+    EncodeNumber: 20765, Hex: 1d51
+  ->RefBlockPrefix:  3572180180
+    EncodeNumber: 3572180180, Hex: d424ebd4
+  ->Expiration[trx]:  2019-12-27 08:18:41 +0000 UTC
+    EncodeNumber: 1577434721, Hex: 61be055e
+  ->Operations:  [0xc0001d6410]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  <nil>
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [0 memo test false]
+MemoPair Marshal
+    EncodeNumber: 0, Hex: 00
+    EncodeString: memo test false
+    writeBytes:  [15] , Hex:  0f
+    writeString:  memo test false
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 1d51d424ebd461be055e01001000000000000000050000000000000064000000000000000001000f6d656d6f20746573742066616c73650000
+digest: [191 183 139 138 46 230 39 223 102 54 176 162 30 24 105 122 219 51 248 141 17 144 97 123 45 179 108 6 16 180 248 78], hex: bfb78b8a2ee627df6636b0a21e18697adb33f88d1190617b2db36c0610b4f84e
+tx digest: [191 183 139 138 46 230 39 223 102 54 176 162 30 24 105 122 219 51 248 141 17 144 97 123 45 179 108 6 16 180 248 78]
+rawMessage: %!s(*json.RawMessage=<nil>)
+BroadcastTransaction: CallAPI: call api error: missing required active authority: Missing Active Authority 1.2.16 
+
+
+locked >>> serialize_transaction {"signatures":[],"ref_block_num":20765,"ref_block_prefix":3572180180,"expiration":"2019-12-27T08:18:41","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+serialize_transaction {"signatures":[],"ref_block_num":20765,"ref_block_prefix":3572180180,"expiration":"2019-12-27T08:18:41","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+"1d51d424ebd461be055e0100100000000000000005000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000"
+
+a. 
+1d51d424ebd461be055e0100100000000000000005000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c736500000000
+
+b. 
+1d51d424ebd461be055e01001000000000000000050000000000000064000000000000000001000f6d656d6f20746573742066616c73650000  
+
+
+
+---- transfer success:
+[Running] go run "/Users/a123/prj/gopath/src/github.com/gkany/graphSDK/tests/chain/chain.go"
+2019/12/27 16:26:45 ------- chain api test ----------
+rawMessage: &true
+rawMessage: &2
+rawMessage: &3
+rawMessage: &4
+rawMessage: &"179db3c6a2e08d610f718f05e9cc2aabad62aff80305b9621b162b8b6f2fd79f"
+rawMessage: &[{"id":"1.2.16","membership_expiration_date":"1969-12-31T23:59:59","registrar":"1.2.4","name":"nicotest","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",1]],"address_auths":[]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",1]],"address_auths":[]},"options":{"memo_key":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","votes":[],"extensions":[]},"statistics":"2.6.16","asset_locked":{"locked_total":[],"contract_lock_details":[]},"cashback_gas":"1.13.10","cashback_vb":"1.13.11"},{"id":"1.2.5","membership_expiration_date":"1969-12-31T23:59:59","registrar":"1.2.4","name":"init0","witness_status":["1.6.1",true],"committee_status":["1.5.0",true],"owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS",1]],"address_auths":[]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS",1]],"address_auths":[]},"options":{"memo_key":"COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS","votes":[],"extensions":[]},"statistics":"2.6.5","asset_locked":{"locked_total":[["1.3.0","10000000000000"]],"contract_lock_details":[],"committee_freeze":{"amount":"5000000000000","asset_id":"1.3.0"},"witness_freeze":{"amount":"5000000000000","asset_id":"1.3.0"}}}]
+rawMessage: &{"id":"2.1.0","head_block_number":20999,"head_block_id":"000052078af958617d9a605ebd3b177f91bf466d","time":"2019-12-27T08:26:44","current_witness":"1.6.2","current_transaction_count":0,"next_maintenance_time":"2019-12-27T10:00:00","last_budget_time":"2019-12-27T08:00:00","witness_budget":"28720000000","accounts_registered_this_interval":0,"recently_missed_count":414485,"current_aslot":11975728,"recent_slots_filled":"340199269888770541886375830412783910903","dynamic_flags":0,"last_irreversible_block_num":20992}
+&[123 34 105 100 34 58 34 50 46 49 46 48 34 44 34 104 101 97 100 95 98 108 111 99 107 95 110 117 109 98 101 114 34 58 50 48 57 57 57 44 34 104 101 97 100 95 98 108 111 99 107 95 105 100 34 58 34 48 48 48 48 53 50 48 55 56 97 102 57 53 56 54 49 55 100 57 97 54 48 53 101 98 100 51 98 49 55 55 102 57 49 98 102 52 54 54 100 34 44 34 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 48 56 58 50 54 58 52 52 34 44 34 99 117 114 114 101 110 116 95 119 105 116 110 101 115 115 34 58 34 49 46 54 46 50 34 44 34 99 117 114 114 101 110 116 95 116 114 97 110 115 97 99 116 105 111 110 95 99 111 117 110 116 34 58 48 44 34 110 101 120 116 95 109 97 105 110 116 101 110 97 110 99 101 95 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 49 48 58 48 48 58 48 48 34 44 34 108 97 115 116 95 98 117 100 103 101 116 95 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 48 56 58 48 48 58 48 48 34 44 34 119 105 116 110 101 115 115 95 98 117 100 103 101 116 34 58 34 50 56 55 50 48 48 48 48 48 48 48 34 44 34 97 99 99 111 117 110 116 115 95 114 101 103 105 115 116 101 114 101 100 95 116 104 105 115 95 105 110 116 101 114 118 97 108 34 58 48 44 34 114 101 99 101 110 116 108 121 95 109 105 115 115 101 100 95 99 111 117 110 116 34 58 52 49 52 52 56 53 44 34 99 117 114 114 101 110 116 95 97 115 108 111 116 34 58 49 49 57 55 53 55 50 56 44 34 114 101 99 101 110 116 95 115 108 111 116 115 95 102 105 108 108 101 100 34 58 34 51 52 48 49 57 57 50 54 57 56 56 56 55 55 48 53 52 49 56 56 54 51 55 53 56 51 48 52 49 50 55 56 51 57 49 48 57 48 51 34 44 34 100 121 110 97 109 105 99 95 102 108 97 103 115 34 58 48 44 34 108 97 115 116 95 105 114 114 101 118 101 114 115 105 98 108 101 95 98 108 111 99 107 95 110 117 109 34 58 50 48 57 57 50 125]
+tx: &{{20999 1633221002 2019-12-27 08:27:14 +0000 UTC [0xc0000d4140] {<nil>}} [] []}
+rawMessage: &["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"]
+rawMessage: &["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"]
+reqPk: [COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx]
+private Key: 5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo, public key: COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":20999,"ref_block_prefix":1633221002,"expiration":"2019-12-27T08:27:14","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[1,{"from":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","to":"COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS","nonce":5577006791947779410,"message":"51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46"}],"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  20999
+    EncodeNumber: 20999, Hex: 0752
+  ->RefBlockPrefix:  1633221002
+    EncodeNumber: 1633221002, Hex: 8af95861
+  ->Expiration[trx]:  2019-12-27 08:27:14 +0000 UTC
+    EncodeNumber: 1577435234, Hex: 62c0055e
+  ->Operations:  [0xc0000d4140]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  <nil>
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [1 0xc000120000]
+MemoPair Marshal
+    EncodeNumber: 1, Hex: 01
+Memo Marshal
+    writeBytes:  [2 27 110 185 211 92 127 126 210 59 100 203 25 253 150 81 60 181 10 106 205 118 139 195 92 252 202 188 26 210 213 197 198] , Hex:  021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c6
+    writeBytes:  [3 246 225 23 166 164 170 27 205 248 116 87 234 43 79 55 191 132 152 52 236 29 235 163 12 208 111 199 87 110 12 133 29] , Hex:  03f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d
+    EncodeNumber: 5577006791947779410, Hex: 52fdfc072182654d
+    writeBytes:  [32] , Hex:  20
+    writeBytes:  [81 225 165 130 139 125 229 95 234 28 213 147 181 250 203 212 132 96 199 69 15 11 113 163 164 27 12 168 216 7 95 70] , Hex:  51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 07528af9586162c0055e010010000000000000000500000000000000640000000000000000000000000000000101021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c603f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d52fdfc072182654d2051e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f460000
+digest: [135 99 255 169 81 199 60 60 95 180 122 141 161 245 239 172 254 193 7 234 30 223 184 48 121 71 206 217 99 234 212 210], hex: 8763ffa951c73c3c5fb47a8da1f5efacfec107ea1edfb8307947ced963ead4d2
+tx digest: [135 99 255 169 81 199 60 60 95 180 122 141 161 245 239 172 254 193 7 234 30 223 184 48 121 71 206 217 99 234 212 210]
+tx: &{0xc000190600}
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":20999,"ref_block_prefix":1633221002,"expiration":"2019-12-27T08:27:15","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[1,{"from":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","to":"COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS","nonce":5577006791947779410,"message":"51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46"}],"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  20999
+    EncodeNumber: 20999, Hex: 0752
+  ->RefBlockPrefix:  1633221002
+    EncodeNumber: 1633221002, Hex: 8af95861
+  ->Expiration[trx]:  2019-12-27 08:27:15 +0000 UTC
+    EncodeNumber: 1577435235, Hex: 63c0055e
+  ->Operations:  [0xc0000d4140]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  <nil>
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [1 0xc000120000]
+MemoPair Marshal
+    EncodeNumber: 1, Hex: 01
+Memo Marshal
+    writeBytes:  [2 27 110 185 211 92 127 126 210 59 100 203 25 253 150 81 60 181 10 106 205 118 139 195 92 252 202 188 26 210 213 197 198] , Hex:  021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c6
+    writeBytes:  [3 246 225 23 166 164 170 27 205 248 116 87 234 43 79 55 191 132 152 52 236 29 235 163 12 208 111 199 87 110 12 133 29] , Hex:  03f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d
+    EncodeNumber: 5577006791947779410, Hex: 52fdfc072182654d
+    writeBytes:  [32] , Hex:  20
+    writeBytes:  [81 225 165 130 139 125 229 95 234 28 213 147 181 250 203 212 132 96 199 69 15 11 113 163 164 27 12 168 216 7 95 70] , Hex:  51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 07528af9586163c0055e010010000000000000000500000000000000640000000000000000000000000000000101021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c603f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d52fdfc072182654d2051e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f460000
+digest: [97 83 127 83 231 251 157 167 51 187 64 105 112 255 22 202 158 206 253 102 12 70 169 13 183 161 126 149 49 49 23 40], hex: 61537f53e7fb9da733bb406970ff16ca9ecefd660c46a90db7a17e9531311728
+tx digest: [97 83 127 83 231 251 157 167 51 187 64 105 112 255 22 202 158 206 253 102 12 70 169 13 183 161 126 149 49 49 23 40]
+tx: &{0xc000190600}
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":20999,"ref_block_prefix":1633221002,"expiration":"2019-12-27T08:27:16","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[1,{"from":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","to":"COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS","nonce":5577006791947779410,"message":"51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46"}],"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  20999
+    EncodeNumber: 20999, Hex: 0752
+  ->RefBlockPrefix:  1633221002
+    EncodeNumber: 1633221002, Hex: 8af95861
+  ->Expiration[trx]:  2019-12-27 08:27:16 +0000 UTC
+    EncodeNumber: 1577435236, Hex: 64c0055e
+  ->Operations:  [0xc0000d4140]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  <nil>
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [1 0xc000120000]
+MemoPair Marshal
+    EncodeNumber: 1, Hex: 01
+Memo Marshal
+    writeBytes:  [2 27 110 185 211 92 127 126 210 59 100 203 25 253 150 81 60 181 10 106 205 118 139 195 92 252 202 188 26 210 213 197 198] , Hex:  021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c6
+    writeBytes:  [3 246 225 23 166 164 170 27 205 248 116 87 234 43 79 55 191 132 152 52 236 29 235 163 12 208 111 199 87 110 12 133 29] , Hex:  03f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d
+    EncodeNumber: 5577006791947779410, Hex: 52fdfc072182654d
+    writeBytes:  [32] , Hex:  20
+    writeBytes:  [81 225 165 130 139 125 229 95 234 28 213 147 181 250 203 212 132 96 199 69 15 11 113 163 164 27 12 168 216 7 95 70] , Hex:  51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 07528af9586164c0055e010010000000000000000500000000000000640000000000000000000000000000000101021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c603f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d52fdfc072182654d2051e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f460000
+digest: [129 72 50 238 44 200 222 171 134 157 180 244 211 95 237 49 92 119 108 52 95 163 194 57 69 222 223 104 119 241 122 171], hex: 814832ee2cc8deab869db4f4d35fed315c776c345fa3c23945dedf6877f17aab
+tx digest: [129 72 50 238 44 200 222 171 134 157 180 244 211 95 237 49 92 119 108 52 95 163 194 57 69 222 223 104 119 241 122 171]
+tx: &{0xc000190600}
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":20999,"ref_block_prefix":1633221002,"expiration":"2019-12-27T08:27:17","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[1,{"from":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","to":"COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS","nonce":5577006791947779410,"message":"51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46"}],"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  20999
+    EncodeNumber: 20999, Hex: 0752
+  ->RefBlockPrefix:  1633221002
+    EncodeNumber: 1633221002, Hex: 8af95861
+  ->Expiration[trx]:  2019-12-27 08:27:17 +0000 UTC
+    EncodeNumber: 1577435237, Hex: 65c0055e
+  ->Operations:  [0xc0000d4140]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  <nil>
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [1 0xc000120000]
+MemoPair Marshal
+    EncodeNumber: 1, Hex: 01
+Memo Marshal
+    writeBytes:  [2 27 110 185 211 92 127 126 210 59 100 203 25 253 150 81 60 181 10 106 205 118 139 195 92 252 202 188 26 210 213 197 198] , Hex:  021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c6
+    writeBytes:  [3 246 225 23 166 164 170 27 205 248 116 87 234 43 79 55 191 132 152 52 236 29 235 163 12 208 111 199 87 110 12 133 29] , Hex:  03f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d
+    EncodeNumber: 5577006791947779410, Hex: 52fdfc072182654d
+    writeBytes:  [32] , Hex:  20
+    writeBytes:  [81 225 165 130 139 125 229 95 234 28 213 147 181 250 203 212 132 96 199 69 15 11 113 163 164 27 12 168 216 7 95 70] , Hex:  51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 07528af9586165c0055e010010000000000000000500000000000000640000000000000000000000000000000101021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c603f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d52fdfc072182654d2051e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f460000
+digest: [162 58 36 51 30 133 118 90 247 188 234 100 141 253 4 235 252 220 230 145 106 42 1 119 23 132 73 9 84 137 218 78], hex: a23a24331e85765af7bcea648dfd04ebfcdce6916a2a0177178449095489da4e
+tx digest: [162 58 36 51 30 133 118 90 247 188 234 100 141 253 4 235 252 220 230 145 106 42 1 119 23 132 73 9 84 137 218 78]
+tx: &{0xc000190600}
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":20999,"ref_block_prefix":1633221002,"expiration":"2019-12-27T08:27:18","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[1,{"from":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","to":"COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS","nonce":5577006791947779410,"message":"51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46"}],"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  20999
+    EncodeNumber: 20999, Hex: 0752
+  ->RefBlockPrefix:  1633221002
+    EncodeNumber: 1633221002, Hex: 8af95861
+  ->Expiration[trx]:  2019-12-27 08:27:18 +0000 UTC
+    EncodeNumber: 1577435238, Hex: 66c0055e
+  ->Operations:  [0xc0000d4140]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  <nil>
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [1 0xc000120000]
+MemoPair Marshal
+    EncodeNumber: 1, Hex: 01
+Memo Marshal
+    writeBytes:  [2 27 110 185 211 92 127 126 210 59 100 203 25 253 150 81 60 181 10 106 205 118 139 195 92 252 202 188 26 210 213 197 198] , Hex:  021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c6
+    writeBytes:  [3 246 225 23 166 164 170 27 205 248 116 87 234 43 79 55 191 132 152 52 236 29 235 163 12 208 111 199 87 110 12 133 29] , Hex:  03f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d
+    EncodeNumber: 5577006791947779410, Hex: 52fdfc072182654d
+    writeBytes:  [32] , Hex:  20
+    writeBytes:  [81 225 165 130 139 125 229 95 234 28 213 147 181 250 203 212 132 96 199 69 15 11 113 163 164 27 12 168 216 7 95 70] , Hex:  51e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f46
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 07528af9586166c0055e010010000000000000000500000000000000640000000000000000000000000000000101021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c603f6e117a6a4aa1bcdf87457ea2b4f37bf849834ec1deba30cd06fc7576e0c851d52fdfc072182654d2051e1a5828b7de55fea1cd593b5facbd48460c7450f0b71a3a41b0ca8d8075f460000
+digest: [231 155 115 170 33 2 163 48 86 154 132 39 163 132 36 0 60 253 210 252 138 140 92 60 234 81 51 225 54 227 229 198], hex: e79b73aa2102a330569a8427a38424003cfdd2fc8a8c5c3cea5133e136e3e5c6
+tx digest: [231 155 115 170 33 2 163 48 86 154 132 39 163 132 36 0 60 253 210 252 138 140 92 60 234 81 51 225 54 227 229 198]
+rawMessage: &"4af7c0db7229aa18632d74230fd95de315275c279efe2f2b32dbbf2960fe0c7c"
+<nil>
+
+-------> 2. transfer memo false
+rawMessage: &{"id":"2.1.0","head_block_number":20999,"head_block_id":"000052078af958617d9a605ebd3b177f91bf466d","time":"2019-12-27T08:26:44","current_witness":"1.6.2","current_transaction_count":0,"next_maintenance_time":"2019-12-27T10:00:00","last_budget_time":"2019-12-27T08:00:00","witness_budget":"28720000000","accounts_registered_this_interval":0,"recently_missed_count":414485,"current_aslot":11975728,"recent_slots_filled":"340199269888770541886375830412783910903","dynamic_flags":0,"last_irreversible_block_num":20992}
+&[123 34 105 100 34 58 34 50 46 49 46 48 34 44 34 104 101 97 100 95 98 108 111 99 107 95 110 117 109 98 101 114 34 58 50 48 57 57 57 44 34 104 101 97 100 95 98 108 111 99 107 95 105 100 34 58 34 48 48 48 48 53 50 48 55 56 97 102 57 53 56 54 49 55 100 57 97 54 48 53 101 98 100 51 98 49 55 55 102 57 49 98 102 52 54 54 100 34 44 34 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 48 56 58 50 54 58 52 52 34 44 34 99 117 114 114 101 110 116 95 119 105 116 110 101 115 115 34 58 34 49 46 54 46 50 34 44 34 99 117 114 114 101 110 116 95 116 114 97 110 115 97 99 116 105 111 110 95 99 111 117 110 116 34 58 48 44 34 110 101 120 116 95 109 97 105 110 116 101 110 97 110 99 101 95 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 49 48 58 48 48 58 48 48 34 44 34 108 97 115 116 95 98 117 100 103 101 116 95 116 105 109 101 34 58 34 50 48 49 57 45 49 50 45 50 55 84 48 56 58 48 48 58 48 48 34 44 34 119 105 116 110 101 115 115 95 98 117 100 103 101 116 34 58 34 50 56 55 50 48 48 48 48 48 48 48 34 44 34 97 99 99 111 117 110 116 115 95 114 101 103 105 115 116 101 114 101 100 95 116 104 105 115 95 105 110 116 101 114 118 97 108 34 58 48 44 34 114 101 99 101 110 116 108 121 95 109 105 115 115 101 100 95 99 111 117 110 116 34 58 52 49 52 52 56 53 44 34 99 117 114 114 101 110 116 95 97 115 108 111 116 34 58 49 49 57 55 53 55 50 56 44 34 114 101 99 101 110 116 95 115 108 111 116 115 95 102 105 108 108 101 100 34 58 34 51 52 48 49 57 57 50 54 57 56 56 56 55 55 48 53 52 49 56 56 54 51 55 53 56 51 48 52 49 50 55 56 51 57 49 48 57 48 51 34 44 34 100 121 110 97 109 105 99 95 102 108 97 103 115 34 58 48 44 34 108 97 115 116 95 105 114 114 101 118 101 114 115 105 98 108 101 95 98 108 111 99 107 95 110 117 109 34 58 50 48 57 57 50 125]
+tx: &{{20999 1633221002 2019-12-27 08:27:14 +0000 UTC [0xc000232370] {<nil>}} [] []}
+rawMessage: &["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"]
+rawMessage: &["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"]
+reqPk: [COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx]
+private Key: 5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo, public key: COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":20999,"ref_block_prefix":1633221002,"expiration":"2019-12-27T08:27:14","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  20999
+    EncodeNumber: 20999, Hex: 0752
+  ->RefBlockPrefix:  1633221002
+    EncodeNumber: 1633221002, Hex: 8af95861
+  ->Expiration[trx]:  2019-12-27 08:27:14 +0000 UTC
+    EncodeNumber: 1577435234, Hex: 62c0055e
+  ->Operations:  [0xc000232370]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  <nil>
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [0 memo test false]
+MemoPair Marshal
+    EncodeNumber: 0, Hex: 00
+    EncodeString: memo test false
+    writeBytes:  [15] , Hex:  0f
+    writeString:  memo test false
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 07528af9586162c0055e0100100000000000000005000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c73650000
+digest: [5 145 175 192 127 134 9 164 165 140 162 133 87 36 49 33 10 228 95 58 143 205 189 154 173 174 2 186 149 138 234 130], hex: 0591afc07f8609a4a58ca285572431210ae45f3a8fcdbd9aadae02ba958aea82
+tx digest: [5 145 175 192 127 134 9 164 165 140 162 133 87 36 49 33 10 228 95 58 143 205 189 154 173 174 2 186 149 138 234 130]
+tx: &{0xc0001b8200}
+-------------> Digest: 
+tx: {"signatures":[],"ref_block_num":20999,"ref_block_prefix":1633221002,"expiration":"2019-12-27T08:27:15","operations":[[0,{"from":"1.2.16","to":"1.2.5","amount":{"amount":100,"asset_id":"1.3.0"},"memo":[0,"memo test false"],"extensions":[]}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  20999
+    EncodeNumber: 20999, Hex: 0752
+  ->RefBlockPrefix:  1633221002
+    EncodeNumber: 1633221002, Hex: 8af95861
+  ->Expiration[trx]:  2019-12-27 08:27:15 +0000 UTC
+    EncodeNumber: 1577435235, Hex: 63c0055e
+  ->Operations:  [0xc000232370]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+TransferOperation Marshal
+  ->type:  OperationTypeTransfer
+    EncodeNumber: 0, Hex: 00
+  ->Fee:  <nil>
+  ->From:  1.2.16
+    writeBytes:  [16] , Hex:  10
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->To:  1.2.5
+    writeBytes:  [5] , Hex:  05
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->Amount:  {100 1.3.0}
+    EncodeNumber: 100, Hex: 6400000000000000
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+  ->p.Memo != nil:  true
+    EncodeNumber: 1, Hex: 01
+  ->Memo:  [0 memo test false]
+MemoPair Marshal
+    EncodeNumber: 0, Hex: 00
+    EncodeString: memo test false
+    writeBytes:  [15] , Hex:  0f
+    writeString:  memo test false
+  ->Extensions[transfer op]:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 07528af9586163c0055e0100100000000000000005000000000000006400000000000000000000000000000001000f6d656d6f20746573742066616c73650000
+digest: [243 146 183 50 233 228 156 138 206 135 126 55 72 136 187 236 99 141 182 30 214 246 4 67 220 148 5 140 211 81 107 145], hex: f392b732e9e49c8ace877e374888bbec638db61ed6f60443dc94058cd3516b91
+tx digest: [243 146 183 50 233 228 156 138 206 135 126 55 72 136 187 236 99 141 182 30 214 246 4 67 220 148 5 140 211 81 107 145]
+rawMessage: &"1c886e7ece62ca8ca2953a458ed92b7d8d529d0820de4f208b12a900b8f82264"
+<nil>

@@ -99,6 +99,7 @@ func (p *OperationEnvelope) UnmarshalJSON(data []byte) error {
 type Operations []Operation
 
 func (p Operations) Marshal(enc *util.TypeEncoder) error {
+	fmt.Println("Operations Marshal")
 	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
 		return errors.Annotate(err, "encode Operations length")
 	}

@@ -295,6 +295,26 @@ func testDecodeJson() {
 	fmt.Println(dgp)
 }
 
+// test nil
+type Pair []interface{}
+type Operation struct {
+	ID   int  `json:"id"`
+	Memo Pair `json:"memo,omitempty"`
+}
+
+func testNil() {
+	op := Operation{
+		ID: 100,
+	}
+	fmt.Println(op.Memo == nil)
+
+	op1 := Operation{
+		ID:   200,
+		Memo: Pair{},
+	}
+	fmt.Println(op1.Memo == nil)
+}
+
 func main() {
 
 	// var a = make(interface{})
@@ -311,5 +331,7 @@ func main() {
 
 	// testDecodeString()
 
-	testDecodeJson()
+	// testDecodeJson()
+
+	testNil()
 }

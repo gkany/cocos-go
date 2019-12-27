@@ -21,6 +21,12 @@ func (p AssetID) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode instance")
 	}
 
+	for i := 1; i < 8; i++ {
+		if err := enc.EncodeUVarint(uint64(0)); err != nil {
+			return errors.Annotate(err, "encode instance")
+		}
+	}
+
 	return nil
 }
 
