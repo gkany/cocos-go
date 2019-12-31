@@ -38,6 +38,14 @@ func (p *TypeEncoder) EncodeVarint(i int64) error {
 	return p.writeBytes(b[:n])
 }
 
+func (p *TypeEncoder) EncodeUVarintByByte(i uint64) (int, error) {
+	fmt.Println("  ---> i: ", i)
+	b := make([]byte, binary.MaxVarintLen64)
+	n := PutUvarintByByte(b, i)
+	fmt.Println("  ---> n: ", n, ", b: ", b[:n], ", b: ", b[:])
+	return n, p.writeBytes(b[:n])
+}
+
 func (p *TypeEncoder) EncodeUVarint(i uint64) error {
 	b := make([]byte, binary.MaxVarintLen64)
 	n := binary.PutUvarint(b, i)

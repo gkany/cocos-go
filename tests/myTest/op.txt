@@ -1,0 +1,24 @@
+	contract_create                               //34
+	call_contract_function                        //35
+	temporary_authority_change                    //36
+	register_nh_asset_creator                     //37
+	create_world_view                             //38
+	relate_world_view                             //39
+	create_nh_asset                               //40
+	delete_nh_asset                               //41
+	transfer_nh_asset                             //42
+	create_nh_asset_order                         //43
+	cancel_nh_asset_order                         //44
+	fill_nh_asset_order                           //45
+	create_file                                   //46
+	add_file_relate_account                       //47
+	file_signature                                //48
+	relate_parent_file                            //49
+	revise_contract                               //50
+	crontab_create                                //51
+	crontab_cancel                                //52
+	crontab_recover                               //53
+	update_collateral_for_gas                     //54
+	account_authentication                        //55   
+
+    

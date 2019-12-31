@@ -33,11 +33,7 @@ func (j *PriceFeed) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{"maintenance_collateral_ratio":`)
-	fflib.FormatBits2(buf, uint64(j.MaintenanceCollateralRatio), 10, false)
-	buf.WriteString(`,"maximum_short_squeeze_ratio":`)
-	fflib.FormatBits2(buf, uint64(j.MaximumShortSqueezeRatio), 10, false)
-	buf.WriteString(`,"settlement_price":`)
+	buf.WriteString(`{"settlement_price":`)
 
 	{
 
@@ -47,16 +43,10 @@ func (j *PriceFeed) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		}
 
 	}
-	buf.WriteString(`,"core_exchange_rate":`)
-
-	{
-
-		err = j.CoreExchangeRate.MarshalJSONBuf(buf)
-		if err != nil {
-			return err
-		}
-
-	}
+	buf.WriteString(`,"maintenance_collateral_ratio":`)
+	fflib.FormatBits2(buf, uint64(j.MaintenanceCollateralRatio), 10, false)
+	buf.WriteString(`,"maximum_short_squeeze_ratio":`)
+	fflib.FormatBits2(buf, uint64(j.MaximumShortSqueezeRatio), 10, false)
 	buf.WriteByte('}')
 	return nil
 }
@@ -65,22 +55,18 @@ const (
 	ffjtPriceFeedbase = iota
 	ffjtPriceFeednosuchkey
 
+	ffjtPriceFeedSettlementPrice
+
 	ffjtPriceFeedMaintenanceCollateralRatio
 
 	ffjtPriceFeedMaximumShortSqueezeRatio
-
-	ffjtPriceFeedSettlementPrice
-
-	ffjtPriceFeedCoreExchangeRate
 )
+
+var ffjKeyPriceFeedSettlementPrice = []byte("settlement_price")
 
 var ffjKeyPriceFeedMaintenanceCollateralRatio = []byte("maintenance_collateral_ratio")
 
 var ffjKeyPriceFeedMaximumShortSqueezeRatio = []byte("maximum_short_squeeze_ratio")
-
-var ffjKeyPriceFeedSettlementPrice = []byte("settlement_price")
-
-var ffjKeyPriceFeedCoreExchangeRate = []byte("core_exchange_rate")
 
 // UnmarshalJSON umarshall json - template of ffjson
 func (j *PriceFeed) UnmarshalJSON(input []byte) error {
@@ -143,14 +129,6 @@ mainparse:
 			} else {
 				switch kn[0] {
 
-				case 'c':
-
-					if bytes.Equal(ffjKeyPriceFeedCoreExchangeRate, kn) {
-						currentKey = ffjtPriceFeedCoreExchangeRate
-						state = fflib.FFParse_want_colon
-						goto mainparse
-					}
-
 				case 'm':
 
 					if bytes.Equal(ffjKeyPriceFeedMaintenanceCollateralRatio, kn) {
@@ -174,18 +152,6 @@ mainparse:
 
 				}
 
-				if fflib.AsciiEqualFold(ffjKeyPriceFeedCoreExchangeRate, kn) {
-					currentKey = ffjtPriceFeedCoreExchangeRate
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyPriceFeedSettlementPrice, kn) {
-					currentKey = ffjtPriceFeedSettlementPrice
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyPriceFeedMaximumShortSqueezeRatio, kn) {
 					currentKey = ffjtPriceFeedMaximumShortSqueezeRatio
 					state = fflib.FFParse_want_colon
@@ -194,6 +160,12 @@ mainparse:
 
 				if fflib.AsciiEqualFold(ffjKeyPriceFeedMaintenanceCollateralRatio, kn) {
 					currentKey = ffjtPriceFeedMaintenanceCollateralRatio
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyPriceFeedSettlementPrice, kn) {
+					currentKey = ffjtPriceFeedSettlementPrice
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -215,17 +187,14 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
+				case ffjtPriceFeedSettlementPrice:
+					goto handle_SettlementPrice
+
 				case ffjtPriceFeedMaintenanceCollateralRatio:
 					goto handle_MaintenanceCollateralRatio
 
 				case ffjtPriceFeedMaximumShortSqueezeRatio:
 					goto handle_MaximumShortSqueezeRatio
-
-				case ffjtPriceFeedSettlementPrice:
-					goto handle_SettlementPrice
-
-				case ffjtPriceFeedCoreExchangeRate:
-					goto handle_CoreExchangeRate
 
 				case ffjtPriceFeednosuchkey:
 					err = fs.SkipField(tok)
@@ -240,6 +209,26 @@ mainparse:
 			}
 		}
 	}
+
+handle_SettlementPrice:
+
+	/* handler: j.SettlementPrice type=types.Price kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			err = j.SettlementPrice.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
+			if err != nil {
+				return err
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
 
 handle_MaintenanceCollateralRatio:
 
@@ -283,46 +272,6 @@ handle_MaximumShortSqueezeRatio:
 			err = j.MaximumShortSqueezeRatio.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_SettlementPrice:
-
-	/* handler: j.SettlementPrice type=types.Price kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			err = j.SettlementPrice.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_CoreExchangeRate:
-
-	/* handler: j.CoreExchangeRate type=types.Price kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			err = j.CoreExchangeRate.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
 			}
 		}
 		state = fflib.FFParse_after_value

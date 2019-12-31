@@ -17,8 +17,15 @@ type ProposalID struct {
 }
 
 func (p ProposalID) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.EncodeUVarint(uint64(p.Instance())); err != nil {
+	n, err := enc.EncodeUVarintByByte(uint64(p.Instance()))
+	if err != nil {
 		return errors.Annotate(err, "encode instance")
+	}
+
+	for i := 0; i < 8-n; i++ {
+		if err := enc.EncodeUVarint(uint64(0)); err != nil {
+			return errors.Annotate(err, "encode zero")
+		}
 	}
 
 	return nil

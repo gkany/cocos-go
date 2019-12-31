@@ -34,13 +34,7 @@ func (j *BidCollateralOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 	var obj []byte
 	_ = obj
 	_ = err
-	/* Struct fall back. type=types.AssetAmount kind=struct */
-	buf.WriteString(`{ "additional_collateral":`)
-	err = buf.Encode(&j.AdditionalCollateral)
-	if err != nil {
-		return err
-	}
-	buf.WriteString(`,"bidder":`)
+	buf.WriteString(`{ "bidder":`)
 
 	{
 
@@ -50,6 +44,12 @@ func (j *BidCollateralOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 		}
 		buf.Write(obj)
 
+	}
+	/* Struct fall back. type=types.AssetAmount kind=struct */
+	buf.WriteString(`,"additional_collateral":`)
+	err = buf.Encode(&j.AdditionalCollateral)
+	if err != nil {
+		return err
 	}
 	/* Struct fall back. type=types.AssetAmount kind=struct */
 	buf.WriteString(`,"debt_covered":`)
@@ -89,9 +89,9 @@ const (
 	ffjtBidCollateralOperationbase = iota
 	ffjtBidCollateralOperationnosuchkey
 
-	ffjtBidCollateralOperationAdditionalCollateral
-
 	ffjtBidCollateralOperationBidder
+
+	ffjtBidCollateralOperationAdditionalCollateral
 
 	ffjtBidCollateralOperationDebtCovered
 
@@ -100,9 +100,9 @@ const (
 	ffjtBidCollateralOperationFee
 )
 
-var ffjKeyBidCollateralOperationAdditionalCollateral = []byte("additional_collateral")
-
 var ffjKeyBidCollateralOperationBidder = []byte("bidder")
+
+var ffjKeyBidCollateralOperationAdditionalCollateral = []byte("additional_collateral")
 
 var ffjKeyBidCollateralOperationDebtCovered = []byte("debt_covered")
 
@@ -231,14 +231,14 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.SimpleLetterEqualFold(ffjKeyBidCollateralOperationBidder, kn) {
-					currentKey = ffjtBidCollateralOperationBidder
+				if fflib.AsciiEqualFold(ffjKeyBidCollateralOperationAdditionalCollateral, kn) {
+					currentKey = ffjtBidCollateralOperationAdditionalCollateral
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
-				if fflib.AsciiEqualFold(ffjKeyBidCollateralOperationAdditionalCollateral, kn) {
-					currentKey = ffjtBidCollateralOperationAdditionalCollateral
+				if fflib.SimpleLetterEqualFold(ffjKeyBidCollateralOperationBidder, kn) {
+					currentKey = ffjtBidCollateralOperationBidder
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -260,11 +260,11 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
-				case ffjtBidCollateralOperationAdditionalCollateral:
-					goto handle_AdditionalCollateral
-
 				case ffjtBidCollateralOperationBidder:
 					goto handle_Bidder
+
+				case ffjtBidCollateralOperationAdditionalCollateral:
+					goto handle_AdditionalCollateral
 
 				case ffjtBidCollateralOperationDebtCovered:
 					goto handle_DebtCovered
@@ -289,26 +289,6 @@ mainparse:
 		}
 	}
 
-handle_AdditionalCollateral:
-
-	/* handler: j.AdditionalCollateral type=types.AssetAmount kind=struct quoted=false*/
-
-	{
-		/* Falling back. type=types.AssetAmount kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-
-		err = json.Unmarshal(tbuf, &j.AdditionalCollateral)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
 handle_Bidder:
 
 	/* handler: j.Bidder type=types.AccountID kind=struct quoted=false*/
@@ -329,6 +309,26 @@ handle_Bidder:
 			}
 		}
 		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_AdditionalCollateral:
+
+	/* handler: j.AdditionalCollateral type=types.AssetAmount kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.AssetAmount kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.AdditionalCollateral)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
 	}
 
 	state = fflib.FFParse_after_value

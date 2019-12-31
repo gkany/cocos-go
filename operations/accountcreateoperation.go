@@ -17,9 +17,7 @@ func init() {
 
 type AccountCreateOperation struct {
 	types.OperationFee
-	Registrar types.AccountID `json:"registrar"`
-	// Referrer        types.AccountID               `json:"referrer"`
-	// ReferrerPercent types.UInt16                  `json:"referrer_percent"`
+	Registrar  types.AccountID               `json:"registrar"`
 	Name       types.String                  `json:"name"`
 	Owner      types.Authority               `json:"owner"`
 	Active     types.Authority               `json:"active"`

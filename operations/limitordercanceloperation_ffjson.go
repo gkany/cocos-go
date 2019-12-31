@@ -34,22 +34,22 @@ func (j *LimitOrderCancelOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) err
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{ "fee_paying_account":`)
+	buf.WriteString(`{ "order":`)
 
 	{
 
-		obj, err = j.FeePayingAccount.MarshalJSON()
+		obj, err = j.Order.MarshalJSON()
 		if err != nil {
 			return err
 		}
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"order":`)
+	buf.WriteString(`,"fee_paying_account":`)
 
 	{
 
-		obj, err = j.Order.MarshalJSON()
+		obj, err = j.FeePayingAccount.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -88,18 +88,18 @@ const (
 	ffjtLimitOrderCancelOperationbase = iota
 	ffjtLimitOrderCancelOperationnosuchkey
 
-	ffjtLimitOrderCancelOperationFeePayingAccount
-
 	ffjtLimitOrderCancelOperationOrder
+
+	ffjtLimitOrderCancelOperationFeePayingAccount
 
 	ffjtLimitOrderCancelOperationExtensions
 
 	ffjtLimitOrderCancelOperationFee
 )
 
-var ffjKeyLimitOrderCancelOperationFeePayingAccount = []byte("fee_paying_account")
-
 var ffjKeyLimitOrderCancelOperationOrder = []byte("order")
+
+var ffjKeyLimitOrderCancelOperationFeePayingAccount = []byte("fee_paying_account")
 
 var ffjKeyLimitOrderCancelOperationExtensions = []byte("extensions")
 
@@ -209,14 +209,14 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.SimpleLetterEqualFold(ffjKeyLimitOrderCancelOperationOrder, kn) {
-					currentKey = ffjtLimitOrderCancelOperationOrder
+				if fflib.AsciiEqualFold(ffjKeyLimitOrderCancelOperationFeePayingAccount, kn) {
+					currentKey = ffjtLimitOrderCancelOperationFeePayingAccount
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
-				if fflib.AsciiEqualFold(ffjKeyLimitOrderCancelOperationFeePayingAccount, kn) {
-					currentKey = ffjtLimitOrderCancelOperationFeePayingAccount
+				if fflib.SimpleLetterEqualFold(ffjKeyLimitOrderCancelOperationOrder, kn) {
+					currentKey = ffjtLimitOrderCancelOperationOrder
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -238,11 +238,11 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
-				case ffjtLimitOrderCancelOperationFeePayingAccount:
-					goto handle_FeePayingAccount
-
 				case ffjtLimitOrderCancelOperationOrder:
 					goto handle_Order
+
+				case ffjtLimitOrderCancelOperationFeePayingAccount:
+					goto handle_FeePayingAccount
 
 				case ffjtLimitOrderCancelOperationExtensions:
 					goto handle_Extensions
@@ -264,31 +264,6 @@ mainparse:
 		}
 	}
 
-handle_FeePayingAccount:
-
-	/* handler: j.FeePayingAccount type=types.AccountID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.FeePayingAccount.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
 handle_Order:
 
 	/* handler: j.Order type=types.LimitOrderID kind=struct quoted=false*/
@@ -304,6 +279,31 @@ handle_Order:
 			}
 
 			err = j.Order.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_FeePayingAccount:
+
+	/* handler: j.FeePayingAccount type=types.AccountID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.FeePayingAccount.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}

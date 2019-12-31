@@ -34,7 +34,18 @@ func (j *BalanceClaimOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{ "balance_to_claim":`)
+	buf.WriteString(`{ "deposit_to_account":`)
+
+	{
+
+		obj, err = j.DepositToAccount.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"balance_to_claim":`)
 
 	{
 
@@ -50,17 +61,6 @@ func (j *BalanceClaimOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	{
 
 		obj, err = j.BalanceOwnerKey.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"deposit_to_account":`)
-
-	{
-
-		obj, err = j.DepositToAccount.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -94,22 +94,22 @@ const (
 	ffjtBalanceClaimOperationbase = iota
 	ffjtBalanceClaimOperationnosuchkey
 
+	ffjtBalanceClaimOperationDepositToAccount
+
 	ffjtBalanceClaimOperationBalanceToClaim
 
 	ffjtBalanceClaimOperationBalanceOwnerKey
-
-	ffjtBalanceClaimOperationDepositToAccount
 
 	ffjtBalanceClaimOperationTotalClaimed
 
 	ffjtBalanceClaimOperationFee
 )
 
+var ffjKeyBalanceClaimOperationDepositToAccount = []byte("deposit_to_account")
+
 var ffjKeyBalanceClaimOperationBalanceToClaim = []byte("balance_to_claim")
 
 var ffjKeyBalanceClaimOperationBalanceOwnerKey = []byte("balance_owner_key")
-
-var ffjKeyBalanceClaimOperationDepositToAccount = []byte("deposit_to_account")
 
 var ffjKeyBalanceClaimOperationTotalClaimed = []byte("total_claimed")
 
@@ -227,12 +227,6 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyBalanceClaimOperationDepositToAccount, kn) {
-					currentKey = ffjtBalanceClaimOperationDepositToAccount
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyBalanceClaimOperationBalanceOwnerKey, kn) {
 					currentKey = ffjtBalanceClaimOperationBalanceOwnerKey
 					state = fflib.FFParse_want_colon
@@ -241,6 +235,12 @@ mainparse:
 
 				if fflib.AsciiEqualFold(ffjKeyBalanceClaimOperationBalanceToClaim, kn) {
 					currentKey = ffjtBalanceClaimOperationBalanceToClaim
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyBalanceClaimOperationDepositToAccount, kn) {
+					currentKey = ffjtBalanceClaimOperationDepositToAccount
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -262,14 +262,14 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
+				case ffjtBalanceClaimOperationDepositToAccount:
+					goto handle_DepositToAccount
+
 				case ffjtBalanceClaimOperationBalanceToClaim:
 					goto handle_BalanceToClaim
 
 				case ffjtBalanceClaimOperationBalanceOwnerKey:
 					goto handle_BalanceOwnerKey
-
-				case ffjtBalanceClaimOperationDepositToAccount:
-					goto handle_DepositToAccount
 
 				case ffjtBalanceClaimOperationTotalClaimed:
 					goto handle_TotalClaimed
@@ -290,6 +290,31 @@ mainparse:
 			}
 		}
 	}
+
+handle_DepositToAccount:
+
+	/* handler: j.DepositToAccount type=types.AccountID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.DepositToAccount.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
 
 handle_BalanceToClaim:
 
@@ -331,31 +356,6 @@ handle_BalanceOwnerKey:
 			}
 
 			err = j.BalanceOwnerKey.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_DepositToAccount:
-
-	/* handler: j.DepositToAccount type=types.AccountID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.DepositToAccount.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}

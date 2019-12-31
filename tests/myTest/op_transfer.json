@@ -819,3 +819,42 @@ digest: [243 146 183 50 233 228 156 138 206 135 126 55 72 136 187 236 99 141 182
 tx digest: [243 146 183 50 233 228 156 138 206 135 126 55 72 136 187 236 99 141 182 30 214 246 4 67 220 148 5 140 211 81 107 145]
 rawMessage: &"1c886e7ece62ca8ca2953a458ed92b7d8d529d0820de4f208b12a900b8f82264"
 <nil>
+
+
+
+websocket api exception :{"code":7,"name":"bad_cast_exception","message":"Bad Cast","stack":[{"context":{"level":"error","file":"variant.cpp","line":537,"method":"get_array","hostname":"","thread_name":"th_a","timestamp":"2019-12-30T08:31:02"},"format":"Invalid cast from ${type} to Array","data":{"type":"null_type"}},{"context":{"level":"warn","file":"websocket_api.cpp","line":144,"method":"on_message","hostname":"","thread_name":"th_a","timestamp":"2019-12-30T08:31:02"},"format":"","data":{"call.method":"call","call.params":[2,"get_potential_signatures",[{"signatures":[],"ref_block_num":36719,"ref_block_prefix":440049263,"expiration":"2019-12-30T08:31:32","operations":[[5,{"registrar":"1.2.16","name":"tester1","owner":{"weight_threshold":1,"account_auths":[],"key_auths":[["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",1]],"address_auths":[]},"active":{"weight_threshold":1,"account_auths":[],"key_auths":[["COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",1]],"address_auths":[]},"options":{"memo_key":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","votes":null,"extensions":[]},"extensions":{}}]],"extensions":[]}]]}}]}
+
+
+
+{
+  "registrar":"1.2.16",
+  "name":"tester1",
+  "owner":{
+      "weight_threshold":1,
+      "account_auths":[],
+      "key_auths":[
+          [
+              "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",
+              1
+          ]
+      ],
+      "address_auths":[]
+  },
+  "active":{
+      "weight_threshold":1,
+      "account_auths":[],
+      "key_auths":[
+          [
+              "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",
+              1
+          ]
+      ],
+      "address_auths":[]
+  },
+  "options":{
+      "memo_key":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx",
+      "votes":null,
+      "extensions":[]
+  },
+  "extensions":{}
+}

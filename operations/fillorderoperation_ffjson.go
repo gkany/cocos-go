@@ -69,16 +69,16 @@ func (j *FillOrderOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	if err != nil {
 		return err
 	}
-	if j.IsMaker {
-		buf.WriteString(`,"is_maker":true`)
-	} else {
-		buf.WriteString(`,"is_maker":false`)
-	}
 	/* Struct fall back. type=types.Price kind=struct */
 	buf.WriteString(`,"fill_price":`)
 	err = buf.Encode(&j.FillPrice)
 	if err != nil {
 		return err
+	}
+	if j.IsMaker {
+		buf.WriteString(`,"is_maker":true`)
+	} else {
+		buf.WriteString(`,"is_maker":false`)
 	}
 	buf.WriteByte(',')
 	if j.Fee != nil {
@@ -109,9 +109,9 @@ const (
 
 	ffjtFillOrderOperationReceives
 
-	ffjtFillOrderOperationIsMaker
-
 	ffjtFillOrderOperationFillPrice
+
+	ffjtFillOrderOperationIsMaker
 
 	ffjtFillOrderOperationFee
 )
@@ -124,9 +124,9 @@ var ffjKeyFillOrderOperationPays = []byte("pays")
 
 var ffjKeyFillOrderOperationReceives = []byte("receives")
 
-var ffjKeyFillOrderOperationIsMaker = []byte("is_maker")
-
 var ffjKeyFillOrderOperationFillPrice = []byte("fill_price")
+
+var ffjKeyFillOrderOperationIsMaker = []byte("is_maker")
 
 var ffjKeyFillOrderOperationFee = []byte("fee")
 
@@ -252,14 +252,14 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.AsciiEqualFold(ffjKeyFillOrderOperationFillPrice, kn) {
-					currentKey = ffjtFillOrderOperationFillPrice
+				if fflib.EqualFoldRight(ffjKeyFillOrderOperationIsMaker, kn) {
+					currentKey = ffjtFillOrderOperationIsMaker
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyFillOrderOperationIsMaker, kn) {
-					currentKey = ffjtFillOrderOperationIsMaker
+				if fflib.AsciiEqualFold(ffjKeyFillOrderOperationFillPrice, kn) {
+					currentKey = ffjtFillOrderOperationFillPrice
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -317,11 +317,11 @@ mainparse:
 				case ffjtFillOrderOperationReceives:
 					goto handle_Receives
 
-				case ffjtFillOrderOperationIsMaker:
-					goto handle_IsMaker
-
 				case ffjtFillOrderOperationFillPrice:
 					goto handle_FillPrice
+
+				case ffjtFillOrderOperationIsMaker:
+					goto handle_IsMaker
 
 				case ffjtFillOrderOperationFee:
 					goto handle_Fee
@@ -430,6 +430,26 @@ handle_Receives:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
+handle_FillPrice:
+
+	/* handler: j.FillPrice type=types.Price kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.Price kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.FillPrice)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
 handle_IsMaker:
 
 	/* handler: j.IsMaker type=bool kind=bool quoted=false*/
@@ -459,26 +479,6 @@ handle_IsMaker:
 				return fs.WrapErr(err)
 			}
 
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_FillPrice:
-
-	/* handler: j.FillPrice type=types.Price kind=struct quoted=false*/
-
-	{
-		/* Falling back. type=types.Price kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-
-		err = json.Unmarshal(tbuf, &j.FillPrice)
-		if err != nil {
-			return fs.WrapErr(err)
 		}
 	}
 

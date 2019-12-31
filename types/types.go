@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	sort "github.com/emirpasic/gods/utils"
 	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
@@ -121,22 +122,28 @@ const (
 	OperationTypeAssetClaimFees                                             //31
 	OperationTypeBidCollateral                                              //32
 	OperationTypeExecuteBid                                                 //33
-
-	// //remove
-	// OperationTypeAccountWhitelist         //7
-	// OperationTypeAccountTransfer          //9
-	// OperationTypeAssetFundFeePool         //16
-	// OperationTypeWithdrawPermissionCreate //25
-	// OperationTypeWithdrawPermissionUpdate //26
-	// OperationTypeWithdrawPermissionClaim  //27
-	// OperationTypeWithdrawPermissionDelete //28
-	// OperationTypeCustom                   //35
-	// OperationTypeAssert                   //36
-	// OperationTypeOverrideTransfer         //38
-	// OperationTypeTransferToBlind          //39
-	// OperationTypeBlindTransfer            //40
-	// OperationTypeTransferFromBlind        //41
-	// OperationTypeFBADistribute            ///44
+	OperationTypeContractCreate                                             //34
+	OperationTypeCallContractFunction                                       //35
+	OperationTypeTemporaryAuthorityChange                                   //36
+	OperationTypeRegisterNhAssetCreator                                     //37
+	OperationTypeCreateWorldView                                            //38
+	OperationTypeRelateWorldView                                            //39
+	OperationTypeCreateNhAsset                                              //40
+	OperationTypeDeleteNhAsset                                              //41
+	OperationTypeTransferNhAsset                                            //42
+	OperationTypeCreateNhAssetOrder                                         //43
+	OperationTypeCancelNhAssetOrder                                         //44
+	OperationTypeFillNhAssetOrder                                           //45
+	OperationTypeCreateFile                                                 //46
+	OperationTypeAddFileRelateAccount                                       //47
+	OperationTypeFileSignature                                              //48
+	OperationTypeRelateParentFile                                           //49
+	OperationTypeReviseContract                                             //50
+	OperationTypeCrontabCreate                                              //51
+	OperationTypeCrontabCancel                                              //52
+	OperationTypeCrontabRecover                                             //53
+	OperationTypeUpdateCollateralForGas                                     //54
+	OperationTypeAccountAuthentication                                      //55
 )
 
 func (p OperationType) OperationName() string {
@@ -505,9 +512,9 @@ type String struct {
 	data string
 }
 
-// func NewString(d string) String {
-// 	return String{data: d}
-// }
+func (p *String) SetData(data string) {
+	p.data = data
+}
 
 func (p String) MarshalJSON() ([]byte, error) {
 	return ffjson.Marshal(p.data)
@@ -670,3 +677,73 @@ type Unmarshalable interface {
 	UnmarshalJSON(input []byte) error
 }
 type M map[string]interface{}
+
+//committee member
+type SupporterType map[AccountID]AssetAmount
+
+func (p *SupporterType) UnmarshalJSON(data []byte) error {
+	var supporters [][]interface{}
+	if err := ffjson.Unmarshal(data, &supporters); err != nil {
+		return errors.Annotate(err, "unmarshal supporters")
+	}
+
+	(*p) = make(map[AccountID]AssetAmount)
+	for _, tk := range supporters {
+		key, ok := tk[0].(AccountID)
+		if !ok {
+			return ErrInvalidInputType
+		}
+
+		amount, ok := tk[1].(AssetAmount)
+		if !ok {
+			return ErrInvalidInputType
+		}
+
+		(*p)[key] = amount
+	}
+
+	return nil
+}
+
+func (p SupporterType) MarshalJSON() ([]byte, error) {
+	ret := make([]interface{}, 0, len(p))
+	for k, v := range p {
+		ret = append(ret, []interface{}{k.String(), v})
+	}
+	return ffjson.Marshal(ret)
+}
+
+func (p SupporterType) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
+		return errors.Annotate(err, "encode length")
+	}
+
+	//sort keys
+	keys := make([]interface{}, 0, len(p))
+	for k := range p {
+		keys = append(keys, k)
+	}
+
+	var err error
+	sort.Sort(keys, func(a, b interface{}) (s int) {
+		s, err = publicKeyComparator(a.(*PublicKey), b.(*PublicKey))
+		return
+	})
+
+	if err != nil {
+		return errors.Annotate(err, "Sort")
+	}
+
+	for _, k := range keys {
+		id := k.(AccountID)
+		if err := id.Marshal(enc); err != nil {
+			return errors.Annotate(err, "encode PubKey")
+		}
+
+		if err := enc.Encode(p[id]); err != nil {
+			return errors.Annotate(err, "encode Weight")
+		}
+	}
+
+	return nil
+}

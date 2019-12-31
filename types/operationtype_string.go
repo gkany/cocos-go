@@ -42,11 +42,33 @@ func _() {
 	_ = x[OperationTypeAssetClaimFees-31]
 	_ = x[OperationTypeBidCollateral-32]
 	_ = x[OperationTypeExecuteBid-33]
+	_ = x[OperationTypeContractCreate-34]
+	_ = x[OperationTypeCallContractFunction-35]
+	_ = x[OperationTypeTemporaryAuthorityChange-36]
+	_ = x[OperationTypeRegisterNhAssetCreator-37]
+	_ = x[OperationTypeCreateWorldView-38]
+	_ = x[OperationTypeRelateWorldView-39]
+	_ = x[OperationTypeCreateNhAsset-40]
+	_ = x[OperationTypeDeleteNhAsset-41]
+	_ = x[OperationTypeTransferNhAsset-42]
+	_ = x[OperationTypeCreateNhAssetOrder-43]
+	_ = x[OperationTypeCancelNhAssetOrder-44]
+	_ = x[OperationTypeFillNhAssetOrder-45]
+	_ = x[OperationTypeCreateFile-46]
+	_ = x[OperationTypeAddFileRelateAccount-47]
+	_ = x[OperationTypeFileSignature-48]
+	_ = x[OperationTypeRelateParentFile-49]
+	_ = x[OperationTypeReviseContract-50]
+	_ = x[OperationTypeCrontabCreate-51]
+	_ = x[OperationTypeCrontabCancel-52]
+	_ = x[OperationTypeCrontabRecover-53]
+	_ = x[OperationTypeUpdateCollateralForGas-54]
+	_ = x[OperationTypeAccountAuthentication-55]
 }
 
-const _OperationType_name = "OperationTypeTransferOperationTypeLimitOrderCreateOperationTypeLimitOrderCancelOperationTypeCallOrderUpdateOperationTypeFillOrderOperationTypeAccountCreateOperationTypeAccountUpdateOperationTypeAccountUpgradeOperationTypeAssetCreateOperationTypeAssetUpdateOperationTypeAssetUpdateRestrictedOperationTypeAssetUpdateBitassetOperationTypeAssetUpdateFeedProducersOperationTypeAssetIssueOperationTypeAssetReserveOperationTypeAssetSettleOperationTypeAssetGlobalSettleOperationTypeAssetPublishFeedOperationTypeWitnessCreateOperationTypeWitnessUpdateOperationTypeProposalCreateOperationTypeProposalUpdateOperationTypeProposalDeleteOperationTypeCommitteeMemberCreateOperationTypeCommitteeMemberUpdateOperationTypeCommitteeMemberUpdateGlobalParametersOperationTypeVestingBalanceCreateOperationTypeVestingBalanceWithdrawOperationTypeWorkerCreateOperationTypeBalanceClaimOperationTypeAssetSettleCancelOperationTypeAssetClaimFeesOperationTypeBidCollateralOperationTypeExecuteBid"
+const _OperationType_name = "OperationTypeTransferOperationTypeLimitOrderCreateOperationTypeLimitOrderCancelOperationTypeCallOrderUpdateOperationTypeFillOrderOperationTypeAccountCreateOperationTypeAccountUpdateOperationTypeAccountUpgradeOperationTypeAssetCreateOperationTypeAssetUpdateOperationTypeAssetUpdateRestrictedOperationTypeAssetUpdateBitassetOperationTypeAssetUpdateFeedProducersOperationTypeAssetIssueOperationTypeAssetReserveOperationTypeAssetSettleOperationTypeAssetGlobalSettleOperationTypeAssetPublishFeedOperationTypeWitnessCreateOperationTypeWitnessUpdateOperationTypeProposalCreateOperationTypeProposalUpdateOperationTypeProposalDeleteOperationTypeCommitteeMemberCreateOperationTypeCommitteeMemberUpdateOperationTypeCommitteeMemberUpdateGlobalParametersOperationTypeVestingBalanceCreateOperationTypeVestingBalanceWithdrawOperationTypeWorkerCreateOperationTypeBalanceClaimOperationTypeAssetSettleCancelOperationTypeAssetClaimFeesOperationTypeBidCollateralOperationTypeExecuteBidOperationTypeContractCreateOperationTypeCallContractFunctionOperationTypeTemporaryAuthorityChangeOperationTypeRegisterNhAssetCreatorOperationTypeCreateWorldViewOperationTypeRelateWorldViewOperationTypeCreateNhAssetOperationTypeDeleteNhAssetOperationTypeTransferNhAssetOperationTypeCreateNhAssetOrderOperationTypeCancelNhAssetOrderOperationTypeFillNhAssetOrderOperationTypeCreateFileOperationTypeAddFileRelateAccountOperationTypeFileSignatureOperationTypeRelateParentFileOperationTypeReviseContractOperationTypeCrontabCreateOperationTypeCrontabCancelOperationTypeCrontabRecoverOperationTypeUpdateCollateralForGasOperationTypeAccountAuthentication"
 
-var _OperationType_index = [...]uint16{0, 21, 50, 79, 107, 129, 155, 181, 208, 232, 256, 290, 322, 359, 382, 407, 431, 461, 490, 516, 542, 569, 596, 623, 657, 691, 741, 774, 809, 834, 859, 889, 916, 942, 965}
+var _OperationType_index = [...]uint16{0, 21, 50, 79, 107, 129, 155, 181, 208, 232, 256, 290, 322, 359, 382, 407, 431, 461, 490, 516, 542, 569, 596, 623, 657, 691, 741, 774, 809, 834, 859, 889, 916, 942, 965, 992, 1025, 1062, 1097, 1125, 1153, 1179, 1205, 1233, 1264, 1295, 1324, 1347, 1380, 1406, 1435, 1462, 1488, 1514, 1541, 1576, 1610}
 
 func (i OperationType) String() string {
 	if i >= OperationType(len(_OperationType_index)-1) {

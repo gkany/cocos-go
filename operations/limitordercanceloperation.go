@@ -17,8 +17,8 @@ func init() {
 
 type LimitOrderCancelOperation struct {
 	types.OperationFee
-	FeePayingAccount types.AccountID    `json:"fee_paying_account"`
 	Order            types.LimitOrderID `json:"order"`
+	FeePayingAccount types.AccountID    `json:"fee_paying_account"`
 	Extensions       types.Extensions   `json:"extensions"`
 }
 
@@ -33,11 +33,11 @@ func (p LimitOrderCancelOperation) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.Encode(p.Fee); err != nil {
 		return errors.Annotate(err, "encode Fee")
 	}
-	if err := enc.Encode(p.FeePayingAccount); err != nil {
-		return errors.Annotate(err, "encode FeePayingAccount")
-	}
 	if err := enc.Encode(p.Order); err != nil {
 		return errors.Annotate(err, "encode Order")
+	}
+	if err := enc.Encode(p.FeePayingAccount); err != nil {
+		return errors.Annotate(err, "encode FeePayingAccount")
 	}
 	if err := enc.Encode(p.Extensions); err != nil {
 		return errors.Annotate(err, "encode Extensions")

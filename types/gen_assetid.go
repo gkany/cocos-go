@@ -17,13 +17,14 @@ type AssetID struct {
 }
 
 func (p AssetID) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.EncodeUVarint(uint64(p.Instance())); err != nil {
+	n, err := enc.EncodeUVarintByByte(uint64(p.Instance()))
+	if err != nil {
 		return errors.Annotate(err, "encode instance")
 	}
 
-	for i := 1; i < 8; i++ {
+	for i := 0; i < 8-n; i++ {
 		if err := enc.EncodeUVarint(uint64(0)); err != nil {
-			return errors.Annotate(err, "encode instance")
+			return errors.Annotate(err, "encode zero")
 		}
 	}
 

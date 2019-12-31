@@ -46,16 +46,7 @@ func (j *CommitteeMemberCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer
 
 	}
 	buf.WriteString(`,"url":`)
-
-	{
-
-		obj, err = j.URL.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
+	fflib.WriteJsonString(buf, string(j.URL))
 	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
@@ -262,24 +253,25 @@ handle_CommitteeMemberAccount:
 
 handle_URL:
 
-	/* handler: j.URL type=types.String kind=struct quoted=false*/
+	/* handler: j.URL type=string kind=string quoted=false*/
 
 	{
+
+		{
+			if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
+			}
+		}
+
 		if tok == fflib.FFTok_null {
 
 		} else {
 
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
+			outBuf := fs.Output.Bytes()
 
-			err = j.URL.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
+			j.URL = string(string(outBuf))
+
 		}
-		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value

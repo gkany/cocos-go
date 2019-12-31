@@ -189,6 +189,10 @@ type MemoPair []interface{}
 func (v MemoPair) Marshal(enc *util.TypeEncoder) error {
 	fmt.Println("MemoPair Marshal")
 
+	if v == nil {
+		return nil
+	}
+
 	if len(v) != 2 {
 		return errors.Errorf("MemoPair length error. %v", len(v))
 	}

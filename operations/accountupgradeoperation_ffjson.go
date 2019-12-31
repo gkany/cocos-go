@@ -46,6 +46,11 @@ func (j *AccountUpgradeOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error
 		buf.Write(obj)
 
 	}
+	if j.UpgradeToLifetimeMember {
+		buf.WriteString(`,"upgrade_to_lifetime_member":true`)
+	} else {
+		buf.WriteString(`,"upgrade_to_lifetime_member":false`)
+	}
 	buf.WriteString(`,"extensions":`)
 
 	{
@@ -56,11 +61,6 @@ func (j *AccountUpgradeOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error
 		}
 		buf.Write(obj)
 
-	}
-	if j.UpgradeToLifetimeMember {
-		buf.WriteString(`,"upgrade_to_lifetime_member":true`)
-	} else {
-		buf.WriteString(`,"upgrade_to_lifetime_member":false`)
 	}
 	buf.WriteByte(',')
 	if j.Fee != nil {
@@ -85,18 +85,18 @@ const (
 
 	ffjtAccountUpgradeOperationAccountToUpgrade
 
-	ffjtAccountUpgradeOperationExtensions
-
 	ffjtAccountUpgradeOperationUpgradeToLifetimeMember
+
+	ffjtAccountUpgradeOperationExtensions
 
 	ffjtAccountUpgradeOperationFee
 )
 
 var ffjKeyAccountUpgradeOperationAccountToUpgrade = []byte("account_to_upgrade")
 
-var ffjKeyAccountUpgradeOperationExtensions = []byte("extensions")
-
 var ffjKeyAccountUpgradeOperationUpgradeToLifetimeMember = []byte("upgrade_to_lifetime_member")
+
+var ffjKeyAccountUpgradeOperationExtensions = []byte("extensions")
 
 var ffjKeyAccountUpgradeOperationFee = []byte("fee")
 
@@ -201,14 +201,14 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.AsciiEqualFold(ffjKeyAccountUpgradeOperationUpgradeToLifetimeMember, kn) {
-					currentKey = ffjtAccountUpgradeOperationUpgradeToLifetimeMember
+				if fflib.EqualFoldRight(ffjKeyAccountUpgradeOperationExtensions, kn) {
+					currentKey = ffjtAccountUpgradeOperationExtensions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAccountUpgradeOperationExtensions, kn) {
-					currentKey = ffjtAccountUpgradeOperationExtensions
+				if fflib.AsciiEqualFold(ffjKeyAccountUpgradeOperationUpgradeToLifetimeMember, kn) {
+					currentKey = ffjtAccountUpgradeOperationUpgradeToLifetimeMember
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -239,11 +239,11 @@ mainparse:
 				case ffjtAccountUpgradeOperationAccountToUpgrade:
 					goto handle_AccountToUpgrade
 
-				case ffjtAccountUpgradeOperationExtensions:
-					goto handle_Extensions
-
 				case ffjtAccountUpgradeOperationUpgradeToLifetimeMember:
 					goto handle_UpgradeToLifetimeMember
+
+				case ffjtAccountUpgradeOperationExtensions:
+					goto handle_Extensions
 
 				case ffjtAccountUpgradeOperationFee:
 					goto handle_Fee
@@ -287,31 +287,6 @@ handle_AccountToUpgrade:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Extensions:
-
-	/* handler: j.Extensions type=types.Extensions kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Extensions.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
 handle_UpgradeToLifetimeMember:
 
 	/* handler: j.UpgradeToLifetimeMember type=bool kind=bool quoted=false*/
@@ -342,6 +317,31 @@ handle_UpgradeToLifetimeMember:
 			}
 
 		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_Extensions:
+
+	/* handler: j.Extensions type=types.Extensions kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.Extensions.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value

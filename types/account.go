@@ -29,19 +29,4 @@ type Account struct {
 	OwnerSpecialAuthority    OwnerSpecialAuthority  `json:"owner_special_authority"`
 	ActiveSpecialAuthority   ActiveSpecialAuthority `json:"active_special_authority"`
 	TopNControlFlags         UInt64                 `json:"top_n_control_flags"`
-
-	//TODO
-	// witness_status
-	// committee_status
-	// asse_locked
-
-	// NetworkFeePercentage          UInt64                 `json:"network_fee_percentage"`
-	// LifetimeReferrerFeePercentage UInt64                 `json:"lifetime_referrer_fee_percentage"`
-	// ReferrerRewardsPercentage     UInt64                 `json:"referrer_rewards_percentage"`
-	// WhitelistingAccounts          AccountIDs             `json:"whitelisting_accounts"`
-	// BlacklistingAccounts          AccountIDs             `json:"blacklisting_accounts"`
-	// WhitelistedAccounts           AccountIDs             `json:"whitelisted_accounts"`
-	// BlacklistedAccounts           AccountIDs             `json:"blacklisted_accounts"`
-	// Referrer                      AccountID              `json:"referrer"`
-	// LifetimeReferrer              AccountID              `json:"lifetime_referrer"`
 }

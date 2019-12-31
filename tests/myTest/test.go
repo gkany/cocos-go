@@ -138,6 +138,20 @@ func (t *Teacher) ShowC(arg string) {
 	fmt.Println(arg)
 }
 
+func UnMarshWitness() {
+	rawMessage := `
+	{"id":"1.6.1","witness_account":"1.2.5","last_aslot":12148831,"signing_key":"COCOS8hxjGaAwkNHewgQqg6ERLA7L4J6wkzuhhLRVbKKuJZUYM3dfuS","pay_vb":"1.13.2","vote_id":"1:0","total_votes":"5000000000000","url":"","total_missed":0,"last_confirmed_block_num":52619,"work_status":true,"next_maintenance_time":"1970-01-01T00:00:00","supporters":[]}
+	`
+
+	var witness types.Witness
+	err := json.Unmarshal([]byte(rawMessage), &witness)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(witness)
+}
+
 func testExtend() {
 	t := Teacher{}
 
@@ -333,5 +347,6 @@ func main() {
 
 	// testDecodeJson()
 
-	testNil()
+	// testNil()
+	UnMarshWitness()
 }

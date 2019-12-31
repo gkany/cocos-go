@@ -41,7 +41,7 @@ type WebsocketAPI interface {
 	SetCredentials(username, password string)
 	OnError(api.ErrorFunc)
 	Subscribe(apiID int, method string, fn api.SubscribeCallback, args ...interface{}) (*json.RawMessage, error)
-	BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset types.GrapheneObject, ops ...types.Operation) (*types.SignedTransaction, error)
+	BuildSignedTransaction(keyBag *crypto.KeyBag, ops ...types.Operation) (*types.SignedTransaction, error)
 	SignTransaction(keyBag *crypto.KeyBag, trx *types.SignedTransaction) error
 
 	//Websocket API functions
@@ -50,6 +50,8 @@ type WebsocketAPI interface {
 	CancelAllSubscriptions() error
 	GetAccountBalances(account types.GrapheneObject, assets ...types.GrapheneObject) (types.AssetAmounts, error)
 	GetAccountByName(name string) (*types.Account, error)
+	GetWitness(accountID string) (*types.Witness, error)
+	GetCommitteeMember(accountID string) (*types.CommitteeMember, error)
 	GetAccountHistory(account types.GrapheneObject, stop types.GrapheneObject, limit int, start types.GrapheneObject) (types.OperationHistories, error)
 	GetAccounts(accountIDs ...types.GrapheneObject) (types.Accounts, error)
 	GetBlock(number uint64) (*types.Block, error)
@@ -66,25 +68,69 @@ type WebsocketAPI interface {
 	GetPotentialSignatures(tx *types.SignedTransaction) (types.PublicKeys, error)
 	GetRecentTransactionByID(transactionID uint32) (*types.SignedTransaction, error)
 	GetRequiredSignatures(tx *types.SignedTransaction, keys types.PublicKeys) (types.PublicKeys, error)
-	GetRequiredFees(ops types.Operations, feeAsset types.GrapheneObject) (types.AssetAmounts, error)
 	GetTicker(base, quote types.GrapheneObject) (*types.MarketTicker, error)
 	GetTradeHistory(base, quote types.GrapheneObject, toTime, fromTime time.Time, limit int) (types.MarketTrades, error)
 	GetTransaction(blockNum uint64, trxInBlock uint32) (*types.SignedTransaction, error)
-	LimitOrderCancel(keyBag *crypto.KeyBag, feePayingAccount, orderID, feeAsset types.GrapheneObject) error
+	LimitOrderCancel(keyBag *crypto.KeyBag, feePayingAccount, orderID types.GrapheneObject) error
 	ListAssets(lowerBoundSymbol string, limit int) (types.Assets, error)
 	LookupAssetSymbols(symbols ...string) (types.Assets, error)
 	SetSubscribeCallback(ID uint64, clearFilter bool) error
 	SubscribeToBlockApplied(onBlockApplied api.BlockAppliedCallback) error
 	SubscribeToMarket(base, quote types.GrapheneObject, onMarketData api.SubscribeCallback) error
 	SubscribeToPendingTransactions(onPendingTransaction api.SubscribeCallback) error
-	Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error
-	// Transfer2(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string) error
+	Transfer(keyBag *crypto.KeyBag, from, to types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error
 	UnsubscribeFromMarket(base, quote types.GrapheneObject) error
 	Get24Volume(base types.GrapheneObject, quote types.GrapheneObject) (*types.Volume24, error)
-	CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error
+	CreateAsset(keyBag *crypto.KeyBag, issuer types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error
+	RegisterAccount(keyBag *crypto.KeyBag, name string, owner, active *types.PublicKey, register string) error
+	UpgradeAccount(keyBag *crypto.KeyBag, name string) error
+	IssueAsset(keyBag *crypto.KeyBag, toAccount types.Account, amount int64, asset types.Asset, memo string, isEncrypt bool) error
+	UpdateAsset(keyBag *crypto.KeyBag, asset types.Asset, newIssuer *types.Account, newOptions types.AssetOptions) error
+	UpdateBitAsset(keyBag *crypto.KeyBag, asset types.Asset, newIssuer *types.Account, newOptions types.BitassetOptions) error
+	UpdateAssetFeedProducers(keyBag *crypto.KeyBag, asset types.Asset, producers types.AccountIDs) error
+	PublishAssetFeed(keyBag *crypto.KeyBag, publisher types.Account, asset types.Asset, feed types.PriceFeed) error
+	ReserveAsset(keyBag *crypto.KeyBag, payer types.Account, asset types.Asset, amount int64) error
+	GlobalSettleAsset(keyBag *crypto.KeyBag, asset types.Asset, settlePrice types.Price) error
+	SettleAsset(keyBag *crypto.KeyBag, account types.Account, asset types.Asset, amount int64) error
+	// BidCollateral(keyBag *crypto.KeyBag, bidder types.Account, asset types.Asset, debtAmount, additionalCollateral int64) error
+	CreateCommitteeMember(keyBag *crypto.KeyBag, ownerAccount types.Account, url string) error
+	UpdateCommitteeMember(keyBag *crypto.KeyBag, committeeAccount types.Account, url *string, workStatus bool) error
+	CreateWitness(keyBag *crypto.KeyBag, ownerAccount types.Account, url string, signKey types.PublicKey) error
+	UpdateWitness(keyBag *crypto.KeyBag, witnessAccount types.Account, url *string, signKey *types.PublicKey, workStatus bool) error
 
-	// BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error)
-	// SignTest(keyBag *crypto.KeyBag, hashTrx string) error
+	// // get_vesting_balances
+
+	// // withdraw_vesting
+	// WithDrawVesting(keyBag *crypto.KeyBag, witnessName, symbol string, amount uint64) error
+
+	// // vote_for_committee_member
+	// VoteForCommitteeMember(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error
+
+	// // vote_for_witness
+	// VoteForWitness(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error
+
+	// network_get_connected_peers
+
+	// improt_balances
+
+	// sell_asset
+
+	// sell
+
+	// buy
+
+	// borrow_asset
+
+	// cancel_order
+
+	// approve_proposal
+
+	// update_collateral_for_gas
+
+	// nh_asset/order
+	// contract
+	// file
+	// crontab
 }
 
 type websocketAPI struct {
@@ -251,16 +297,8 @@ func (p *websocketAPI) SignTransaction(keyBag *crypto.KeyBag, tx *types.SignedTr
 
 //BuildSignedTransaction builds a new transaction by given operation(s),
 //applies fees, current block data and signs the transaction.
-func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset types.GrapheneObject, ops ...types.Operation) (*types.SignedTransaction, error) {
+func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, ops ...types.Operation) (*types.SignedTransaction, error) {
 	operations := types.Operations(ops)
-	// fees, err := p.GetRequiredFees(operations, feeAsset)
-	// if err != nil {
-	// 	return nil, errors.Annotate(err, "GetRequiredFees")
-	// }
-
-	// if err := operations.ApplyFees(fees); err != nil {
-	// 	return nil, errors.Annotate(err, "ApplyFees")
-	// }
 	props, err := p.GetDynamicGlobalProperties()
 	if err != nil {
 		return nil, errors.Annotate(err, "GetDynamicGlobalProperties")
@@ -279,7 +317,7 @@ func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset ty
 		return nil, errors.Annotate(err, "RequiredSigningKeys")
 	}
 	fmt.Printf("reqPk: %v\n", reqPk)
-	
+
 	signer := crypto.NewTransactionSigner(tx)
 
 	privKeys := keyBag.PrivatesByPublics(reqPk)
@@ -294,50 +332,6 @@ func (p *websocketAPI) BuildSignedTransaction(keyBag *crypto.KeyBag, feeAsset ty
 
 	return tx, nil
 }
-
-/*
-func (p *websocketAPI) BuildSignedTransactionTest(keyBag *crypto.KeyBag, serializeTrx string) (*types.SignedTransaction, error) {
-	var operations types.Operations
-	// fees, err := p.GetRequiredFees(operations, feeAsset)
-	// if err != nil {
-	// 	return nil, errors.Annotate(err, "GetRequiredFees")
-	// }
-
-	// if err := operations.ApplyFees(fees); err != nil {
-	// 	return nil, errors.Annotate(err, "ApplyFees")
-	// }
-
-	props, err := p.GetDynamicGlobalProperties()
-	if err != nil {
-		return nil, errors.Annotate(err, "GetDynamicGlobalProperties")
-	}
-
-	tx, err := types.NewSignedTransactionWithBlockData(props)
-	if err != nil {
-		return nil, errors.Annotate(err, "NewTransaction")
-	}
-
-	tx.Operations = operations
-
-	// reqPk, err := p.RequiredSigningKeys(tx)
-	// if err != nil {
-	// 	return nil, errors.Annotate(err, "RequiredSigningKeys")
-	// }
-
-	signer := crypto.NewTransactionSigner(tx)
-
-	privKeys := keyBag.Privates() //
-	if len(privKeys) == 0 {
-		return nil, types.ErrNoSigningKeyFound
-	}
-
-	// var signer crypto.TransactionSigner
-	if err := signer.SignTest(privKeys, serializeTrx); err != nil {
-		return nil, errors.Annotate(err, "Sign")
-	}
-	return nil, nil
-}
-*/
 
 //RequiredSigningKeys is a convenience call to retrieve the minimum subset of public keys to sign a transaction.
 //If the transaction is already signed, the result is empty.
@@ -500,6 +494,38 @@ func (p *websocketAPI) GetAccountByName(name string) (*types.Account, error) {
 	return &ret, nil
 }
 
+func (p *websocketAPI) GetWitness(accountID string) (*types.Witness, error) {
+	resp, err := p.wsClient.CallAPI(0, "get_witness_by_account", accountID)
+	if err != nil {
+		return nil, errors.Annotate(err, "CallAPI")
+	}
+
+	logging.DDumpJSON("get_witness_by_account <", resp)
+
+	ret := types.Witness{}
+	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+		return nil, errors.Annotate(err, "Unmarshal [Account]")
+	}
+
+	return &ret, nil
+}
+
+func (p *websocketAPI) GetCommitteeMember(accountID string) (*types.CommitteeMember, error) {
+	resp, err := p.wsClient.CallAPI(0, "get_committee_member_by_account", accountID)
+	if err != nil {
+		return nil, errors.Annotate(err, "CallAPI")
+	}
+
+	logging.DDumpJSON("get_committee_member_by_account <", resp)
+
+	ret := types.CommitteeMember{}
+	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+		return nil, errors.Annotate(err, "Unmarshal [Account]")
+	}
+
+	return &ret, nil
+}
+
 // GetAccountHistory returns OperationHistory object(s).
 // account: The account whose history should be queried
 // stop: ID of the earliest operation to retrieve
@@ -654,23 +680,6 @@ func (p *websocketAPI) LookupAssetSymbols(symbols ...string) (types.Assets, erro
 	return ret, nil
 }
 
-//GetRequiredFees calculates the required fee for each operation by the specified asset type.
-func (p *websocketAPI) GetRequiredFees(ops types.Operations, feeAsset types.GrapheneObject) (types.AssetAmounts, error) {
-	resp, err := p.wsClient.CallAPI(0, "get_required_fees", ops.Envelopes(), feeAsset.ID())
-	if err != nil {
-		return nil, errors.Annotate(err, "CallAPI")
-	}
-
-	logging.DDumpJSON("get_required_fees <", resp)
-
-	ret := types.AssetAmounts{}
-	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
-		return nil, errors.Annotate(err, "Unmarshal [AssetAmounts]")
-	}
-
-	return ret, nil
-}
-
 //GetLimitOrders returns LimitOrders type.
 func (p *websocketAPI) GetLimitOrders(base, quote types.GrapheneObject, limit int) (types.LimitOrders, error) {
 	if limit > GetLimitOrdersLimit {
@@ -694,14 +703,14 @@ func (p *websocketAPI) GetLimitOrders(base, quote types.GrapheneObject, limit in
 
 // LimitOrderCancel cancels a certain limit order given by orderID. Fees are paid in feeAsset.
 // The transaction is signed with private keys in keyBag.
-func (p *websocketAPI) LimitOrderCancel(keyBag *crypto.KeyBag, feePayingAccount, orderID, feeAsset types.GrapheneObject) error {
+func (p *websocketAPI) LimitOrderCancel(keyBag *crypto.KeyBag, feePayingAccount, orderID types.GrapheneObject) error {
 	op := operations.LimitOrderCancelOperation{
 		FeePayingAccount: types.AccountIDFromObject(feePayingAccount),
 		Order:            types.LimitOrderIDFromObject(orderID),
 		Extensions:       types.Extensions{},
 	}
 
-	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
 	if err != nil {
 		return errors.Annotate(err, "BuildSignedTransaction")
 	}
@@ -986,7 +995,7 @@ func (p *websocketAPI) GetObjects(ids ...types.GrapheneObject) ([]interface{}, e
 
 // Transfer transfers a certain amount between two accounts. Fees are paid in feeAsset.
 // The transaction is signed with private keys in keyBag.
-func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error {
+func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to types.GrapheneObject, amount types.AssetAmount, memo string, isEncrypt bool) error {
 	op := operations.TransferOperation{
 		Amount:     amount,
 		Extensions: types.Extensions{},
@@ -1001,13 +1010,13 @@ func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.
 			if err != nil {
 				return errors.Annotate(err, "Encrypt [memo]")
 			}
-			op.Memo = types.MemoPair{uint8(1), m,}
+			op.Memo = types.MemoPair{uint8(1), m}
 		} else {
-			op.Memo = types.MemoPair{uint8(0), memo,}
+			op.Memo = types.MemoPair{uint8(0), memo}
 		}
 	}
 
-	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
 	if err != nil {
 		return errors.Annotate(err, "BuildSignedTransaction")
 	}
@@ -1019,53 +1028,7 @@ func (p *websocketAPI) Transfer(keyBag *crypto.KeyBag, from, to, feeAsset types.
 	return nil
 }
 
-/*
-func (p *websocketAPI) Transfer2(keyBag *crypto.KeyBag, from, to, feeAsset types.GrapheneObject, amount types.AssetAmount, memo string) error {
-	op := operations.TransferOperation{
-		Amount:     amount,
-		Extensions: types.Extensions{},
-		From:       types.AccountIDFromObject(from),
-		To:         types.AccountIDFromObject(to),
-	}
-	op.SetFee(types.NewAsset(21154, "1.3.0"))
-
-	if memo != "" {
-		// builder := p.NewMemoBuilder(from, to, memo)
-		// m, err := builder.Encrypt(keyBag)
-		// if err != nil {
-		// 	return errors.Annotate(err, "Encrypt [memo]")
-		// }
-		// // op.Memo = m
-	}
-	fmt.Println("transfer op: ", op)
-
-	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)
-	if err != nil {
-		return errors.Annotate(err, "BuildSignedTransaction")
-	}
-
-	if err := p.BroadcastTransaction(trx); err != nil {
-		return errors.Annotate(err, "BroadcastTransaction")
-	}
-
-	return nil
-}
-
-func (p *websocketAPI) SignTest(keyBag *crypto.KeyBag, hashTrx string) error {
-	trx, err := p.BuildSignedTransactionTest(keyBag, hashTrx)
-	if err != nil {
-		return errors.Annotate(err, "BuildSignedTransaction")
-	}
-
-	if err := p.BroadcastTransaction(trx); err != nil {
-		return errors.Annotate(err, "BroadcastTransaction")
-	}
-
-	return nil
-}
-*/
-
-func (p *websocketAPI) CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error {
+func (p *websocketAPI) CreateAsset(keyBag *crypto.KeyBag, issuer types.GrapheneObject, symbol string, precision uint8, common types.AssetOptions, bitasset *types.BitassetOptions) error {
 	op := operations.AssetCreateOperation{
 		Issuer:          types.AccountIDFromObject(issuer),
 		Symbol:          symbol,
@@ -1074,7 +1037,7 @@ func (p *websocketAPI) CreateAsset(keyBag *crypto.KeyBag, issuer, feeAsset types
 		BitassetOptions: bitasset,
 	}
 
-	trx, err := p.BuildSignedTransaction(keyBag, feeAsset, &op)
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
 	if err != nil {
 		return errors.Annotate(err, "BuildSignedTransaction")
 	}
@@ -1183,6 +1146,509 @@ func (p *websocketAPI) Close() error {
 
 	return nil
 }
+
+// register new account
+func (p *websocketAPI) RegisterAccount(keyBag *crypto.KeyBag, name string, owner, active *types.PublicKey, register string) error {
+	account, err := p.GetAccountByName(register)
+	if err != nil {
+		return err
+	}
+
+	ownerAuth := types.Authority{
+		WeightThreshold: 1,
+		KeyAuths: types.KeyAuthsMap{
+			owner: 1,
+		},
+	}
+
+	activeAuth := types.Authority{
+		WeightThreshold: 1,
+		KeyAuths: types.KeyAuthsMap{
+			active: 1,
+		},
+	}
+
+	var newAccountName types.String
+	newAccountName.SetData(name)
+
+	op := operations.AccountCreateOperation{
+		Registrar: account.ID,
+		Name:      newAccountName,
+		Owner:     ownerAuth,
+		Active:    activeAuth,
+		Options: types.AccountOptions{
+			MemoKey:    *active,
+			Votes:      types.Votes{},
+			Extensions: types.Extensions{},
+		},
+		Extensions: types.AccountCreateExtensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) UpgradeAccount(keyBag *crypto.KeyBag, name string) error {
+	account, err := p.GetAccountByName(name)
+	if err != nil {
+		return err
+	}
+
+	op := operations.AccountUpgradeOperation{
+		AccountToUpgrade:        account.ID,
+		UpgradeToLifetimeMember: true,
+		Extensions:              types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) IssueAsset(keyBag *crypto.KeyBag, toAccount types.Account, amount int64, asset types.Asset, memo string, isEncrypt bool) error {
+	op := operations.AssetIssueOperation{
+		Issuer:         asset.Issuer,
+		IssueToAccount: toAccount.ID,
+		AssetToIssue: types.AssetAmount{
+			Asset:  asset.ID,
+			Amount: types.Int64(amount),
+		},
+		Extensions: types.Extensions{},
+	}
+
+	if memo != "" {
+		if isEncrypt {
+			builder := p.NewMemoBuilder(types.NewAccountID(asset.Issuer.String()), types.NewAccountID(toAccount.ID.String()), memo)
+			m, err := builder.Encrypt(keyBag)
+			if err != nil {
+				return errors.Annotate(err, "Encrypt [memo]")
+			}
+			op.Memo = types.MemoPair{uint8(1), m}
+		} else {
+			op.Memo = types.MemoPair{uint8(0), memo}
+		}
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) UpdateAsset(keyBag *crypto.KeyBag, asset types.Asset, newIssuer *types.Account, newOptions types.AssetOptions) error {
+	op := operations.AssetUpdateOperation{
+		Issuer:        asset.Issuer,
+		AssetToUpdate: asset.ID,
+		NewOptions:    newOptions,
+		Extensions:    types.Extensions{},
+	}
+
+	if newIssuer != nil {
+		op.NewIssuer = &newIssuer.ID
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) UpdateBitAsset(keyBag *crypto.KeyBag, asset types.Asset, newIssuer *types.Account, newOptions types.BitassetOptions) error {
+	op := operations.AssetUpdateBitassetOperation{
+		Issuer:        asset.Issuer,
+		AssetToUpdate: asset.ID,
+		NewOptions:    newOptions,
+		Extensions:    types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) UpdateAssetFeedProducers(keyBag *crypto.KeyBag, asset types.Asset, producers types.AccountIDs) error {
+	op := operations.AssetUpdateFeedProducersOperation{
+		Issuer:           asset.Issuer,
+		AssetToUpdate:    asset.ID,
+		NewFeedProducers: producers,
+		Extensions:       types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) PublishAssetFeed(keyBag *crypto.KeyBag, publisher types.Account, asset types.Asset, feed types.PriceFeed) error {
+	op := operations.AssetPublishFeedOperation{
+		Publisher:  publisher.ID,
+		AssetID:    asset.ID,
+		Feed:       feed,
+		Extensions: types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) ReserveAsset(keyBag *crypto.KeyBag, payer types.Account, asset types.Asset, amount int64) error {
+	op := operations.AssetReserveOperation{
+		Payer: payer.ID,
+		AmountToReserve: types.AssetAmount{
+			Asset:  asset.ID,
+			Amount: types.Int64(amount),
+		},
+		Extensions: types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) GlobalSettleAsset(keyBag *crypto.KeyBag, asset types.Asset, settlePrice types.Price) error {
+	op := operations.AssetGlobalSettleOperation{
+		Issuer:        asset.Issuer,
+		AssetToSettle: asset.ID,
+		SettlePrice:   settlePrice,
+		Extensions:    types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) SettleAsset(keyBag *crypto.KeyBag, account types.Account, asset types.Asset, amount int64) error {
+	op := operations.AssetSettleOperation{
+		Account: account.ID,
+		Amount: types.AssetAmount{
+			Asset:  asset.ID,
+			Amount: types.Int64(amount),
+		},
+		Extensions: types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+/*
+type BidCollateralOperation struct {
+	types.OperationFee
+	Bidder               types.AccountID   `json:"bidder"`
+	AdditionalCollateral types.AssetAmount `json:"additional_collateral"`
+	DebtCovered          types.AssetAmount `json:"debt_covered"`
+	Extensions           types.Extensions  `json:"extensions"`
+}
+
+signed_transaction bid_collateral(string bidder_name,
+	string debt_amount, string debt_symbol,
+	string additional_collateral,
+	bool broadcast)
+{
+	try
+	{
+		fc::optional<asset_object> debt_asset = find_asset(debt_symbol);
+		if (!debt_asset)
+		FC_THROW("No asset with that symbol exists!");
+		FC_ASSERT(debt_asset->bitasset_data_id.valid(), "debt_asset:${debt_asset},bitasset_data_id is null", ("debt_asset", *debt_asset));
+		const asset_object &collateral = get_asset(get_object(*debt_asset->bitasset_data_id).options.short_backing_asset);
+
+		bid_collateral_operation op;
+		op.bidder = get_account_id(bidder_name);
+		op.debt_covered = debt_asset->amount_from_string(debt_amount);
+		op.additional_collateral = collateral.amount_from_string(additional_collateral);
+
+		signed_transaction tx;
+		tx.operations.push_back(op);
+		tx.validate();
+
+		return sign_transaction(tx, broadcast);
+	}
+	FC_CAPTURE_AND_RETHROW((bidder_name)(debt_amount)(debt_symbol)(additional_collateral)(broadcast))
+}
+*/
+
+// bid_collateral
+// func (p *websocketAPI) BidCollateral(keyBag *crypto.KeyBag, bidder types.Account, asset types.Asset, debtAmount, additionalCollateral int64) error {
+// 	// bitAssetData, err := p.GetObjects(asset.BitassetDataID)
+// 	// if err != nil {
+// 	// 	return err
+// 	// }
+
+// 	op := operations.BidCollateralOperation{
+// 		Bidder: bidder.ID,
+// 		DebtCovered: types.AssetAmount{
+// 			Asset:  asset.ID,
+// 			Amount: types.Int64(debtAmount),
+// 		},
+// 		// AdditionalCollateral: types.AssetAmount{
+// 		// 	Asset: bitasset[0].options.short_backing_asset,
+// 		// 	Amount: types.Int64(additionalCollateral),
+// 		// },
+// 		Extensions: types.Extensions{},
+// 	}
+
+// 	trx, err := p.BuildSignedTransaction(keyBag, &op)
+// 	if err != nil {
+// 		return errors.Annotate(err, "BuildSignedTransaction")
+// 	}
+
+// 	if err := p.BroadcastTransaction(trx); err != nil {
+// 		return errors.Annotate(err, "BroadcastTransaction")
+// 	}
+
+// 	return nil
+// }
+
+func (p *websocketAPI) CreateCommitteeMember(keyBag *crypto.KeyBag, ownerAccount types.Account, url string) error {
+	op := operations.CommitteeMemberCreateOperation{
+		CommitteeMemberAccount: ownerAccount.ID,
+		URL: url,
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) UpdateCommitteeMember(keyBag *crypto.KeyBag, committeeAccount types.Account, url *string, workStatus bool) error {
+	committee, err := p.GetCommitteeMember(committeeAccount.ID.String())
+	if err != nil {
+		return err
+	}
+
+	op := operations.CommitteeMemberUpdateOperation{
+		CommitteeMember: committee,
+		CommitteeMemberAccount: committeeAccount.ID,
+		WorkStatus: workStatus,
+	}
+
+	if url != "" {
+		op.NewURL = url
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) CreateWitness(keyBag *crypto.KeyBag, ownerAccount types.Account, url string, signKey types.PublicKey) error {
+	op := operations.WitnessCreateOperation{
+		WitnessAccount: ownerAccount.ID,
+		URL: url,
+		BlockSigningKey: signKey,
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) UpdateWitness(keyBag *crypto.KeyBag, witnessAccount types.Account, url *string, signKey *types.PublicKey, workStatus bool) error {
+	witness, err := p.GetWitness(witnessAccount.ID.String())
+	if err != nil {
+		return err
+	}
+
+	op := operations.WitnessUpdateOperation{
+		Witness: witness.ID,
+		WitnessAccount: account.ID,
+		WorkStatus: workStatus,
+	}
+
+	if url != nil {
+		op.NewURL = url
+	}
+
+	if signKey != nil {
+		op.NewSigningKey = signKey
+	}
+
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+/*
+	// get_vesting_balances
+
+	// withdraw_vesting
+func (p *websocketAPI) WithDrawVesting(keyBag *crypto.KeyBag, witnessName, symbol string, amount uint64) error {
+	account, err := p.GetAccountByName(name)
+	if err != nil {
+		return err
+	}
+
+	op := operations.AccountUpgradeOperation{
+		AccountToUpgrade: account.ID,
+		UpgradeToLifetimeMember: true,
+		Extensions: types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+	// vote_for_committee_member
+func (p *websocketAPI) VoteForCommitteeMember(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error  {
+	account, err := p.GetAccountByName(name)
+	if err != nil {
+		return err
+	}
+
+	op := operations.AccountUpgradeOperation{
+		AccountToUpgrade: account.ID,
+		UpgradeToLifetimeMember: true,
+		Extensions: types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+	// vote_for_witness
+func (p *websocketAPI) VoteForWitness(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error  {
+	account, err := p.GetAccountByName(name)
+	if err != nil {
+		return err
+	}
+
+	op := operations.AccountUpgradeOperation{
+		AccountToUpgrade: account.ID,
+		UpgradeToLifetimeMember: true,
+		Extensions: types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+*/
 
 //NewWebsocketAPI creates a new WebsocketAPI interface.
 //wsEndpointURL: a websocket node endpoint URL.

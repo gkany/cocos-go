@@ -6,6 +6,7 @@ package operations
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gkany/graphSDK/types"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
@@ -35,40 +36,7 @@ func (j *WitnessUpdateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{ `)
-	if j.NewSigningKey != nil {
-		if true {
-			buf.WriteString(`"new_signing_key":`)
-
-			{
-
-				obj, err = j.NewSigningKey.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-			buf.WriteByte(',')
-		}
-	}
-	if j.NewURL != nil {
-		if true {
-			buf.WriteString(`"new_url":`)
-
-			{
-
-				obj, err = j.NewURL.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
-			buf.WriteByte(',')
-		}
-	}
-	buf.WriteString(`"witness":`)
+	buf.WriteString(`{ "witness":`)
 
 	{
 
@@ -91,6 +59,35 @@ func (j *WitnessUpdateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 
 	}
 	buf.WriteByte(',')
+	if j.NewSigningKey != nil {
+		if true {
+			buf.WriteString(`"new_signing_key":`)
+
+			{
+
+				obj, err = j.NewSigningKey.MarshalJSON()
+				if err != nil {
+					return err
+				}
+				buf.Write(obj)
+
+			}
+			buf.WriteByte(',')
+		}
+	}
+	if j.NewURL != nil {
+		if true {
+			buf.WriteString(`"new_url":`)
+			fflib.WriteJsonString(buf, string(*j.NewURL))
+			buf.WriteByte(',')
+		}
+	}
+	if j.WorkStatus {
+		buf.WriteString(`"work_status":true`)
+	} else {
+		buf.WriteString(`"work_status":false`)
+	}
+	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
 			/* Struct fall back. type=types.AssetAmount kind=struct */
@@ -111,24 +108,28 @@ const (
 	ffjtWitnessUpdateOperationbase = iota
 	ffjtWitnessUpdateOperationnosuchkey
 
-	ffjtWitnessUpdateOperationNewSigningKey
-
-	ffjtWitnessUpdateOperationNewURL
-
 	ffjtWitnessUpdateOperationWitness
 
 	ffjtWitnessUpdateOperationWitnessAccount
 
+	ffjtWitnessUpdateOperationNewSigningKey
+
+	ffjtWitnessUpdateOperationNewURL
+
+	ffjtWitnessUpdateOperationWorkStatus
+
 	ffjtWitnessUpdateOperationFee
 )
+
+var ffjKeyWitnessUpdateOperationWitness = []byte("witness")
+
+var ffjKeyWitnessUpdateOperationWitnessAccount = []byte("witness_account")
 
 var ffjKeyWitnessUpdateOperationNewSigningKey = []byte("new_signing_key")
 
 var ffjKeyWitnessUpdateOperationNewURL = []byte("new_url")
 
-var ffjKeyWitnessUpdateOperationWitness = []byte("witness")
-
-var ffjKeyWitnessUpdateOperationWitnessAccount = []byte("witness_account")
+var ffjKeyWitnessUpdateOperationWorkStatus = []byte("work_status")
 
 var ffjKeyWitnessUpdateOperationFee = []byte("fee")
 
@@ -225,6 +226,11 @@ mainparse:
 						currentKey = ffjtWitnessUpdateOperationWitnessAccount
 						state = fflib.FFParse_want_colon
 						goto mainparse
+
+					} else if bytes.Equal(ffjKeyWitnessUpdateOperationWorkStatus, kn) {
+						currentKey = ffjtWitnessUpdateOperationWorkStatus
+						state = fflib.FFParse_want_colon
+						goto mainparse
 					}
 
 				}
@@ -235,14 +241,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyWitnessUpdateOperationWitnessAccount, kn) {
-					currentKey = ffjtWitnessUpdateOperationWitnessAccount
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyWitnessUpdateOperationWitness, kn) {
-					currentKey = ffjtWitnessUpdateOperationWitness
+				if fflib.EqualFoldRight(ffjKeyWitnessUpdateOperationWorkStatus, kn) {
+					currentKey = ffjtWitnessUpdateOperationWorkStatus
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -255,6 +255,18 @@ mainparse:
 
 				if fflib.EqualFoldRight(ffjKeyWitnessUpdateOperationNewSigningKey, kn) {
 					currentKey = ffjtWitnessUpdateOperationNewSigningKey
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyWitnessUpdateOperationWitnessAccount, kn) {
+					currentKey = ffjtWitnessUpdateOperationWitnessAccount
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyWitnessUpdateOperationWitness, kn) {
+					currentKey = ffjtWitnessUpdateOperationWitness
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -276,17 +288,20 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
+				case ffjtWitnessUpdateOperationWitness:
+					goto handle_Witness
+
+				case ffjtWitnessUpdateOperationWitnessAccount:
+					goto handle_WitnessAccount
+
 				case ffjtWitnessUpdateOperationNewSigningKey:
 					goto handle_NewSigningKey
 
 				case ffjtWitnessUpdateOperationNewURL:
 					goto handle_NewURL
 
-				case ffjtWitnessUpdateOperationWitness:
-					goto handle_Witness
-
-				case ffjtWitnessUpdateOperationWitnessAccount:
-					goto handle_WitnessAccount
+				case ffjtWitnessUpdateOperationWorkStatus:
+					goto handle_WorkStatus
 
 				case ffjtWitnessUpdateOperationFee:
 					goto handle_Fee
@@ -304,68 +319,6 @@ mainparse:
 			}
 		}
 	}
-
-handle_NewSigningKey:
-
-	/* handler: j.NewSigningKey type=types.PublicKey kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-			j.NewSigningKey = nil
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			if j.NewSigningKey == nil {
-				j.NewSigningKey = new(types.PublicKey)
-			}
-
-			err = j.NewSigningKey.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_NewURL:
-
-	/* handler: j.NewURL type=types.String kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-			j.NewURL = nil
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			if j.NewURL == nil {
-				j.NewURL = new(types.String)
-			}
-
-			err = j.NewURL.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
 
 handle_Witness:
 
@@ -412,6 +365,102 @@ handle_WitnessAccount:
 			}
 		}
 		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_NewSigningKey:
+
+	/* handler: j.NewSigningKey type=types.PublicKey kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+			j.NewSigningKey = nil
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			if j.NewSigningKey == nil {
+				j.NewSigningKey = new(types.PublicKey)
+			}
+
+			err = j.NewSigningKey.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_NewURL:
+
+	/* handler: j.NewURL type=string kind=string quoted=false*/
+
+	{
+
+		{
+			if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
+			}
+		}
+
+		if tok == fflib.FFTok_null {
+
+			j.NewURL = nil
+
+		} else {
+
+			var tval string
+			outBuf := fs.Output.Bytes()
+
+			tval = string(string(outBuf))
+			j.NewURL = &tval
+
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_WorkStatus:
+
+	/* handler: j.WorkStatus type=bool kind=bool quoted=false*/
+
+	{
+		if tok != fflib.FFTok_bool && tok != fflib.FFTok_null {
+			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for bool", tok))
+		}
+	}
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+			tmpb := fs.Output.Bytes()
+
+			if bytes.Compare([]byte{'t', 'r', 'u', 'e'}, tmpb) == 0 {
+
+				j.WorkStatus = true
+
+			} else if bytes.Compare([]byte{'f', 'a', 'l', 's', 'e'}, tmpb) == 0 {
+
+				j.WorkStatus = false
+
+			} else {
+				err = errors.New("unexpected bytes for true/false value")
+				return fs.WrapErr(err)
+			}
+
+		}
 	}
 
 	state = fflib.FFParse_after_value

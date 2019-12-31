@@ -34,11 +34,11 @@ func (j *WitnessCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{ "block_signing_key":`)
+	buf.WriteString(`{ "witness_account":`)
 
 	{
 
-		obj, err = j.BlockSigningKey.MarshalJSON()
+		obj, err = j.WitnessAccount.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -47,11 +47,11 @@ func (j *WitnessCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 	}
 	buf.WriteString(`,"url":`)
 	fflib.WriteJsonString(buf, string(j.URL))
-	buf.WriteString(`,"witness_account":`)
+	buf.WriteString(`,"block_signing_key":`)
 
 	{
 
-		obj, err = j.WitnessAccount.MarshalJSON()
+		obj, err = j.BlockSigningKey.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -79,20 +79,20 @@ const (
 	ffjtWitnessCreateOperationbase = iota
 	ffjtWitnessCreateOperationnosuchkey
 
-	ffjtWitnessCreateOperationBlockSigningKey
+	ffjtWitnessCreateOperationWitnessAccount
 
 	ffjtWitnessCreateOperationURL
 
-	ffjtWitnessCreateOperationWitnessAccount
+	ffjtWitnessCreateOperationBlockSigningKey
 
 	ffjtWitnessCreateOperationFee
 )
 
-var ffjKeyWitnessCreateOperationBlockSigningKey = []byte("block_signing_key")
+var ffjKeyWitnessCreateOperationWitnessAccount = []byte("witness_account")
 
 var ffjKeyWitnessCreateOperationURL = []byte("url")
 
-var ffjKeyWitnessCreateOperationWitnessAccount = []byte("witness_account")
+var ffjKeyWitnessCreateOperationBlockSigningKey = []byte("block_signing_key")
 
 var ffjKeyWitnessCreateOperationFee = []byte("fee")
 
@@ -197,8 +197,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyWitnessCreateOperationWitnessAccount, kn) {
-					currentKey = ffjtWitnessCreateOperationWitnessAccount
+				if fflib.EqualFoldRight(ffjKeyWitnessCreateOperationBlockSigningKey, kn) {
+					currentKey = ffjtWitnessCreateOperationBlockSigningKey
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -209,8 +209,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyWitnessCreateOperationBlockSigningKey, kn) {
-					currentKey = ffjtWitnessCreateOperationBlockSigningKey
+				if fflib.EqualFoldRight(ffjKeyWitnessCreateOperationWitnessAccount, kn) {
+					currentKey = ffjtWitnessCreateOperationWitnessAccount
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -232,14 +232,14 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
-				case ffjtWitnessCreateOperationBlockSigningKey:
-					goto handle_BlockSigningKey
+				case ffjtWitnessCreateOperationWitnessAccount:
+					goto handle_WitnessAccount
 
 				case ffjtWitnessCreateOperationURL:
 					goto handle_URL
 
-				case ffjtWitnessCreateOperationWitnessAccount:
-					goto handle_WitnessAccount
+				case ffjtWitnessCreateOperationBlockSigningKey:
+					goto handle_BlockSigningKey
 
 				case ffjtWitnessCreateOperationFee:
 					goto handle_Fee
@@ -258,9 +258,9 @@ mainparse:
 		}
 	}
 
-handle_BlockSigningKey:
+handle_WitnessAccount:
 
-	/* handler: j.BlockSigningKey type=types.PublicKey kind=struct quoted=false*/
+	/* handler: j.WitnessAccount type=types.AccountID kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -272,7 +272,7 @@ handle_BlockSigningKey:
 				return fs.WrapErr(err)
 			}
 
-			err = j.BlockSigningKey.UnmarshalJSON(tbuf)
+			err = j.WitnessAccount.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -309,9 +309,9 @@ handle_URL:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_WitnessAccount:
+handle_BlockSigningKey:
 
-	/* handler: j.WitnessAccount type=types.AccountID kind=struct quoted=false*/
+	/* handler: j.BlockSigningKey type=types.PublicKey kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -323,7 +323,7 @@ handle_WitnessAccount:
 				return fs.WrapErr(err)
 			}
 
-			err = j.WitnessAccount.UnmarshalJSON(tbuf)
+			err = j.BlockSigningKey.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}

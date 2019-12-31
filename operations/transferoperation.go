@@ -19,11 +19,11 @@ func init() {
 
 type TransferOperation struct {
 	types.OperationFee
-	From   types.AccountID   `json:"from"`
-	To     types.AccountID   `json:"to"`
-	Amount types.AssetAmount `json:"amount"`
-	Memo       types.MemoPair   `json:"memo,omitempty"`
-	Extensions types.Extensions `json:"extensions"`
+	From       types.AccountID   `json:"from"`
+	To         types.AccountID   `json:"to"`
+	Amount     types.AssetAmount `json:"amount"`
+	Memo       types.MemoPair    `json:"memo,omitempty"`
+	Extensions types.Extensions  `json:"extensions"`
 }
 
 func (p TransferOperation) Type() types.OperationType {

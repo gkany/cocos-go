@@ -1,0 +1,84 @@
+unlocked >>> serialize_transaction {"signatures":[],"ref_block_num":37952,"ref_block_prefix":4245719684,"expiration":"2019-12-30T09:16:48","operations":[[7,{"account_to_upgrade":"1.2.6053","extensions":[],"upgrade_to_lifetime_member":true}]],"extensions":[]}
+serialize_transaction {"signatures":[],"ref_block_num":37952,"ref_block_prefix":4245719684,"expiration":"2019-12-30T09:16:48","operations":[[7,{"account_to_upgrade":"1.2.6053","extensions":[],"upgrade_to_lifetime_member":true}]],"extensions":[]}
+"4094848a10fd80c0095e0107a5170000000000000100000000"
+unlocked >>> 
+
+tx: {"signatures":[],"ref_block_num":37952,"ref_block_prefix":4245719684,"expiration":"2019-12-30T09:16:48","operations":[[7,{"account_to_upgrade":"1.2.6053","extensions":[],"upgrade_to_lifetime_member":true}]],"extensions":[]}
+Transaction Marshal
+  -> RefBlockNum:  37952
+    EncodeNumber: 37952, Hex: 4094
+  ->RefBlockPrefix:  4245719684
+    EncodeNumber: 4245719684, Hex: 848a10fd
+  ->Expiration[trx]:  2019-12-30 09:16:48 +0000 UTC
+    EncodeNumber: 1577697408, Hex: 80c0095e
+  ->Operations:  [0xc0000b9590]
+Operations Marshal
+    writeBytes:  [1] , Hex:  01
+    EncodeNumber: 7, Hex: 07
+    writeBytes:  [165 47] , Hex:  a52f
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    writeBytes:  [0] , Hex:  00
+    EncodeNumber: 1, Hex: 01
+    writeBytes:  [0] , Hex:  00
+  ->Extensions:  {<nil>}
+    writeBytes:  [0] , Hex:  00
+rawTrx - Hex: 4094848a10fd80c0095e0107a52f00000000000000010000  
+
+
+----- 1.
+a. 4094848a10fd80c0095e0107
+a517000000000000
+0100000000
+
+
+b. 4094848a10fd80c0095e0107
+a52f00000000000000
+010000 
+
+
+{
+    "signatures":[
+
+    ],
+    "ref_block_num":37952,
+    "ref_block_prefix":4245719684,
+    "expiration":"2019-12-30T09:16:48",
+    "operations":[
+        [
+            7,
+            {
+                "account_to_upgrade":"1.2.6053",
+                "extensions":[
+
+                ],
+                "upgrade_to_lifetime_member":true
+            }
+        ]
+    ],
+    "extensions":[
+
+    ]
+}
+
+
+--> p.Instance():  6053
+---> i:  6053
+ PutUvarintTest x:  6053
+ i:  0 , x:  6053 , buf[i]:  165 , byte(x):  165
+ i=0, x=6053, buf[i]=10100101, byte(x)=10100101
+
+ i:  1 , x:  47 , buf[i]:  47 , byte(x):  47
+ i=1, x=47, buf[i]=101111, byte(x)=101111
+---> n:  2 , b:  [165 47] , b:  [165 47 0 0 0 0 0 0 0 0]
+  writeBytes:  [165 47] , Hex:  a52f
+
+  
+
+
+
+
