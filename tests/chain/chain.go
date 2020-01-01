@@ -334,12 +334,12 @@ func testGetCommitteeMember(api graphSDK.WebsocketAPI) {
 }
 
 func main() {
-	// config.SetCurrent(config.ChainIDTestnet)
-	// wsURL := "ws://test.cocosbcx.net"
+	config.SetCurrent(config.ChainIDTestnet)
+	wsURL := "ws://test.cocosbcx.net"
 
-	chainID := config.ChainIDLocal
-	wsURL := "ws://127.0.0.1:8049"
-	config.SetCurrent(chainID)
+	// chainID := config.ChainIDLocal
+	// wsURL := "ws://127.0.0.1:8049"
+	// config.SetCurrent(chainID)
 
 	// chain api 测试
 	log.Println("------- chain api test ----------")

@@ -747,3 +747,59 @@ func (p SupporterType) Marshal(enc *util.TypeEncoder) error {
 
 	return nil
 }
+
+type AccountIDArray []AccountID
+type FileIDArray []FileID
+
+type SignaturesType map[AccountID]string
+
+func (p *SignaturesType) UnmarshalJSON(data []byte) error {
+	var signatures [][]interface{}
+	if err := ffjson.Unmarshal(data, &signatures); err != nil {
+		return errors.Annotate(err, "unmarshal signatures")
+	}
+
+	(*p) = make(map[AccountID]string)
+	for _, tk := range signatures {
+		key, ok := tk[0].(AccountID)
+		if !ok {
+			return ErrInvalidInputType
+		}
+
+		value, ok := tk[1].(string)
+		if !ok {
+			return ErrInvalidInputType
+		}
+
+		(*p)[key] = value
+	}
+
+	return nil
+}
+
+func (p SignaturesType) MarshalJSON() ([]byte, error) {
+	ret := make([]interface{}, 0, len(p))
+	for k, v := range p {
+		ret = append(ret, []interface{}{k.String(), v})
+	}
+	return ffjson.Marshal(ret)
+}
+
+func (p SignaturesType) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
+		return errors.Annotate(err, "encode length")
+	}
+
+	for _, k := range keys {
+		key := k.(AccountID)
+		if err := key.Marshal(enc); err != nil {
+			return errors.Annotate(err, "encode AccountID")
+		}
+
+		if err := enc.Encode(p[key]); err != nil {
+			return errors.Annotate(err, "encode value")
+		}
+	}
+
+	return nil
+}

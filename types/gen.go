@@ -29,6 +29,7 @@ package types
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_witnessscheduleid.go gen "T1=WitnessSchedule"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_budgetrecordid.go gen "T1=BudgetRecord"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_specialauthorityid.go gen "T1=SpecialAuthority"
+//go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_fileid.go gen "T1=File"
 
 //go:generate stringer -type=OperationType
 //go:generate stringer -type=ObjectType

@@ -1498,12 +1498,12 @@ func (p *websocketAPI) UpdateCommitteeMember(keyBag *crypto.KeyBag, committeeAcc
 	}
 
 	op := operations.CommitteeMemberUpdateOperation{
-		CommitteeMember: committee,
+		CommitteeMember:        *committee,
 		CommitteeMemberAccount: committeeAccount.ID,
-		WorkStatus: workStatus,
+		WorkStatus:             workStatus,
 	}
 
-	if url != "" {
+	if url != nil {
 		op.NewURL = url
 	}
 
@@ -1521,8 +1521,8 @@ func (p *websocketAPI) UpdateCommitteeMember(keyBag *crypto.KeyBag, committeeAcc
 
 func (p *websocketAPI) CreateWitness(keyBag *crypto.KeyBag, ownerAccount types.Account, url string, signKey types.PublicKey) error {
 	op := operations.WitnessCreateOperation{
-		WitnessAccount: ownerAccount.ID,
-		URL: url,
+		WitnessAccount:  ownerAccount.ID,
+		URL:             url,
 		BlockSigningKey: signKey,
 	}
 
@@ -1545,9 +1545,9 @@ func (p *websocketAPI) UpdateWitness(keyBag *crypto.KeyBag, witnessAccount types
 	}
 
 	op := operations.WitnessUpdateOperation{
-		Witness: witness.ID,
-		WitnessAccount: account.ID,
-		WorkStatus: workStatus,
+		Witness:        witness.ID,
+		WitnessAccount: witnessAccount.ID,
+		WorkStatus:     workStatus,
 	}
 
 	if url != nil {
@@ -1557,7 +1557,6 @@ func (p *websocketAPI) UpdateWitness(keyBag *crypto.KeyBag, witnessAccount types
 	if signKey != nil {
 		op.NewSigningKey = signKey
 	}
-
 
 	trx, err := p.BuildSignedTransaction(keyBag, &op)
 	if err != nil {
