@@ -168,8 +168,14 @@ api.OnError(func(err error) {
 - [x] OperationTypeFileSignature                         
 - [x] OperationTypeRelateParentFile                      
 - [x] OperationTypeReviseContract                        
-- [x] OperationTypeCrontabCreate                         
-- [x] OperationTypeCrontabCancel                         
-- [x] OperationTypeCrontabRecover                        
+- [ ] OperationTypeCrontabCreate                         
+- [ ] OperationTypeCrontabCancel                         
+- [ ] OperationTypeCrontabRecover                        
 - [x] OperationTypeUpdateCollateralForGas                
 - [x] OperationTypeAccountAuthentication                 
+
+## todo   
+* add missing operations   
+* add convenience functions   
+
+Have fun and feel free to contribute needed operations and tests.   
