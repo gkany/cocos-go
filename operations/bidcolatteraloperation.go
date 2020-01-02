@@ -17,8 +17,8 @@ func init() {
 
 type BidCollateralOperation struct {
 	types.OperationFee
-	AdditionalCollateral types.AssetAmount `json:"additional_collateral"`
 	Bidder               types.AccountID   `json:"bidder"`
+	AdditionalCollateral types.AssetAmount `json:"additional_collateral"`
 	DebtCovered          types.AssetAmount `json:"debt_covered"`
 	Extensions           types.Extensions  `json:"extensions"`
 }

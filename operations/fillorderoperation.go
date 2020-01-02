@@ -22,8 +22,8 @@ type FillOrderOperation struct {
 	AccountID types.AccountID   `json:"account_id"`
 	Pays      types.AssetAmount `json:"pays"`
 	Receives  types.AssetAmount `json:"receives"`
-	IsMaker   bool              `json:"is_maker"`
 	FillPrice types.Price       `json:"fill_price"`
+	IsMaker   bool              `json:"is_maker"`
 }
 
 func (p FillOrderOperation) Type() types.OperationType {

@@ -69,6 +69,12 @@ func (j *Asset) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
+	/* Struct fall back. type=types.AssetOptions kind=struct */
+	buf.WriteString(`,"options":`)
+	err = buf.Encode(&j.Options)
+	if err != nil {
+		return err
+	}
 	buf.WriteString(`,"dynamic_asset_data_id":`)
 
 	{
@@ -91,11 +97,16 @@ func (j *Asset) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
-	/* Struct fall back. type=types.AssetOptions kind=struct */
-	buf.WriteString(`,"options":`)
-	err = buf.Encode(&j.Options)
-	if err != nil {
-		return err
+	buf.WriteString(`,"buyback_account":`)
+
+	{
+
+		obj, err = j.BuybackAccount.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
 	}
 	buf.WriteByte('}')
 	return nil
@@ -113,11 +124,13 @@ const (
 
 	ffjtAssetIssuer
 
+	ffjtAssetOptions
+
 	ffjtAssetDynamicAssetDataID
 
 	ffjtAssetBitassetDataID
 
-	ffjtAssetOptions
+	ffjtAssetBuybackAccount
 )
 
 var ffjKeyAssetID = []byte("id")
@@ -128,11 +141,13 @@ var ffjKeyAssetPrecision = []byte("precision")
 
 var ffjKeyAssetIssuer = []byte("issuer")
 
+var ffjKeyAssetOptions = []byte("options")
+
 var ffjKeyAssetDynamicAssetDataID = []byte("dynamic_asset_data_id")
 
 var ffjKeyAssetBitassetDataID = []byte("bitasset_data_id")
 
-var ffjKeyAssetOptions = []byte("options")
+var ffjKeyAssetBuybackAccount = []byte("buyback_account")
 
 // UnmarshalJSON umarshall json - template of ffjson
 func (j *Asset) UnmarshalJSON(input []byte) error {
@@ -201,6 +216,11 @@ mainparse:
 						currentKey = ffjtAssetBitassetDataID
 						state = fflib.FFParse_want_colon
 						goto mainparse
+
+					} else if bytes.Equal(ffjKeyAssetBuybackAccount, kn) {
+						currentKey = ffjtAssetBuybackAccount
+						state = fflib.FFParse_want_colon
+						goto mainparse
 					}
 
 				case 'd':
@@ -250,8 +270,8 @@ mainparse:
 
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAssetOptions, kn) {
-					currentKey = ffjtAssetOptions
+				if fflib.EqualFoldRight(ffjKeyAssetBuybackAccount, kn) {
+					currentKey = ffjtAssetBuybackAccount
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -264,6 +284,12 @@ mainparse:
 
 				if fflib.EqualFoldRight(ffjKeyAssetDynamicAssetDataID, kn) {
 					currentKey = ffjtAssetDynamicAssetDataID
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAssetOptions, kn) {
+					currentKey = ffjtAssetOptions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -321,14 +347,17 @@ mainparse:
 				case ffjtAssetIssuer:
 					goto handle_Issuer
 
+				case ffjtAssetOptions:
+					goto handle_Options
+
 				case ffjtAssetDynamicAssetDataID:
 					goto handle_DynamicAssetDataID
 
 				case ffjtAssetBitassetDataID:
 					goto handle_BitassetDataID
 
-				case ffjtAssetOptions:
-					goto handle_Options
+				case ffjtAssetBuybackAccount:
+					goto handle_BuybackAccount
 
 				case ffjtAssetnosuchkey:
 					err = fs.SkipField(tok)
@@ -449,6 +478,26 @@ handle_Issuer:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
+handle_Options:
+
+	/* handler: j.Options type=types.AssetOptions kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.AssetOptions kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.Options)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
 handle_DynamicAssetDataID:
 
 	/* handler: j.DynamicAssetDataID type=types.AssetDynamicDataID kind=struct quoted=false*/
@@ -499,21 +548,26 @@ handle_BitassetDataID:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Options:
+handle_BuybackAccount:
 
-	/* handler: j.Options type=types.AssetOptions kind=struct quoted=false*/
+	/* handler: j.BuybackAccount type=types.AccountID kind=struct quoted=false*/
 
 	{
-		/* Falling back. type=types.AssetOptions kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
+		if tok == fflib.FFTok_null {
 
-		err = json.Unmarshal(tbuf, &j.Options)
-		if err != nil {
-			return fs.WrapErr(err)
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.BuybackAccount.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
 		}
+		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value

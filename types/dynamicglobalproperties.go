@@ -12,19 +12,20 @@ import (
 
 type DynamicGlobalProperties struct {
 	ID                             DynamicGlobalPropertyID `json:"id"`
-	CurrentWitness                 WitnessID               `json:"current_witness"`
-	LastBudgetTime                 Time                    `json:"last_budget_time"`
-	Time                           Time                    `json:"time"`
-	NextMaintenanceTime            Time                    `json:"next_maintenance_time"`
-	AccountsRegisteredThisInterval int                     `json:"accounts_registered_this_interval"`
-	DynamicFlags                   int                     `json:"dynamic_flags"`
-	HeadBlockID                    String                  `json:"head_block_id"`
-	RecentSlotsFilled              String                  `json:"recent_slots_filled"`
 	HeadBlockNumber                UInt32                  `json:"head_block_number"`
-	LastIrreversibleBlockNum       UInt32                  `json:"last_irreversible_block_num"`
-	CurrentAslot                   int64                   `json:"current_aslot"`
-	WitnessBudget                  int64                   `json:"witness_budget"`
+	HeadBlockID                    String                  `json:"head_block_id"`
+	Time                           Time                    `json:"time"`
+	CurrentWitness                 WitnessID               `json:"current_witness"`
+	CurrentTransactionCount        UInt32                  `json:"current_transaction_count"`
+	NextMaintenanceTime            Time                    `json:"next_maintenance_time"`
+	LastBudgetTime                 Time                    `json:"last_budget_time"`
+	WitnessBudget                  String                  `json:"witness_budget"`
+	AccountsRegisteredThisInterval int                     `json:"accounts_registered_this_interval"`
 	RecentlyMissedCount            int64                   `json:"recently_missed_count"`
+	CurrentAslot                   int64                   `json:"current_aslot"`
+	RecentSlotsFilled              String                  `json:"recent_slots_filled"`
+	DynamicFlags                   int                     `json:"dynamic_flags"`
+	LastIrreversibleBlockNum       UInt32                  `json:"last_irreversible_block_num"`
 }
 
 func (p DynamicGlobalProperties) RefBlockNum() UInt16 {

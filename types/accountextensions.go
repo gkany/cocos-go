@@ -44,7 +44,6 @@ type AccountCreateExtensions struct {
 	NullExt                *NullExtension          `json:"null_ext,omitempty"`
 	OwnerSpecialAuthority  *OwnerSpecialAuthority  `json:"owner_special_authority,omitempty"`
 	ActiveSpecialAuthority *ActiveSpecialAuthority `json:"active_special_authority,omitempty"`
-	BuybackOptions         *BuybackOptions         `json:"buyback_options,omitempty"`
 }
 
 func (p AccountCreateExtensions) Length() int {
@@ -56,9 +55,6 @@ func (p AccountCreateExtensions) Length() int {
 		fields++
 	}
 	if p.ActiveSpecialAuthority != nil {
-		fields++
-	}
-	if p.BuybackOptions != nil {
 		fields++
 	}
 
@@ -85,12 +81,6 @@ func (p AccountCreateExtensions) Marshal(enc *util.TypeEncoder) error {
 	if p.ActiveSpecialAuthority != nil {
 		if err := enc.Encode(p.ActiveSpecialAuthority); err != nil {
 			return errors.Annotate(err, "encode ActiveSpecialAuthority")
-		}
-	}
-
-	if p.BuybackOptions != nil {
-		if err := enc.Encode(p.BuybackOptions); err != nil {
-			return errors.Annotate(err, "encode BuybackOptions")
 		}
 	}
 

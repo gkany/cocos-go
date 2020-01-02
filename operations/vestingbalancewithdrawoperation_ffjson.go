@@ -5,8 +5,8 @@ package operations
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/gkany/graphSDK/types"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
 
@@ -34,14 +34,15 @@ func (j *VestingBalanceWithdrawOperation) MarshalJSONBuf(buf fflib.EncodingBuffe
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{ "amount":`)
+	buf.WriteString(`{ "vesting_balance":`)
 
 	{
 
-		err = j.Amount.MarshalJSONBuf(buf)
+		obj, err = j.VestingBalance.MarshalJSON()
 		if err != nil {
 			return err
 		}
+		buf.Write(obj)
 
 	}
 	buf.WriteString(`,"owner":`)
@@ -55,29 +56,20 @@ func (j *VestingBalanceWithdrawOperation) MarshalJSONBuf(buf fflib.EncodingBuffe
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"vesting_balance":`)
-
-	{
-
-		obj, err = j.VestingBalance.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
+	/* Struct fall back. type=types.AssetAmount kind=struct */
+	buf.WriteString(`,"amount":`)
+	err = buf.Encode(&j.Amount)
+	if err != nil {
+		return err
 	}
 	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
+			/* Struct fall back. type=types.AssetAmount kind=struct */
 			buf.WriteString(`"fee":`)
-
-			{
-
-				err = j.Fee.MarshalJSONBuf(buf)
-				if err != nil {
-					return err
-				}
-
+			err = buf.Encode(j.Fee)
+			if err != nil {
+				return err
 			}
 			buf.WriteByte(',')
 		}
@@ -91,20 +83,20 @@ const (
 	ffjtVestingBalanceWithdrawOperationbase = iota
 	ffjtVestingBalanceWithdrawOperationnosuchkey
 
-	ffjtVestingBalanceWithdrawOperationAmount
+	ffjtVestingBalanceWithdrawOperationVestingBalance
 
 	ffjtVestingBalanceWithdrawOperationOwner
 
-	ffjtVestingBalanceWithdrawOperationVestingBalance
+	ffjtVestingBalanceWithdrawOperationAmount
 
 	ffjtVestingBalanceWithdrawOperationFee
 )
 
-var ffjKeyVestingBalanceWithdrawOperationAmount = []byte("amount")
+var ffjKeyVestingBalanceWithdrawOperationVestingBalance = []byte("vesting_balance")
 
 var ffjKeyVestingBalanceWithdrawOperationOwner = []byte("owner")
 
-var ffjKeyVestingBalanceWithdrawOperationVestingBalance = []byte("vesting_balance")
+var ffjKeyVestingBalanceWithdrawOperationAmount = []byte("amount")
 
 var ffjKeyVestingBalanceWithdrawOperationFee = []byte("fee")
 
@@ -209,8 +201,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyVestingBalanceWithdrawOperationVestingBalance, kn) {
-					currentKey = ffjtVestingBalanceWithdrawOperationVestingBalance
+				if fflib.SimpleLetterEqualFold(ffjKeyVestingBalanceWithdrawOperationAmount, kn) {
+					currentKey = ffjtVestingBalanceWithdrawOperationAmount
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -221,8 +213,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.SimpleLetterEqualFold(ffjKeyVestingBalanceWithdrawOperationAmount, kn) {
-					currentKey = ffjtVestingBalanceWithdrawOperationAmount
+				if fflib.EqualFoldRight(ffjKeyVestingBalanceWithdrawOperationVestingBalance, kn) {
+					currentKey = ffjtVestingBalanceWithdrawOperationVestingBalance
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -244,14 +236,14 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
-				case ffjtVestingBalanceWithdrawOperationAmount:
-					goto handle_Amount
+				case ffjtVestingBalanceWithdrawOperationVestingBalance:
+					goto handle_VestingBalance
 
 				case ffjtVestingBalanceWithdrawOperationOwner:
 					goto handle_Owner
 
-				case ffjtVestingBalanceWithdrawOperationVestingBalance:
-					goto handle_VestingBalance
+				case ffjtVestingBalanceWithdrawOperationAmount:
+					goto handle_Amount
 
 				case ffjtVestingBalanceWithdrawOperationFee:
 					goto handle_Fee
@@ -270,18 +262,23 @@ mainparse:
 		}
 	}
 
-handle_Amount:
+handle_VestingBalance:
 
-	/* handler: j.Amount type=types.AssetAmount kind=struct quoted=false*/
+	/* handler: j.VestingBalance type=types.VestingBalanceID kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
 
 		} else {
 
-			err = j.Amount.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
+			tbuf, err := fs.CaptureField(tok)
 			if err != nil {
-				return err
+				return fs.WrapErr(err)
+			}
+
+			err = j.VestingBalance.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
 			}
 		}
 		state = fflib.FFParse_after_value
@@ -315,26 +312,21 @@ handle_Owner:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_VestingBalance:
+handle_Amount:
 
-	/* handler: j.VestingBalance type=types.VestingBalanceID kind=struct quoted=false*/
+	/* handler: j.Amount type=types.AssetAmount kind=struct quoted=false*/
 
 	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.VestingBalance.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
+		/* Falling back. type=types.AssetAmount kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
 		}
-		state = fflib.FFParse_after_value
+
+		err = json.Unmarshal(tbuf, &j.Amount)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
 	}
 
 	state = fflib.FFParse_after_value
@@ -345,22 +337,16 @@ handle_Fee:
 	/* handler: j.Fee type=types.AssetAmount kind=struct quoted=false*/
 
 	{
-		if tok == fflib.FFTok_null {
-
-			j.Fee = nil
-
-		} else {
-
-			if j.Fee == nil {
-				j.Fee = new(types.AssetAmount)
-			}
-
-			err = j.Fee.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
-			}
+		/* Falling back. type=types.AssetAmount kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
 		}
-		state = fflib.FFParse_after_value
+
+		err = json.Unmarshal(tbuf, &j.Fee)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
 	}
 
 	state = fflib.FFParse_after_value

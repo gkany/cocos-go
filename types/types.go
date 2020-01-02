@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	sort "github.com/emirpasic/gods/utils"
 	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
@@ -94,46 +95,55 @@ const (
 	OperationTypeFillOrder                                                  //4
 	OperationTypeAccountCreate                                              //5
 	OperationTypeAccountUpdate                                              //6
-	OperationTypeAccountWhitelist                                           //7
-	OperationTypeAccountUpgrade                                             //8
-	OperationTypeAccountTransfer                                            //9
-	OperationTypeAssetCreate                                                //10
-	OperationTypeAssetUpdate                                                //11
-	OperationTypeAssetUpdateBitasset                                        //12
-	OperationTypeAssetUpdateFeedProducers                                   //13
-	OperationTypeAssetIssue                                                 //14
-	OperationTypeAssetReserve                                               //15
-	OperationTypeAssetFundFeePool                                           //16
-	OperationTypeAssetSettle                                                //17
-	OperationTypeAssetGlobalSettle                                          //18
-	OperationTypeAssetPublishFeed                                           //19
-	OperationTypeWitnessCreate                                              //20
-	OperationTypeWitnessUpdate                                              //21
-	OperationTypeProposalCreate                                             //22
-	OperationTypeProposalUpdate                                             //23
-	OperationTypeProposalDelete                                             //24
-	OperationTypeWithdrawPermissionCreate                                   //25
-	OperationTypeWithdrawPermissionUpdate                                   //26
-	OperationTypeWithdrawPermissionClaim                                    //27
-	OperationTypeWithdrawPermissionDelete                                   //28
-	OperationTypeCommitteeMemberCreate                                      //29
-	OperationTypeCommitteeMemberUpdate                                      //30
-	OperationTypeCommitteeMemberUpdateGlobalParameters                      //31
-	OperationTypeVestingBalanceCreate                                       //32
-	OperationTypeVestingBalanceWithdraw                                     //33
-	OperationTypeWorkerCreate                                               //34
-	OperationTypeCustom                                                     //35
-	OperationTypeAssert                                                     //36
-	OperationTypeBalanceClaim                                               //37
-	OperationTypeOverrideTransfer                                           //38
-	OperationTypeTransferToBlind                                            //39
-	OperationTypeBlindTransfer                                              ///40
-	OperationTypeTransferFromBlind                                          //41
-	OperationTypeAssetSettleCancel                                          ///42
-	OperationTypeAssetClaimFees                                             //43
-	OperationTypeFBADistribute                                              ///44
-	OperationTypeBidCollateral                                              //45
-	OperationTypeExecuteBid                                                 ///46
+	OperationTypeAccountUpgrade                                             //7
+	OperationTypeAssetCreate                                                //8
+	OperationTypeAssetUpdate                                                //9
+	OperationTypeAssetUpdateRestricted                                      //10
+	OperationTypeAssetUpdateBitasset                                        //11
+	OperationTypeAssetUpdateFeedProducers                                   //12
+	OperationTypeAssetIssue                                                 //13
+	OperationTypeAssetReserve                                               //14
+	OperationTypeAssetSettle                                                //15
+	OperationTypeAssetGlobalSettle                                          //16
+	OperationTypeAssetPublishFeed                                           //17
+	OperationTypeWitnessCreate                                              //18
+	OperationTypeWitnessUpdate                                              //19
+	OperationTypeProposalCreate                                             //20
+	OperationTypeProposalUpdate                                             //21
+	OperationTypeProposalDelete                                             //22
+	OperationTypeCommitteeMemberCreate                                      //23
+	OperationTypeCommitteeMemberUpdate                                      //24
+	OperationTypeCommitteeMemberUpdateGlobalParameters                      //25
+	OperationTypeVestingBalanceCreate                                       //26
+	OperationTypeVestingBalanceWithdraw                                     //27
+	OperationTypeWorkerCreate                                               //28
+	OperationTypeBalanceClaim                                               //29
+	OperationTypeAssetSettleCancel                                          //30
+	OperationTypeAssetClaimFees                                             //31
+	OperationTypeBidCollateral                                              //32
+	OperationTypeExecuteBid                                                 //33
+	OperationTypeContractCreate                                             //34
+	OperationTypeCallContractFunction                                       //35
+	OperationTypeTemporaryAuthorityChange                                   //36
+	OperationTypeRegisterNhAssetCreator                                     //37
+	OperationTypeCreateWorldView                                            //38
+	OperationTypeRelateWorldView                                            //39
+	OperationTypeCreateNhAsset                                              //40
+	OperationTypeDeleteNhAsset                                              //41
+	OperationTypeTransferNhAsset                                            //42
+	OperationTypeCreateNhAssetOrder                                         //43
+	OperationTypeCancelNhAssetOrder                                         //44
+	OperationTypeFillNhAssetOrder                                           //45
+	OperationTypeCreateFile                                                 //46
+	OperationTypeAddFileRelateAccount                                       //47
+	OperationTypeFileSignature                                              //48
+	OperationTypeRelateParentFile                                           //49
+	OperationTypeReviseContract                                             //50
+	OperationTypeCrontabCreate                                              //51
+	OperationTypeCrontabCancel                                              //52
+	OperationTypeCrontabRecover                                             //53
+	OperationTypeUpdateCollateralForGas                                     //54
+	OperationTypeAccountAuthentication                                      //55
 )
 
 func (p OperationType) OperationName() string {
@@ -143,35 +153,43 @@ func (p OperationType) OperationName() string {
 type SpaceType UInt8
 
 const (
-	SpaceTypeProtocol SpaceType = iota + 1
+	SpaceTypeRelativeProtocol SpaceType = iota
+	SpaceTypeProtocol
 	SpaceTypeImplementation
+	SpaceTypeExtension
+	SpaceTypeNHAssetProtocol
+	SpaceTypeMarketHistory
 )
 
 type ObjectType UInt8
 
 //for SpaceTypeProtocol
 const (
-	ObjectTypeBase ObjectType = iota + 1
-	ObjectTypeAccount
-	ObjectTypeAsset
-	ObjectTypeForceSettlement
-	ObjectTypeCommitteeMember
-	ObjectTypeWitness
-	ObjectTypeLimitOrder
-	ObjectTypeCallOrder
-	ObjectTypeCustom
-	ObjectTypeProposal
-	ObjectTypeOperationHistory
-	ObjectTypeWithdrawPermission
-	ObjectTypeVestingBalance
-	ObjectTypeWorker
-	ObjectTypeBalance
+	ObjectTypeBase             ObjectType = iota + 1 // 1
+	ObjectTypeAccount                                // 2
+	ObjectTypeAsset                                  // 3
+	ObjectTypeForceSettlement                        // 4
+	ObjectTypeCommitteeMember                        // 5
+	ObjectTypeWitness                                // 6
+	ObjectTypeLimitOrder                             // 7
+	ObjectTypeCallOrder                              // 8
+	ObjectTypeCustom                                 // 9
+	ObjectTypeProposal                               // 10
+	ObjectTypeOperationHistory                       // 11
+	ObjectTypeCrontab                                // 12
+	ObjectTypeVestingBalance                         // 13
+	ObjectTypeWorker                                 // 14
+	ObjectTypeBalance                                // 15
+	ObjectTypeContract                               // 16
+	ObjectTypeContractData                           // 17
+	ObjectTypeFile                                   // 18
 )
 
 // for SpaceTypeImplementation
 const (
-	ObjectTypeGlobalProperty ObjectType = iota + 1
+	ObjectTypeGlobalProperty ObjectType = iota
 	ObjectTypeDynamicGlobalProperty
+	ObjectTypeContractBinCode
 	ObjectTypeAssetDynamicData
 	ObjectTypeAssetBitAssetData
 	ObjectTypeAccountBalance
@@ -179,11 +197,28 @@ const (
 	ObjectTypeTransaction
 	ObjectTypeBlockSummary
 	ObjectTypeAccountTransactionHistory
-	ObjectTypeBlindedBalance
+	ObjectTypeCollateralBid
 	ObjectTypeChainProperty
 	ObjectTypeWitnessSchedule
 	ObjectTypeBudgetRecord
 	ObjectTypeSpecialAuthority
+)
+
+// for extension_type_for_nico
+const (
+	ObjectTypeTemporaryAuthority ObjectType = iota
+	ObjectTypeTransactionInBlockInfo
+	ObjectTypeAssetRestrictedObject
+	ObjectTypeUnsuccessfulCandidates
+	ObjectTypeCollateralForGas
+)
+
+// for nh object type
+const (
+	ObjectTypeNhAssetCreator ObjectType = iota // 0
+	ObjectTypeWorldView                        // 1
+	ObjectTypeNHAsset                          // 2
+	ObjectTypeNHAssetOrder                     // 3
 )
 
 type AssetPermission Int16
@@ -502,6 +537,10 @@ type String struct {
 	data string
 }
 
+func (p *String) SetData(data string) {
+	p.data = data
+}
+
 func (p String) MarshalJSON() ([]byte, error) {
 	return ffjson.Marshal(p.data)
 }
@@ -663,3 +702,138 @@ type Unmarshalable interface {
 	UnmarshalJSON(input []byte) error
 }
 type M map[string]interface{}
+
+//committee member
+type SupporterType map[AccountID]AssetAmount
+
+func (p *SupporterType) UnmarshalJSON(data []byte) error {
+	var supporters [][]interface{}
+	if err := ffjson.Unmarshal(data, &supporters); err != nil {
+		return errors.Annotate(err, "unmarshal supporters")
+	}
+
+	(*p) = make(map[AccountID]AssetAmount)
+	for _, tk := range supporters {
+		key, ok := tk[0].(AccountID)
+		if !ok {
+			return ErrInvalidInputType
+		}
+
+		amount, ok := tk[1].(AssetAmount)
+		if !ok {
+			return ErrInvalidInputType
+		}
+
+		(*p)[key] = amount
+	}
+
+	return nil
+}
+
+func (p SupporterType) MarshalJSON() ([]byte, error) {
+	ret := make([]interface{}, 0, len(p))
+	for k, v := range p {
+		ret = append(ret, []interface{}{k.String(), v})
+	}
+	return ffjson.Marshal(ret)
+}
+
+func (p SupporterType) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
+		return errors.Annotate(err, "encode length")
+	}
+
+	//sort keys
+	keys := make([]interface{}, 0, len(p))
+	for k := range p {
+		keys = append(keys, k)
+	}
+
+	var err error
+	sort.Sort(keys, func(a, b interface{}) (s int) {
+		s, err = publicKeyComparator(a.(*PublicKey), b.(*PublicKey))
+		return
+	})
+
+	if err != nil {
+		return errors.Annotate(err, "Sort")
+	}
+
+	for _, k := range keys {
+		id := k.(AccountID)
+		if err := id.Marshal(enc); err != nil {
+			return errors.Annotate(err, "encode PubKey")
+		}
+
+		if err := enc.Encode(p[id]); err != nil {
+			return errors.Annotate(err, "encode Weight")
+		}
+	}
+
+	return nil
+}
+
+type AccountIDArray []AccountID
+type FileIDArray []FileID
+
+type SignaturesType map[AccountID]string
+
+func (p *SignaturesType) UnmarshalJSON(data []byte) error {
+	var signatures [][]interface{}
+	if err := ffjson.Unmarshal(data, &signatures); err != nil {
+		return errors.Annotate(err, "unmarshal signatures")
+	}
+
+	(*p) = make(map[AccountID]string)
+	for _, tk := range signatures {
+		key, ok := tk[0].(AccountID)
+		if !ok {
+			return ErrInvalidInputType
+		}
+
+		value, ok := tk[1].(string)
+		if !ok {
+			return ErrInvalidInputType
+		}
+
+		(*p)[key] = value
+	}
+
+	return nil
+}
+
+func (p SignaturesType) MarshalJSON() ([]byte, error) {
+	ret := make([]interface{}, 0, len(p))
+	for k, v := range p {
+		ret = append(ret, []interface{}{k.String(), v})
+	}
+	return ffjson.Marshal(ret)
+}
+
+func (p SignaturesType) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
+		return errors.Annotate(err, "encode length")
+	}
+
+	// for _, key := range keys {
+	// 	key := key.(AccountID)
+	// 	if err := key.Marshal(enc); err != nil {
+	// 		return errors.Annotate(err, "encode AccountID")
+	// 	}
+
+	// 	if err := enc.Encode(p[key]); err != nil {
+	// 		return errors.Annotate(err, "encode value")
+	// 	}
+	// }
+
+	return nil
+}
+
+type ContractIDListType []ContractID
+type NHAssetIDListType []NHAssetID
+type NHAssetMapType map[ContractID]NHAssetIDListType
+type StringMapType map[string]string
+type ContractDescribeMapType map[ContractID]StringMapType
+
+type NhAssetLeaseLimitType int // 0 -- black_list, 1 -- white_list
+type CharListType []int

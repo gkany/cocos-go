@@ -19,7 +19,8 @@ type CommitteeMemberUpdateOperation struct {
 	types.OperationFee
 	CommitteeMember        types.CommitteeMember `json:"committee_member"`
 	CommitteeMemberAccount types.AccountID       `json:"committee_member_account"`
-	NewURL                 *types.String         `json:"new_url,omitempty"`
+	NewURL                 *string               `json:"new_url,omitempty"`
+	WorkStatus             bool                  `json:"work_status"`
 }
 
 func (p CommitteeMemberUpdateOperation) Type() types.OperationType {
@@ -44,6 +45,9 @@ func (p CommitteeMemberUpdateOperation) Marshal(enc *util.TypeEncoder) error {
 	}
 	if err := enc.Encode(p.NewURL); err != nil {
 		return errors.Annotate(err, "encode NewURL")
+	}
+	if err := enc.Encode(p.WorkStatus); err != nil {
+		return errors.Annotate(err, "encode WorkStatus")
 	}
 
 	return nil

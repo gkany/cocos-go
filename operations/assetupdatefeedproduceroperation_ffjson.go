@@ -35,33 +35,22 @@ func (j *AssetUpdateFeedProducersOperation) MarshalJSONBuf(buf fflib.EncodingBuf
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{ "asset_to_update":`)
-
-	{
-
-		obj, err = j.AssetToUpdate.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"extensions":`)
-
-	{
-
-		obj, err = j.Extensions.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"issuer":`)
+	buf.WriteString(`{ "issuer":`)
 
 	{
 
 		obj, err = j.Issuer.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"asset_to_update":`)
+
+	{
+
+		obj, err = j.AssetToUpdate.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -90,6 +79,17 @@ func (j *AssetUpdateFeedProducersOperation) MarshalJSONBuf(buf fflib.EncodingBuf
 	} else {
 		buf.WriteString(`null`)
 	}
+	buf.WriteString(`,"extensions":`)
+
+	{
+
+		obj, err = j.Extensions.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
 	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
@@ -111,24 +111,24 @@ const (
 	ffjtAssetUpdateFeedProducersOperationbase = iota
 	ffjtAssetUpdateFeedProducersOperationnosuchkey
 
-	ffjtAssetUpdateFeedProducersOperationAssetToUpdate
-
-	ffjtAssetUpdateFeedProducersOperationExtensions
-
 	ffjtAssetUpdateFeedProducersOperationIssuer
 
+	ffjtAssetUpdateFeedProducersOperationAssetToUpdate
+
 	ffjtAssetUpdateFeedProducersOperationNewFeedProducers
+
+	ffjtAssetUpdateFeedProducersOperationExtensions
 
 	ffjtAssetUpdateFeedProducersOperationFee
 )
 
-var ffjKeyAssetUpdateFeedProducersOperationAssetToUpdate = []byte("asset_to_update")
-
-var ffjKeyAssetUpdateFeedProducersOperationExtensions = []byte("extensions")
-
 var ffjKeyAssetUpdateFeedProducersOperationIssuer = []byte("issuer")
 
+var ffjKeyAssetUpdateFeedProducersOperationAssetToUpdate = []byte("asset_to_update")
+
 var ffjKeyAssetUpdateFeedProducersOperationNewFeedProducers = []byte("new_feed_producers")
+
+var ffjKeyAssetUpdateFeedProducersOperationExtensions = []byte("extensions")
 
 var ffjKeyAssetUpdateFeedProducersOperationFee = []byte("fee")
 
@@ -241,26 +241,26 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAssetUpdateFeedProducersOperationNewFeedProducers, kn) {
-					currentKey = ffjtAssetUpdateFeedProducersOperationNewFeedProducers
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetUpdateFeedProducersOperationIssuer, kn) {
-					currentKey = ffjtAssetUpdateFeedProducersOperationIssuer
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyAssetUpdateFeedProducersOperationExtensions, kn) {
 					currentKey = ffjtAssetUpdateFeedProducersOperationExtensions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
+				if fflib.EqualFoldRight(ffjKeyAssetUpdateFeedProducersOperationNewFeedProducers, kn) {
+					currentKey = ffjtAssetUpdateFeedProducersOperationNewFeedProducers
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
 				if fflib.EqualFoldRight(ffjKeyAssetUpdateFeedProducersOperationAssetToUpdate, kn) {
 					currentKey = ffjtAssetUpdateFeedProducersOperationAssetToUpdate
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAssetUpdateFeedProducersOperationIssuer, kn) {
+					currentKey = ffjtAssetUpdateFeedProducersOperationIssuer
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -282,17 +282,17 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
-				case ffjtAssetUpdateFeedProducersOperationAssetToUpdate:
-					goto handle_AssetToUpdate
-
-				case ffjtAssetUpdateFeedProducersOperationExtensions:
-					goto handle_Extensions
-
 				case ffjtAssetUpdateFeedProducersOperationIssuer:
 					goto handle_Issuer
 
+				case ffjtAssetUpdateFeedProducersOperationAssetToUpdate:
+					goto handle_AssetToUpdate
+
 				case ffjtAssetUpdateFeedProducersOperationNewFeedProducers:
 					goto handle_NewFeedProducers
+
+				case ffjtAssetUpdateFeedProducersOperationExtensions:
+					goto handle_Extensions
 
 				case ffjtAssetUpdateFeedProducersOperationFee:
 					goto handle_Fee
@@ -311,56 +311,6 @@ mainparse:
 		}
 	}
 
-handle_AssetToUpdate:
-
-	/* handler: j.AssetToUpdate type=types.AssetID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.AssetToUpdate.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_Extensions:
-
-	/* handler: j.Extensions type=types.Extensions kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Extensions.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
 handle_Issuer:
 
 	/* handler: j.Issuer type=types.AccountID kind=struct quoted=false*/
@@ -376,6 +326,31 @@ handle_Issuer:
 			}
 
 			err = j.Issuer.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_AssetToUpdate:
+
+	/* handler: j.AssetToUpdate type=types.AssetID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.AssetToUpdate.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -454,6 +429,31 @@ handle_NewFeedProducers:
 				wantVal = false
 			}
 		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_Extensions:
+
+	/* handler: j.Extensions type=types.Extensions kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.Extensions.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value

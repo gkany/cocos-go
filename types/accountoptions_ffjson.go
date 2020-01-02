@@ -44,21 +44,6 @@ func (j *AccountOptions) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"voting_account":`)
-
-	{
-
-		obj, err = j.VotingAccount.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"num_witness":`)
-	fflib.FormatBits2(buf, uint64(j.NumWitness), 10, false)
-	buf.WriteString(`,"num_committee":`)
-	fflib.FormatBits2(buf, uint64(j.NumCommittee), 10, false)
 	buf.WriteString(`,"votes":`)
 	if j.Votes != nil {
 		buf.WriteString(`[`)
@@ -102,24 +87,12 @@ const (
 
 	ffjtAccountOptionsMemoKey
 
-	ffjtAccountOptionsVotingAccount
-
-	ffjtAccountOptionsNumWitness
-
-	ffjtAccountOptionsNumCommittee
-
 	ffjtAccountOptionsVotes
 
 	ffjtAccountOptionsExtensions
 )
 
 var ffjKeyAccountOptionsMemoKey = []byte("memo_key")
-
-var ffjKeyAccountOptionsVotingAccount = []byte("voting_account")
-
-var ffjKeyAccountOptionsNumWitness = []byte("num_witness")
-
-var ffjKeyAccountOptionsNumCommittee = []byte("num_committee")
 
 var ffjKeyAccountOptionsVotes = []byte("votes")
 
@@ -202,27 +175,9 @@ mainparse:
 						goto mainparse
 					}
 
-				case 'n':
-
-					if bytes.Equal(ffjKeyAccountOptionsNumWitness, kn) {
-						currentKey = ffjtAccountOptionsNumWitness
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountOptionsNumCommittee, kn) {
-						currentKey = ffjtAccountOptionsNumCommittee
-						state = fflib.FFParse_want_colon
-						goto mainparse
-					}
-
 				case 'v':
 
-					if bytes.Equal(ffjKeyAccountOptionsVotingAccount, kn) {
-						currentKey = ffjtAccountOptionsVotingAccount
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyAccountOptionsVotes, kn) {
+					if bytes.Equal(ffjKeyAccountOptionsVotes, kn) {
 						currentKey = ffjtAccountOptionsVotes
 						state = fflib.FFParse_want_colon
 						goto mainparse
@@ -238,24 +193,6 @@ mainparse:
 
 				if fflib.EqualFoldRight(ffjKeyAccountOptionsVotes, kn) {
 					currentKey = ffjtAccountOptionsVotes
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.AsciiEqualFold(ffjKeyAccountOptionsNumCommittee, kn) {
-					currentKey = ffjtAccountOptionsNumCommittee
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountOptionsNumWitness, kn) {
-					currentKey = ffjtAccountOptionsNumWitness
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.AsciiEqualFold(ffjKeyAccountOptionsVotingAccount, kn) {
-					currentKey = ffjtAccountOptionsVotingAccount
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -285,15 +222,6 @@ mainparse:
 
 				case ffjtAccountOptionsMemoKey:
 					goto handle_MemoKey
-
-				case ffjtAccountOptionsVotingAccount:
-					goto handle_VotingAccount
-
-				case ffjtAccountOptionsNumWitness:
-					goto handle_NumWitness
-
-				case ffjtAccountOptionsNumCommittee:
-					goto handle_NumCommittee
 
 				case ffjtAccountOptionsVotes:
 					goto handle_Votes
@@ -330,81 +258,6 @@ handle_MemoKey:
 			}
 
 			err = j.MemoKey.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_VotingAccount:
-
-	/* handler: j.VotingAccount type=types.AccountID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.VotingAccount.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_NumWitness:
-
-	/* handler: j.NumWitness type=types.UInt16 kind=uint16 quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.NumWitness.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_NumCommittee:
-
-	/* handler: j.NumCommittee type=types.UInt16 kind=uint16 quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.NumCommittee.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}

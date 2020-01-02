@@ -5,8 +5,8 @@ package operations
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/gkany/graphSDK/types"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
 
@@ -56,31 +56,32 @@ func (j *TransferOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
+	/* Struct fall back. type=types.AssetAmount kind=struct */
 	buf.WriteString(`,"amount":`)
-
-	{
-
-		err = j.Amount.MarshalJSONBuf(buf)
-		if err != nil {
-			return err
-		}
-
+	err = buf.Encode(&j.Amount)
+	if err != nil {
+		return err
 	}
 	buf.WriteByte(',')
-	if j.Memo != nil {
-		if true {
-			buf.WriteString(`"memo":`)
-
-			{
-
-				err = j.Memo.MarshalJSONBuf(buf)
+	if len(j.Memo) != 0 {
+		buf.WriteString(`"memo":`)
+		if j.Memo != nil {
+			buf.WriteString(`[`)
+			for i, v := range j.Memo {
+				if i != 0 {
+					buf.WriteString(`,`)
+				}
+				/* Interface types must use runtime reflection. type=interface {} kind=interface */
+				err = buf.Encode(v)
 				if err != nil {
 					return err
 				}
-
 			}
-			buf.WriteByte(',')
+			buf.WriteString(`]`)
+		} else {
+			buf.WriteString(`null`)
 		}
+		buf.WriteByte(',')
 	}
 	buf.WriteString(`"extensions":`)
 
@@ -96,15 +97,11 @@ func (j *TransferOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
+			/* Struct fall back. type=types.AssetAmount kind=struct */
 			buf.WriteString(`"fee":`)
-
-			{
-
-				err = j.Fee.MarshalJSONBuf(buf)
-				if err != nil {
-					return err
-				}
-
+			err = buf.Encode(j.Fee)
+			if err != nil {
+				return err
 			}
 			buf.WriteByte(',')
 		}
@@ -391,16 +388,16 @@ handle_Amount:
 	/* handler: j.Amount type=types.AssetAmount kind=struct quoted=false*/
 
 	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			err = j.Amount.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
-			}
+		/* Falling back. type=types.AssetAmount kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
 		}
-		state = fflib.FFParse_after_value
+
+		err = json.Unmarshal(tbuf, &j.Amount)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
 	}
 
 	state = fflib.FFParse_after_value
@@ -408,25 +405,67 @@ handle_Amount:
 
 handle_Memo:
 
-	/* handler: j.Memo type=types.Memo kind=struct quoted=false*/
+	/* handler: j.Memo type=types.MemoPair kind=slice quoted=false*/
 
 	{
-		if tok == fflib.FFTok_null {
 
-			j.Memo = nil
-
-		} else {
-
-			if j.Memo == nil {
-				j.Memo = new(types.Memo)
-			}
-
-			err = j.Memo.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
+		{
+			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for MemoPair", tok))
 			}
 		}
-		state = fflib.FFParse_after_value
+
+		if tok == fflib.FFTok_null {
+			j.Memo = nil
+		} else {
+
+			j.Memo = []interface{}{}
+
+			wantVal := true
+
+			for {
+
+				var tmpJMemo interface{}
+
+				tok = fs.Scan()
+				if tok == fflib.FFTok_error {
+					goto tokerror
+				}
+				if tok == fflib.FFTok_right_brace {
+					break
+				}
+
+				if tok == fflib.FFTok_comma {
+					if wantVal == true {
+						// TODO(pquerna): this isn't an ideal error message, this handles
+						// things like [,,,] as an array value.
+						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
+					}
+					continue
+				} else {
+					wantVal = true
+				}
+
+				/* handler: tmpJMemo type=interface {} kind=interface quoted=false*/
+
+				{
+					/* Falling back. type=interface {} kind=interface */
+					tbuf, err := fs.CaptureField(tok)
+					if err != nil {
+						return fs.WrapErr(err)
+					}
+
+					err = json.Unmarshal(tbuf, &tmpJMemo)
+					if err != nil {
+						return fs.WrapErr(err)
+					}
+				}
+
+				j.Memo = append(j.Memo, tmpJMemo)
+
+				wantVal = false
+			}
+		}
 	}
 
 	state = fflib.FFParse_after_value
@@ -462,22 +501,16 @@ handle_Fee:
 	/* handler: j.Fee type=types.AssetAmount kind=struct quoted=false*/
 
 	{
-		if tok == fflib.FFTok_null {
-
-			j.Fee = nil
-
-		} else {
-
-			if j.Fee == nil {
-				j.Fee = new(types.AssetAmount)
-			}
-
-			err = j.Fee.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
-			}
+		/* Falling back. type=types.AssetAmount kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
 		}
-		state = fflib.FFParse_after_value
+
+		err = json.Unmarshal(tbuf, &j.Fee)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
 	}
 
 	state = fflib.FFParse_after_value

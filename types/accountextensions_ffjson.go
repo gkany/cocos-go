@@ -81,21 +81,6 @@ func (j *AccountCreateExtensions) MarshalJSONBuf(buf fflib.EncodingBuffer) error
 			buf.WriteByte(',')
 		}
 	}
-	if j.BuybackOptions != nil {
-		if true {
-			buf.WriteString(`"buyback_options":`)
-
-			{
-
-				err = j.BuybackOptions.MarshalJSONBuf(buf)
-				if err != nil {
-					return err
-				}
-
-			}
-			buf.WriteByte(',')
-		}
-	}
 	buf.Rewind(1)
 	buf.WriteByte('}')
 	return nil
@@ -110,8 +95,6 @@ const (
 	ffjtAccountCreateExtensionsOwnerSpecialAuthority
 
 	ffjtAccountCreateExtensionsActiveSpecialAuthority
-
-	ffjtAccountCreateExtensionsBuybackOptions
 )
 
 var ffjKeyAccountCreateExtensionsNullExt = []byte("null_ext")
@@ -119,8 +102,6 @@ var ffjKeyAccountCreateExtensionsNullExt = []byte("null_ext")
 var ffjKeyAccountCreateExtensionsOwnerSpecialAuthority = []byte("owner_special_authority")
 
 var ffjKeyAccountCreateExtensionsActiveSpecialAuthority = []byte("active_special_authority")
-
-var ffjKeyAccountCreateExtensionsBuybackOptions = []byte("buyback_options")
 
 // UnmarshalJSON umarshall json - template of ffjson
 func (j *AccountCreateExtensions) UnmarshalJSON(input []byte) error {
@@ -191,14 +172,6 @@ mainparse:
 						goto mainparse
 					}
 
-				case 'b':
-
-					if bytes.Equal(ffjKeyAccountCreateExtensionsBuybackOptions, kn) {
-						currentKey = ffjtAccountCreateExtensionsBuybackOptions
-						state = fflib.FFParse_want_colon
-						goto mainparse
-					}
-
 				case 'n':
 
 					if bytes.Equal(ffjKeyAccountCreateExtensionsNullExt, kn) {
@@ -215,12 +188,6 @@ mainparse:
 						goto mainparse
 					}
 
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAccountCreateExtensionsBuybackOptions, kn) {
-					currentKey = ffjtAccountCreateExtensionsBuybackOptions
-					state = fflib.FFParse_want_colon
-					goto mainparse
 				}
 
 				if fflib.EqualFoldRight(ffjKeyAccountCreateExtensionsActiveSpecialAuthority, kn) {
@@ -266,9 +233,6 @@ mainparse:
 
 				case ffjtAccountCreateExtensionsActiveSpecialAuthority:
 					goto handle_ActiveSpecialAuthority
-
-				case ffjtAccountCreateExtensionsBuybackOptions:
-					goto handle_BuybackOptions
 
 				case ffjtAccountCreateExtensionsnosuchkey:
 					err = fs.SkipField(tok)
@@ -364,32 +328,6 @@ handle_ActiveSpecialAuthority:
 			err = j.ActiveSpecialAuthority.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_BuybackOptions:
-
-	/* handler: j.BuybackOptions type=types.BuybackOptions kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-			j.BuybackOptions = nil
-
-		} else {
-
-			if j.BuybackOptions == nil {
-				j.BuybackOptions = new(BuybackOptions)
-			}
-
-			err = j.BuybackOptions.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
 			}
 		}
 		state = fflib.FFParse_after_value

@@ -5,8 +5,8 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/gkany/graphSDK/util"
 	sort "github.com/emirpasic/gods/utils"
+	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )
@@ -33,6 +33,10 @@ func (p Authority) Marshal(enc *util.TypeEncoder) error {
 	}
 
 	return nil
+}
+
+func (p *Authority) AddKeyAuth(publicKey *PublicKey, weight UInt16) {
+	p.KeyAuths[publicKey] = weight
 }
 
 type KeyAuthsMap map[*PublicKey]UInt16

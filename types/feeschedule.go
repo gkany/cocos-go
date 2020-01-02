@@ -3,9 +3,9 @@ package types
 import (
 	"encoding/json"
 
-	"github.com/gkany/graphSDK/util"
-	"github.com/denkhaus/logging"
 	sort "github.com/emirpasic/gods/utils"
+	"github.com/gkany/graphSDK/logging"
+	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )

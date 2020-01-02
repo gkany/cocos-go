@@ -17,9 +17,9 @@ func init() {
 
 type WitnessCreateOperation struct {
 	types.OperationFee
-	BlockSigningKey types.PublicKey `json:"block_signing_key"`
-	URL             string          `json:"url"`
 	WitnessAccount  types.AccountID `json:"witness_account"`
+	URL             string          `json:"url"`
+	BlockSigningKey types.PublicKey `json:"block_signing_key"`
 }
 
 func (p WitnessCreateOperation) Type() types.OperationType {

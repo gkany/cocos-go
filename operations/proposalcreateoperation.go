@@ -17,11 +17,11 @@ func init() {
 
 type ProposalCreateOperation struct {
 	types.OperationFee
-	ExpirationTime      types.Time                     `json:"expiration_time"`
-	Extensions          types.Extensions               `json:"extensions"`
 	FeePayingAccount    types.AccountID                `json:"fee_paying_account"`
-	ReviewPeriodSeconds *types.UInt32                  `json:"review_period_seconds,omitempty"`
+	ExpirationTime      types.Time                     `json:"expiration_time"`
 	ProposedOps         types.OperationEnvelopeHolders `json:"proposed_ops"`
+	ReviewPeriodSeconds *types.UInt32                  `json:"review_period_seconds,omitempty"`
+	Extensions          types.Extensions               `json:"extensions"`
 }
 
 func (p ProposalCreateOperation) Type() types.OperationType {

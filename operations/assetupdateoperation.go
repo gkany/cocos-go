@@ -17,11 +17,11 @@ func init() {
 
 type AssetUpdateOperation struct {
 	types.OperationFee
-	AssetToUpdate types.AssetID      `json:"asset_to_update"`
 	Issuer        types.AccountID    `json:"issuer"`
-	Extensions    types.Extensions   `json:"extensions"`
-	NewIssuer     *types.AccountID   `json:"new_issuer"`
+	AssetToUpdate types.AssetID      `json:"asset_to_update"`
+	NewIssuer     *types.AccountID   `json:"new_issuer,omitempty"`
 	NewOptions    types.AssetOptions `json:"new_options"`
+	Extensions    types.Extensions   `json:"extensions"`
 }
 
 func (p AssetUpdateOperation) Type() types.OperationType {

@@ -17,14 +17,12 @@ func init() {
 
 type AccountCreateOperation struct {
 	types.OperationFee
-	Registrar       types.AccountID               `json:"registrar"`
-	Referrer        types.AccountID               `json:"referrer"`
-	ReferrerPercent types.UInt16                  `json:"referrer_percent"`
-	Owner           types.Authority               `json:"owner"`
-	Active          types.Authority               `json:"active"`
-	Name            types.String                  `json:"name"`
-	Extensions      types.AccountCreateExtensions `json:"extensions"`
-	Options         types.AccountOptions          `json:"options"`
+	Registrar  types.AccountID               `json:"registrar"`
+	Name       types.String                  `json:"name"`
+	Owner      types.Authority               `json:"owner"`
+	Active     types.Authority               `json:"active"`
+	Options    types.AccountOptions          `json:"options"`
+	Extensions types.AccountCreateExtensions `json:"extensions"`
 }
 
 func (p AccountCreateOperation) Type() types.OperationType {
@@ -61,12 +59,12 @@ func (p AccountCreateOperation) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.Encode(p.Registrar); err != nil {
 		return errors.Annotate(err, "encode Registrar")
 	}
-	if err := enc.Encode(p.Referrer); err != nil {
-		return errors.Annotate(err, "encode Referrer")
-	}
-	if err := enc.Encode(p.ReferrerPercent); err != nil {
-		return errors.Annotate(err, "encode ReferrerPercent")
-	}
+	// if err := enc.Encode(p.Referrer); err != nil {
+	// 	return errors.Annotate(err, "encode Referrer")
+	// }
+	// if err := enc.Encode(p.ReferrerPercent); err != nil {
+	// 	return errors.Annotate(err, "encode ReferrerPercent")
+	// }
 	if err := enc.Encode(p.Name); err != nil {
 		return errors.Annotate(err, "encode Name")
 	}
