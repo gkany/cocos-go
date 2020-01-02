@@ -17,9 +17,9 @@ func init() {
 
 type VestingBalanceWithdrawOperation struct {
 	types.OperationFee
-	Amount         types.AssetAmount      `json:"amount"`
-	Owner          types.AccountID        `json:"owner"`
 	VestingBalance types.VestingBalanceID `json:"vesting_balance"`
+	Owner          types.AccountID        `json:"owner"`
+	Amount         types.AssetAmount      `json:"amount"`
 }
 
 func (p VestingBalanceWithdrawOperation) Type() types.OperationType {

@@ -10,7 +10,6 @@ package types
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_customid.go gen "T1=Custom"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_proposalid.go gen "T1=Proposal"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_operationhistoryid.go gen "T1=OperationHistory"
-//go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_withdrawpermissionid.go gen "T1=WithdrawPermission"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_vestingbalanceid.go gen "T1=VestingBalance"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_workerid.go gen "T1=Worker"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_balanceid.go gen "T1=Balance"
@@ -24,11 +23,18 @@ package types
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_transactionid.go gen "T1=Transaction"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_blocksummaryid.go gen "T1=BlockSummary"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_accounttransactionhistoryid.go gen "T1=AccountTransactionHistory"
-//go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_blindedbalanceid.go gen "T1=BlindedBalance"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_chainpropertyid.go gen "T1=ChainProperty"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_witnessscheduleid.go gen "T1=WitnessSchedule"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_budgetrecordid.go gen "T1=BudgetRecord"
 //go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_specialauthorityid.go gen "T1=SpecialAuthority"
+
+//go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_fileid.go gen "T1=File"
+//go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_contractid.go gen "T1=Contract"
+//go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_nhassetid.go gen "T1=NHAsset"
+//go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_nhassetorderid.go gen "T1=NHAssetOrder"
+//go:generate genny -in=../gen/templates/objectid.go.tmpl -out=./gen_contractbincodeid.go gen "T1=ContractBinCode"
+
+
 
 //go:generate stringer -type=OperationType
 //go:generate stringer -type=ObjectType

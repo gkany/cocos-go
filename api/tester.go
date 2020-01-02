@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gkany/graphSDK/types"
-	"github.com/denkhaus/logging"
+	"github.com/gkany/graphSDK/logging"
 	sort "github.com/emirpasic/gods/utils"
 	deadlock "github.com/sasha-s/go-deadlock"
 	"gopkg.in/tomb.v2"

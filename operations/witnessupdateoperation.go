@@ -17,10 +17,11 @@ func init() {
 
 type WitnessUpdateOperation struct {
 	types.OperationFee
-	NewSigningKey  *types.PublicKey `json:"new_signing_key,omitempty"`
-	NewURL         *types.String    `json:"new_url,omitempty"`
 	Witness        types.WitnessID  `json:"witness"`
 	WitnessAccount types.AccountID  `json:"witness_account"`
+	NewSigningKey  *types.PublicKey `json:"new_signing_key,omitempty"`
+	NewURL         *string          `json:"new_url,omitempty"`
+	WorkStatus     bool             `json:"work_status"`
 }
 
 func (p WitnessUpdateOperation) Type() types.OperationType {
@@ -58,6 +59,10 @@ func (p WitnessUpdateOperation) Marshal(enc *util.TypeEncoder) error {
 
 	if err := enc.Encode(p.NewSigningKey); err != nil {
 		return errors.Annotate(err, "encode NewSigningKey")
+	}
+
+	if err := enc.Encode(p.WorkStatus); err != nil {
+		return errors.Annotate(err, "encode WorkStatus")
 	}
 
 	return nil

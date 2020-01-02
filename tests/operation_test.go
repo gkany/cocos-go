@@ -3,12 +3,11 @@ package tests
 import (
 	"testing"
 
-	"github.com/gkany/graphSDK"
 	"github.com/gkany/graphSDK/crypto"
 	"github.com/gkany/graphSDK/gen/data"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/operations"
 	"github.com/gkany/graphSDK/types"
-	"github.com/denkhaus/logging"
 	"github.com/stretchr/testify/suite"
 
 	// importing this initializes sample data fetching

@@ -117,57 +117,65 @@ api.OnError(func(err error) {
 
 ## implemented and tested (serialize/unserialize) operations
 
-- [x] OperationTypeTransfer OperationType
-- [x] OperationTypeLimitOrderCreate
-- [x] OperationTypeLimitOrderCancel
-- [x] OperationTypeCallOrderUpdate
-- [x] OperationTypeFillOrder (virtual)
-- [x] OperationTypeAccountCreate
-- [x] OperationTypeAccountUpdate
-- [x] OperationTypeAccountWhitelist
-- [x] OperationTypeAccountUpgrade
-- [x] OperationTypeAccountTransfer
-- [x] OperationTypeAssetCreate
-- [x] OperationTypeAssetUpdate
-- [x] OperationTypeAssetUpdateBitasset
-- [x] OperationTypeAssetUpdateFeedProducers
-- [x] OperationTypeAssetIssue
-- [x] OperationTypeAssetReserve
-- [x] OperationTypeAssetFundFeePool
-- [x] OperationTypeAssetSettle
-- [x] OperationTypeAssetGlobalSettle
-- [x] OperationTypeAssetPublishFeed
-- [x] OperationTypeWitnessCreate
-- [x] OperationTypeWitnessUpdate
-- [x] OperationTypeProposalCreate
-- [x] OperationTypeProposalUpdate
-- [x] OperationTypeProposalDelete
-- [x] OperationTypeWithdrawPermissionCreate
-- [x] OperationTypeWithdrawPermissionUpdate
-- [x] OperationTypeWithdrawPermissionClaim
-- [x] OperationTypeWithdrawPermissionDelete
-- [x] OperationTypeCommitteeMemberCreate
-- [x] OperationTypeCommitteeMemberUpdate
-- [x] OperationTypeCommitteeMemberUpdateGlobalParameters
-- [x] OperationTypeVestingBalanceCreate
-- [x] OperationTypeVestingBalanceWithdraw
-- [x] OperationTypeWorkerCreate
-- [x] OperationTypeCustom
-- [ ] OperationTypeAssert
-- [x] OperationTypeBalanceClaim
-- [x] OperationTypeOverrideTransfer
-- [x] OperationTypeTransferToBlind
-- [ ] OperationTypeBlindTransfer
-- [x] OperationTypeTransferFromBlind
-- [ ] OperationTypeAssetSettleCancel
-- [x] OperationTypeAssetClaimFees
-- [ ] OperationTypeFBADistribute
-- [x] OperationTypeBidColatteral
-- [ ] OperationTypeExecuteBid
+- [x] OperationTypeTransfer                              
+- [x] OperationTypeLimitOrderCreate                      
+- [x] OperationTypeLimitOrderCancel                      
+- [x] OperationTypeCallOrderUpdate                       
+- [x] OperationTypeFillOrder                             
+- [x] OperationTypeAccountCreate                         
+- [x] OperationTypeAccountUpdate                         
+- [x] OperationTypeAccountUpgrade                        
+- [x] OperationTypeAssetCreate                           
+- [x] OperationTypeAssetUpdate                           
+- [x] OperationTypeAssetUpdateRestricted                 
+- [x] OperationTypeAssetUpdateBitasset                   
+- [x] OperationTypeAssetUpdateFeedProducers              
+- [x] OperationTypeAssetIssue                            
+- [x] OperationTypeAssetReserve                          
+- [x] OperationTypeAssetSettle                           
+- [x] OperationTypeAssetGlobalSettle                     
+- [x] OperationTypeAssetPublishFeed                      
+- [x] OperationTypeWitnessCreate                         
+- [x] OperationTypeWitnessUpdate                         
+- [x] OperationTypeProposalCreate                        
+- [x] OperationTypeProposalUpdate                        
+- [x] OperationTypeProposalDelete                        
+- [x] OperationTypeCommitteeMemberCreate                 
+- [x] OperationTypeCommitteeMemberUpdate                 
+- [x] OperationTypeCommitteeMemberUpdateGlobalParameters  
+- [x] OperationTypeVestingBalanceCreate                  
+- [x] OperationTypeVestingBalanceWithdraw                
+- [x] OperationTypeWorkerCreate                          
+- [x] OperationTypeBalanceClaim                          
+- [x] OperationTypeAssetSettleCancel                     
+- [x] OperationTypeAssetClaimFees                        
+- [x] OperationTypeBidCollateral                         
+- [x] OperationTypeExecuteBid                            
+- [x] OperationTypeContractCreate                        
+- [x] OperationTypeCallContractFunction                  
+- [x] OperationTypeTemporaryAuthorityChange              
+- [x] OperationTypeRegisterNhAssetCreator                
+- [x] OperationTypeCreateWorldView                       
+- [x] OperationTypeRelateWorldView                       
+- [x] OperationTypeCreateNhAsset                         
+- [x] OperationTypeDeleteNhAsset                         
+- [x] OperationTypeTransferNhAsset                       
+- [x] OperationTypeCreateNhAssetOrder                    
+- [x] OperationTypeCancelNhAssetOrder                    
+- [x] OperationTypeFillNhAssetOrder                      
+- [x] OperationTypeCreateFile                            
+- [x] OperationTypeAddFileRelateAccount                  
+- [x] OperationTypeFileSignature                         
+- [x] OperationTypeRelateParentFile                      
+- [x] OperationTypeReviseContract                        
+- [ ] OperationTypeCrontabCreate                         
+- [ ] OperationTypeCrontabCancel                         
+- [ ] OperationTypeCrontabRecover                        
+- [x] OperationTypeUpdateCollateralForGas                
+- [x] OperationTypeAccountAuthentication                 
 
-## todo
-- add missing operations
-- add convenience functions 
+## todo   
+* add missing operations   
+* add convenience functions   
 
-
-Have fun and feel free to contribute needed operations and tests.
+Have fun and feel free to contribute needed operations and tests.   

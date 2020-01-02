@@ -6,8 +6,8 @@ package operations
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/gkany/graphSDK/types"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
 
@@ -56,19 +56,16 @@ func (j *CommitteeMemberUpdateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer
 	if j.NewURL != nil {
 		if true {
 			buf.WriteString(`"new_url":`)
-
-			{
-
-				obj, err = j.NewURL.MarshalJSON()
-				if err != nil {
-					return err
-				}
-				buf.Write(obj)
-
-			}
+			fflib.WriteJsonString(buf, string(*j.NewURL))
 			buf.WriteByte(',')
 		}
 	}
+	if j.WorkStatus {
+		buf.WriteString(`"work_status":true`)
+	} else {
+		buf.WriteString(`"work_status":false`)
+	}
+	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
 			/* Struct fall back. type=types.AssetAmount kind=struct */
@@ -95,6 +92,8 @@ const (
 
 	ffjtCommitteeMemberUpdateOperationNewURL
 
+	ffjtCommitteeMemberUpdateOperationWorkStatus
+
 	ffjtCommitteeMemberUpdateOperationFee
 )
 
@@ -103,6 +102,8 @@ var ffjKeyCommitteeMemberUpdateOperationCommitteeMember = []byte("committee_memb
 var ffjKeyCommitteeMemberUpdateOperationCommitteeMemberAccount = []byte("committee_member_account")
 
 var ffjKeyCommitteeMemberUpdateOperationNewURL = []byte("new_url")
+
+var ffjKeyCommitteeMemberUpdateOperationWorkStatus = []byte("work_status")
 
 var ffjKeyCommitteeMemberUpdateOperationFee = []byte("fee")
 
@@ -196,10 +197,24 @@ mainparse:
 						goto mainparse
 					}
 
+				case 'w':
+
+					if bytes.Equal(ffjKeyCommitteeMemberUpdateOperationWorkStatus, kn) {
+						currentKey = ffjtCommitteeMemberUpdateOperationWorkStatus
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
+
 				}
 
 				if fflib.SimpleLetterEqualFold(ffjKeyCommitteeMemberUpdateOperationFee, kn) {
 					currentKey = ffjtCommitteeMemberUpdateOperationFee
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyCommitteeMemberUpdateOperationWorkStatus, kn) {
+					currentKey = ffjtCommitteeMemberUpdateOperationWorkStatus
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -247,6 +262,9 @@ mainparse:
 
 				case ffjtCommitteeMemberUpdateOperationNewURL:
 					goto handle_NewURL
+
+				case ffjtCommitteeMemberUpdateOperationWorkStatus:
+					goto handle_WorkStatus
 
 				case ffjtCommitteeMemberUpdateOperationFee:
 					goto handle_Fee
@@ -312,30 +330,64 @@ handle_CommitteeMemberAccount:
 
 handle_NewURL:
 
-	/* handler: j.NewURL type=types.String kind=struct quoted=false*/
+	/* handler: j.NewURL type=string kind=string quoted=false*/
 
 	{
+
+		{
+			if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
+			}
+		}
+
 		if tok == fflib.FFTok_null {
 
 			j.NewURL = nil
 
 		} else {
 
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
+			var tval string
+			outBuf := fs.Output.Bytes()
 
-			if j.NewURL == nil {
-				j.NewURL = new(types.String)
-			}
+			tval = string(string(outBuf))
+			j.NewURL = &tval
 
-			err = j.NewURL.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
 		}
-		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_WorkStatus:
+
+	/* handler: j.WorkStatus type=bool kind=bool quoted=false*/
+
+	{
+		if tok != fflib.FFTok_bool && tok != fflib.FFTok_null {
+			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for bool", tok))
+		}
+	}
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+			tmpb := fs.Output.Bytes()
+
+			if bytes.Compare([]byte{'t', 'r', 'u', 'e'}, tmpb) == 0 {
+
+				j.WorkStatus = true
+
+			} else if bytes.Compare([]byte{'f', 'a', 'l', 's', 'e'}, tmpb) == 0 {
+
+				j.WorkStatus = false
+
+			} else {
+				err = errors.New("unexpected bytes for true/false value")
+				return fs.WrapErr(err)
+			}
+
+		}
 	}
 
 	state = fflib.FFParse_after_value

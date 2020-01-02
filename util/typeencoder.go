@@ -1,7 +1,10 @@
 package util
 
 import (
+	"bytes"
 	"encoding/binary"
+	"encoding/hex"
+	"fmt"
 	"io"
 	"reflect"
 	"strings"
@@ -35,6 +38,14 @@ func (p *TypeEncoder) EncodeVarint(i int64) error {
 	return p.writeBytes(b[:n])
 }
 
+func (p *TypeEncoder) EncodeUVarintByByte(i uint64) (int, error) {
+	fmt.Println("  ---> i: ", i)
+	b := make([]byte, binary.MaxVarintLen64)
+	n := PutUvarintByByte(b, i)
+	fmt.Println("  ---> n: ", n, ", b: ", b[:n], ", b: ", b[:])
+	return n, p.writeBytes(b[:n])
+}
+
 func (p *TypeEncoder) EncodeUVarint(i uint64) error {
 	b := make([]byte, binary.MaxVarintLen64)
 	n := binary.PutUvarint(b, i)
@@ -42,9 +53,17 @@ func (p *TypeEncoder) EncodeUVarint(i uint64) error {
 }
 
 func (p *TypeEncoder) EncodeNumber(v interface{}) error {
+	// fmt.Printf("    EncodeNumber: %v\n", v)
 	if err := binary.Write(p.w, binary.LittleEndian, v); err != nil {
 		return errors.Annotatef(err, "TypeEncoder: failed to write number: %v", v)
 	}
+
+	//test
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, v)
+	vBytes := buf.Bytes()
+	fmt.Printf("    EncodeNumber: %v, Hex: %v\n", v, hex.EncodeToString(vBytes[:]))
+
 	return nil
 }
 
@@ -61,7 +80,6 @@ func (p *TypeEncoder) Encode(v interface{}) error {
 	if m, ok := v.(TypeMarshaler); ok {
 		return m.Marshal(p)
 	}
-
 	switch v := v.(type) {
 	case int8:
 		return p.EncodeNumber(v)
@@ -106,6 +124,7 @@ func (p *TypeEncoder) Encode(v interface{}) error {
 }
 
 func (p *TypeEncoder) EncodeStringSlice(v []string) error {
+	fmt.Printf("    EncodeStringSlice: %v\n", v)
 	if err := p.EncodeUVarint(uint64(len(v))); err != nil {
 		return errors.Annotate(err, "EncodeUVarint [slice length]")
 	}
@@ -123,6 +142,7 @@ func (p *TypeEncoder) EncodeStringSlice(v []string) error {
 }
 
 func (p *TypeEncoder) EncodeString(v string) error {
+	fmt.Printf("    EncodeString: %v\n", v)
 	if err := p.EncodeUVarint(uint64(len(v))); err != nil {
 		return errors.Annotate(err, "EncodeUVarint [string length]")
 	}
@@ -131,6 +151,7 @@ func (p *TypeEncoder) EncodeString(v string) error {
 }
 
 func (p *TypeEncoder) writeBytes(bs []byte) error {
+	fmt.Println("    writeBytes: ", bs, ", Hex: ", hex.EncodeToString(bs[:]))
 	if _, err := p.w.Write(bs); err != nil {
 		return errors.Annotatef(err, "TypeEncoder: failed to write bytes: %v", bs)
 	}
@@ -138,6 +159,7 @@ func (p *TypeEncoder) writeBytes(bs []byte) error {
 }
 
 func (p *TypeEncoder) writeString(s string) error {
+	fmt.Println("    writeString: ", s)
 	if _, err := io.Copy(p.w, strings.NewReader(s)); err != nil {
 		return errors.Annotatef(err, "TypeEncoder: failed to write string: %v", s)
 	}

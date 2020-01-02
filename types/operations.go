@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/util"
-	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )
@@ -23,6 +23,8 @@ type Operation interface {
 	Type() OperationType
 	MarshalFeeScheduleParams(M, *util.TypeEncoder) error
 }
+
+type OperationResults []OperationResult
 
 type OperationResult interface {
 }
@@ -97,6 +99,7 @@ func (p *OperationEnvelope) UnmarshalJSON(data []byte) error {
 type Operations []Operation
 
 func (p Operations) Marshal(enc *util.TypeEncoder) error {
+	fmt.Println("Operations Marshal")
 	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
 		return errors.Annotate(err, "encode Operations length")
 	}

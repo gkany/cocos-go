@@ -35,3 +35,17 @@ func (p AssetAmount) Marshal(enc *util.TypeEncoder) error {
 
 	return nil
 }
+
+func NewZeroCoreAsset() AssetAmount {
+	return AssetAmount{
+		Amount: Int64(0),
+		Asset:  AssetIDFromObject(NewAssetID("1.3.0")),
+	}
+}
+
+func NewAsset(amount int64, assetID string) AssetAmount {
+	return AssetAmount{
+		Amount: Int64(amount),
+		Asset:  AssetIDFromObject(NewAssetID(assetID)),
+	}
+}

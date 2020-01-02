@@ -9,7 +9,8 @@ type Asset struct {
 	Symbol             String              `json:"symbol"`
 	Precision          int                 `json:"precision"`
 	Issuer             AccountID           `json:"issuer"`
+	Options            AssetOptions        `json:"options"`
 	DynamicAssetDataID AssetDynamicDataID  `json:"dynamic_asset_data_id"`
 	BitassetDataID     AssetBitAssetDataID `json:"bitasset_data_id"`
-	Options            AssetOptions        `json:"options"`
+	BuybackAccount     AccountID           `json:"buyback_account"`
 }

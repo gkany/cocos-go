@@ -8,29 +8,14 @@ import (
 )
 
 type AccountOptions struct {
-	MemoKey       PublicKey  `json:"memo_key"`
-	VotingAccount AccountID  `json:"voting_account"`
-	NumWitness    UInt16     `json:"num_witness"`
-	NumCommittee  UInt16     `json:"num_committee"`
-	Votes         Votes      `json:"votes"`
-	Extensions    Extensions `json:"extensions"`
+	MemoKey    PublicKey  `json:"memo_key"`
+	Votes      Votes      `json:"votes"`
+	Extensions Extensions `json:"extensions"`
 }
 
 func (p AccountOptions) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.Encode(p.MemoKey); err != nil {
 		return errors.Annotate(err, "encode MemoKey")
-	}
-
-	if err := enc.Encode(p.VotingAccount); err != nil {
-		return errors.Annotate(err, "encode VotingAccount")
-	}
-
-	if err := enc.Encode(p.NumWitness); err != nil {
-		return errors.Annotate(err, "encode NumWitness")
-	}
-
-	if err := enc.Encode(p.NumCommittee); err != nil {
-		return errors.Annotate(err, "encode NumCommittee")
 	}
 
 	if err := enc.Encode(p.Votes); err != nil {

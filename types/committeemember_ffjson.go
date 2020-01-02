@@ -5,6 +5,7 @@ package types
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
@@ -55,6 +56,17 @@ func (j *CommitteeMember) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
+	buf.WriteString(`,"vote_id":`)
+
+	{
+
+		obj, err = j.VoteID.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
 	buf.WriteString(`,"total_votes":`)
 	fflib.FormatBits2(buf, uint64(j.TotalVotes), 10, false)
 	buf.WriteString(`,"url":`)
@@ -68,11 +80,27 @@ func (j *CommitteeMember) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"vote_id":`)
+	if j.WorkStatus {
+		buf.WriteString(`,"work_status":true`)
+	} else {
+		buf.WriteString(`,"work_status":false`)
+	}
+	buf.WriteString(`,"next_maintenance_time":`)
 
 	{
 
-		obj, err = j.VoteID.MarshalJSON()
+		obj, err = j.NextMaintenanceTime.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"supporters":`)
+
+	{
+
+		obj, err = j.Supporters.MarshalJSON()
 		if err != nil {
 			return err
 		}
@@ -91,22 +119,34 @@ const (
 
 	ffjtCommitteeMemberCommitteeMemberAccount
 
+	ffjtCommitteeMemberVoteID
+
 	ffjtCommitteeMemberTotalVotes
 
 	ffjtCommitteeMemberURL
 
-	ffjtCommitteeMemberVoteID
+	ffjtCommitteeMemberWorkStatus
+
+	ffjtCommitteeMemberNextMaintenanceTime
+
+	ffjtCommitteeMemberSupporters
 )
 
 var ffjKeyCommitteeMemberID = []byte("id")
 
 var ffjKeyCommitteeMemberCommitteeMemberAccount = []byte("committee_member_account")
 
+var ffjKeyCommitteeMemberVoteID = []byte("vote_id")
+
 var ffjKeyCommitteeMemberTotalVotes = []byte("total_votes")
 
 var ffjKeyCommitteeMemberURL = []byte("url")
 
-var ffjKeyCommitteeMemberVoteID = []byte("vote_id")
+var ffjKeyCommitteeMemberWorkStatus = []byte("work_status")
+
+var ffjKeyCommitteeMemberNextMaintenanceTime = []byte("next_maintenance_time")
+
+var ffjKeyCommitteeMemberSupporters = []byte("supporters")
 
 // UnmarshalJSON umarshall json - template of ffjson
 func (j *CommitteeMember) UnmarshalJSON(input []byte) error {
@@ -185,6 +225,22 @@ mainparse:
 						goto mainparse
 					}
 
+				case 'n':
+
+					if bytes.Equal(ffjKeyCommitteeMemberNextMaintenanceTime, kn) {
+						currentKey = ffjtCommitteeMemberNextMaintenanceTime
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
+
+				case 's':
+
+					if bytes.Equal(ffjKeyCommitteeMemberSupporters, kn) {
+						currentKey = ffjtCommitteeMemberSupporters
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
+
 				case 't':
 
 					if bytes.Equal(ffjKeyCommitteeMemberTotalVotes, kn) {
@@ -209,10 +265,30 @@ mainparse:
 						goto mainparse
 					}
 
+				case 'w':
+
+					if bytes.Equal(ffjKeyCommitteeMemberWorkStatus, kn) {
+						currentKey = ffjtCommitteeMemberWorkStatus
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
+
 				}
 
-				if fflib.AsciiEqualFold(ffjKeyCommitteeMemberVoteID, kn) {
-					currentKey = ffjtCommitteeMemberVoteID
+				if fflib.EqualFoldRight(ffjKeyCommitteeMemberSupporters, kn) {
+					currentKey = ffjtCommitteeMemberSupporters
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.AsciiEqualFold(ffjKeyCommitteeMemberNextMaintenanceTime, kn) {
+					currentKey = ffjtCommitteeMemberNextMaintenanceTime
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyCommitteeMemberWorkStatus, kn) {
+					currentKey = ffjtCommitteeMemberWorkStatus
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -225,6 +301,12 @@ mainparse:
 
 				if fflib.EqualFoldRight(ffjKeyCommitteeMemberTotalVotes, kn) {
 					currentKey = ffjtCommitteeMemberTotalVotes
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.AsciiEqualFold(ffjKeyCommitteeMemberVoteID, kn) {
+					currentKey = ffjtCommitteeMemberVoteID
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -264,14 +346,23 @@ mainparse:
 				case ffjtCommitteeMemberCommitteeMemberAccount:
 					goto handle_CommitteeMemberAccount
 
+				case ffjtCommitteeMemberVoteID:
+					goto handle_VoteID
+
 				case ffjtCommitteeMemberTotalVotes:
 					goto handle_TotalVotes
 
 				case ffjtCommitteeMemberURL:
 					goto handle_URL
 
-				case ffjtCommitteeMemberVoteID:
-					goto handle_VoteID
+				case ffjtCommitteeMemberWorkStatus:
+					goto handle_WorkStatus
+
+				case ffjtCommitteeMemberNextMaintenanceTime:
+					goto handle_NextMaintenanceTime
+
+				case ffjtCommitteeMemberSupporters:
+					goto handle_Supporters
 
 				case ffjtCommitteeMembernosuchkey:
 					err = fs.SkipField(tok)
@@ -337,6 +428,31 @@ handle_CommitteeMemberAccount:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
+handle_VoteID:
+
+	/* handler: j.VoteID type=types.VoteID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.VoteID.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
 handle_TotalVotes:
 
 	/* handler: j.TotalVotes type=types.UInt64 kind=uint64 quoted=false*/
@@ -387,9 +503,44 @@ handle_URL:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_VoteID:
+handle_WorkStatus:
 
-	/* handler: j.VoteID type=types.VoteID kind=struct quoted=false*/
+	/* handler: j.WorkStatus type=bool kind=bool quoted=false*/
+
+	{
+		if tok != fflib.FFTok_bool && tok != fflib.FFTok_null {
+			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for bool", tok))
+		}
+	}
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+			tmpb := fs.Output.Bytes()
+
+			if bytes.Compare([]byte{'t', 'r', 'u', 'e'}, tmpb) == 0 {
+
+				j.WorkStatus = true
+
+			} else if bytes.Compare([]byte{'f', 'a', 'l', 's', 'e'}, tmpb) == 0 {
+
+				j.WorkStatus = false
+
+			} else {
+				err = errors.New("unexpected bytes for true/false value")
+				return fs.WrapErr(err)
+			}
+
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_NextMaintenanceTime:
+
+	/* handler: j.NextMaintenanceTime type=types.Time kind=struct quoted=false*/
 
 	{
 		if tok == fflib.FFTok_null {
@@ -401,7 +552,32 @@ handle_VoteID:
 				return fs.WrapErr(err)
 			}
 
-			err = j.VoteID.UnmarshalJSON(tbuf)
+			err = j.NextMaintenanceTime.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_Supporters:
+
+	/* handler: j.Supporters type=types.SupporterType kind=map quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.Supporters.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}

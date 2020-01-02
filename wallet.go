@@ -5,8 +5,8 @@ import (
 
 	"github.com/gkany/graphSDK/api"
 	"github.com/gkany/graphSDK/config"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/types"
-	"github.com/denkhaus/logging"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )

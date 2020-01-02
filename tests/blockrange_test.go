@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/bradhe/stopwatch"
-	"github.com/denkhaus/logging"
+	"github.com/gkany/graphSDK/logging"
 	"github.com/stretchr/testify/assert"
 
 	// register operations

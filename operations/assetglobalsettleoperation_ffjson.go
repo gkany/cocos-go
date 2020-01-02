@@ -5,8 +5,8 @@ package operations
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/gkany/graphSDK/types"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
 
@@ -34,7 +34,18 @@ func (j *AssetGlobalSettleOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) er
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{ "asset_to_settle":`)
+	buf.WriteString(`{ "issuer":`)
+
+	{
+
+		obj, err = j.Issuer.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
+	buf.WriteString(`,"asset_to_settle":`)
 
 	{
 
@@ -44,6 +55,12 @@ func (j *AssetGlobalSettleOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) er
 		}
 		buf.Write(obj)
 
+	}
+	/* Struct fall back. type=types.Price kind=struct */
+	buf.WriteString(`,"settle_price":`)
+	err = buf.Encode(&j.SettlePrice)
+	if err != nil {
+		return err
 	}
 	buf.WriteString(`,"extensions":`)
 
@@ -56,39 +73,14 @@ func (j *AssetGlobalSettleOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) er
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"issuer":`)
-
-	{
-
-		obj, err = j.Issuer.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
-	buf.WriteString(`,"settle_price":`)
-
-	{
-
-		err = j.SettlePrice.MarshalJSONBuf(buf)
-		if err != nil {
-			return err
-		}
-
-	}
 	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
+			/* Struct fall back. type=types.AssetAmount kind=struct */
 			buf.WriteString(`"fee":`)
-
-			{
-
-				err = j.Fee.MarshalJSONBuf(buf)
-				if err != nil {
-					return err
-				}
-
+			err = buf.Encode(j.Fee)
+			if err != nil {
+				return err
 			}
 			buf.WriteByte(',')
 		}
@@ -102,24 +94,24 @@ const (
 	ffjtAssetGlobalSettleOperationbase = iota
 	ffjtAssetGlobalSettleOperationnosuchkey
 
-	ffjtAssetGlobalSettleOperationAssetToSettle
-
-	ffjtAssetGlobalSettleOperationExtensions
-
 	ffjtAssetGlobalSettleOperationIssuer
 
+	ffjtAssetGlobalSettleOperationAssetToSettle
+
 	ffjtAssetGlobalSettleOperationSettlePrice
+
+	ffjtAssetGlobalSettleOperationExtensions
 
 	ffjtAssetGlobalSettleOperationFee
 )
 
-var ffjKeyAssetGlobalSettleOperationAssetToSettle = []byte("asset_to_settle")
-
-var ffjKeyAssetGlobalSettleOperationExtensions = []byte("extensions")
-
 var ffjKeyAssetGlobalSettleOperationIssuer = []byte("issuer")
 
+var ffjKeyAssetGlobalSettleOperationAssetToSettle = []byte("asset_to_settle")
+
 var ffjKeyAssetGlobalSettleOperationSettlePrice = []byte("settle_price")
+
+var ffjKeyAssetGlobalSettleOperationExtensions = []byte("extensions")
 
 var ffjKeyAssetGlobalSettleOperationFee = []byte("fee")
 
@@ -232,26 +224,26 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAssetGlobalSettleOperationSettlePrice, kn) {
-					currentKey = ffjtAssetGlobalSettleOperationSettlePrice
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.EqualFoldRight(ffjKeyAssetGlobalSettleOperationIssuer, kn) {
-					currentKey = ffjtAssetGlobalSettleOperationIssuer
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyAssetGlobalSettleOperationExtensions, kn) {
 					currentKey = ffjtAssetGlobalSettleOperationExtensions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
+				if fflib.EqualFoldRight(ffjKeyAssetGlobalSettleOperationSettlePrice, kn) {
+					currentKey = ffjtAssetGlobalSettleOperationSettlePrice
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
 				if fflib.EqualFoldRight(ffjKeyAssetGlobalSettleOperationAssetToSettle, kn) {
 					currentKey = ffjtAssetGlobalSettleOperationAssetToSettle
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAssetGlobalSettleOperationIssuer, kn) {
+					currentKey = ffjtAssetGlobalSettleOperationIssuer
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -273,17 +265,17 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
-				case ffjtAssetGlobalSettleOperationAssetToSettle:
-					goto handle_AssetToSettle
-
-				case ffjtAssetGlobalSettleOperationExtensions:
-					goto handle_Extensions
-
 				case ffjtAssetGlobalSettleOperationIssuer:
 					goto handle_Issuer
 
+				case ffjtAssetGlobalSettleOperationAssetToSettle:
+					goto handle_AssetToSettle
+
 				case ffjtAssetGlobalSettleOperationSettlePrice:
 					goto handle_SettlePrice
+
+				case ffjtAssetGlobalSettleOperationExtensions:
+					goto handle_Extensions
 
 				case ffjtAssetGlobalSettleOperationFee:
 					goto handle_Fee
@@ -301,6 +293,31 @@ mainparse:
 			}
 		}
 	}
+
+handle_Issuer:
+
+	/* handler: j.Issuer type=types.AccountID kind=struct quoted=false*/
+
+	{
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			err = j.Issuer.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+		}
+		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
 
 handle_AssetToSettle:
 
@@ -322,6 +339,26 @@ handle_AssetToSettle:
 			}
 		}
 		state = fflib.FFParse_after_value
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_SettlePrice:
+
+	/* handler: j.SettlePrice type=types.Price kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.Price kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.SettlePrice)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
 	}
 
 	state = fflib.FFParse_after_value
@@ -352,72 +389,21 @@ handle_Extensions:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Issuer:
-
-	/* handler: j.Issuer type=types.AccountID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Issuer.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_SettlePrice:
-
-	/* handler: j.SettlePrice type=types.Price kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			err = j.SettlePrice.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
 handle_Fee:
 
 	/* handler: j.Fee type=types.AssetAmount kind=struct quoted=false*/
 
 	{
-		if tok == fflib.FFTok_null {
-
-			j.Fee = nil
-
-		} else {
-
-			if j.Fee == nil {
-				j.Fee = new(types.AssetAmount)
-			}
-
-			err = j.Fee.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
-			if err != nil {
-				return err
-			}
+		/* Falling back. type=types.AssetAmount kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
 		}
-		state = fflib.FFParse_after_value
+
+		err = json.Unmarshal(tbuf, &j.Fee)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
 	}
 
 	state = fflib.FFParse_after_value

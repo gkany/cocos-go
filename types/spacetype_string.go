@@ -8,18 +8,21 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
+	_ = x[SpaceTypeRelativeProtocol-0]
 	_ = x[SpaceTypeProtocol-1]
 	_ = x[SpaceTypeImplementation-2]
+	_ = x[SpaceTypeExtension-3]
+	_ = x[SpaceTypeNHAssetProtocol-4]
+	_ = x[SpaceTypeMarketHistory-5]
 }
 
-const _SpaceType_name = "SpaceTypeProtocolSpaceTypeImplementation"
+const _SpaceType_name = "SpaceTypeRelativeProtocolSpaceTypeProtocolSpaceTypeImplementationSpaceTypeExtensionSpaceTypeNHAssetProtocolSpaceTypeMarketHistory"
 
-var _SpaceType_index = [...]uint8{0, 17, 40}
+var _SpaceType_index = [...]uint8{0, 25, 42, 65, 83, 107, 129}
 
 func (i SpaceType) String() string {
-	i -= 1
 	if i >= SpaceType(len(_SpaceType_index)-1) {
-		return "SpaceType(" + strconv.FormatInt(int64(i+1), 10) + ")"
+		return "SpaceType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
 	return _SpaceType_name[_SpaceType_index[i]:_SpaceType_index[i+1]]
 }

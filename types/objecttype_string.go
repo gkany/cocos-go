@@ -19,12 +19,16 @@ func _() {
 	_ = x[ObjectTypeCustom-9]
 	_ = x[ObjectTypeProposal-10]
 	_ = x[ObjectTypeOperationHistory-11]
-	_ = x[ObjectTypeWithdrawPermission-12]
+	_ = x[ObjectTypeCrontab-12]
 	_ = x[ObjectTypeVestingBalance-13]
 	_ = x[ObjectTypeWorker-14]
 	_ = x[ObjectTypeBalance-15]
-	_ = x[ObjectTypeGlobalProperty-1]
-	_ = x[ObjectTypeDynamicGlobalProperty-2]
+	_ = x[ObjectTypeContract-16]
+	_ = x[ObjectTypeContractData-17]
+	_ = x[ObjectTypeFile-18]
+	_ = x[ObjectTypeGlobalProperty-0]
+	_ = x[ObjectTypeDynamicGlobalProperty-1]
+	_ = x[ObjectTypeContractBinCode-2]
 	_ = x[ObjectTypeAssetDynamicData-3]
 	_ = x[ObjectTypeAssetBitAssetData-4]
 	_ = x[ObjectTypeAccountBalance-5]
@@ -32,21 +36,29 @@ func _() {
 	_ = x[ObjectTypeTransaction-7]
 	_ = x[ObjectTypeBlockSummary-8]
 	_ = x[ObjectTypeAccountTransactionHistory-9]
-	_ = x[ObjectTypeBlindedBalance-10]
+	_ = x[ObjectTypeCollateralBid-10]
 	_ = x[ObjectTypeChainProperty-11]
 	_ = x[ObjectTypeWitnessSchedule-12]
 	_ = x[ObjectTypeBudgetRecord-13]
 	_ = x[ObjectTypeSpecialAuthority-14]
+	_ = x[ObjectTypeTemporaryAuthority-0]
+	_ = x[ObjectTypeTransactionInBlockInfo-1]
+	_ = x[ObjectTypeAssetRestrictedObject-2]
+	_ = x[ObjectTypeUnsuccessfulCandidates-3]
+	_ = x[ObjectTypeCollateralForGas-4]
+	_ = x[ObjectTypeNhAssetCreator-0]
+	_ = x[ObjectTypeWorldView-1]
+	_ = x[ObjectTypeNHAsset-2]
+	_ = x[ObjectTypeNHAssetOrder-3]
 }
 
-const _ObjectType_name = "ObjectTypeBaseObjectTypeAccountObjectTypeAssetObjectTypeForceSettlementObjectTypeCommitteeMemberObjectTypeWitnessObjectTypeLimitOrderObjectTypeCallOrderObjectTypeCustomObjectTypeProposalObjectTypeOperationHistoryObjectTypeWithdrawPermissionObjectTypeVestingBalanceObjectTypeWorkerObjectTypeBalance"
+const _ObjectType_name = "ObjectTypeGlobalPropertyObjectTypeBaseObjectTypeAccountObjectTypeAssetObjectTypeForceSettlementObjectTypeCommitteeMemberObjectTypeWitnessObjectTypeLimitOrderObjectTypeCallOrderObjectTypeCustomObjectTypeProposalObjectTypeOperationHistoryObjectTypeCrontabObjectTypeVestingBalanceObjectTypeWorkerObjectTypeBalanceObjectTypeContractObjectTypeContractDataObjectTypeFile"
 
-var _ObjectType_index = [...]uint16{0, 14, 31, 46, 71, 96, 113, 133, 152, 168, 186, 212, 240, 264, 280, 297}
+var _ObjectType_index = [...]uint16{0, 24, 38, 55, 70, 95, 120, 137, 157, 176, 192, 210, 236, 253, 277, 293, 310, 328, 350, 364}
 
 func (i ObjectType) String() string {
-	i -= 1
 	if i >= ObjectType(len(_ObjectType_index)-1) {
-		return "ObjectType(" + strconv.FormatInt(int64(i+1), 10) + ")"
+		return "ObjectType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
 	return _ObjectType_name[_ObjectType_index[i]:_ObjectType_index[i+1]]
 }
