@@ -12,11 +12,11 @@ import (
 	"github.com/juju/errors"
 )
 
-type WithdrawPermissionID struct {
+type NHAssetID struct {
 	ObjectID
 }
 
-func (p WithdrawPermissionID) Marshal(enc *util.TypeEncoder) error {
+func (p NHAssetID) Marshal(enc *util.TypeEncoder) error {
 	n, err := enc.EncodeUVarintByByte(uint64(p.Instance()))
 	if err != nil {
 		return errors.Annotate(err, "encode instance")
@@ -31,62 +31,62 @@ func (p WithdrawPermissionID) Marshal(enc *util.TypeEncoder) error {
 	return nil
 }
 
-func (p *WithdrawPermissionID) Unmarshal(dec *util.TypeDecoder) error {
+func (p *NHAssetID) Unmarshal(dec *util.TypeDecoder) error {
 	var instance uint64
 	if err := dec.DecodeUVarint(&instance); err != nil {
 		return errors.Annotate(err, "decode instance")
 	}
 
-	p.number = UInt64((uint64(SpaceTypeProtocol) << 56) | (uint64(ObjectTypeWithdrawPermission) << 48) | instance)
+	p.number = UInt64((uint64(SpaceTypeProtocol) << 56) | (uint64(ObjectTypeNHAsset) << 48) | instance)
 	return nil
 }
 
-type WithdrawPermissionIDs []WithdrawPermissionID
+type NHAssetIDs []NHAssetID
 
-func (p WithdrawPermissionIDs) Marshal(enc *util.TypeEncoder) error {
+func (p NHAssetIDs) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
 		return errors.Annotate(err, "encode length")
 	}
 
 	for _, ex := range p {
 		if err := enc.Encode(ex); err != nil {
-			return errors.Annotate(err, "encode WithdrawPermissionID")
+			return errors.Annotate(err, "encode NHAssetID")
 		}
 	}
 
 	return nil
 }
 
-func WithdrawPermissionIDFromObject(ob GrapheneObject) WithdrawPermissionID {
-	id, ok := ob.(*WithdrawPermissionID)
+func NHAssetIDFromObject(ob GrapheneObject) NHAssetID {
+	id, ok := ob.(*NHAssetID)
 	if ok {
 		return *id
 	}
 
-	p := WithdrawPermissionID{}
+	p := NHAssetID{}
 	p.MustFromObject(ob)
-	if p.ObjectType() != ObjectTypeWithdrawPermission {
-		panic(fmt.Sprintf("invalid ObjectType: %q has no ObjectType 'ObjectTypeWithdrawPermission'", p.ID()))
+	if p.ObjectType() != ObjectTypeNHAsset {
+		panic(fmt.Sprintf("invalid ObjectType: %q has no ObjectType 'ObjectTypeNHAsset'", p.ID()))
 	}
 
 	return p
 }
 
-//NewWithdrawPermissionID creates an new WithdrawPermissionID object
-func NewWithdrawPermissionID(id string) GrapheneObject {
-	gid := new(WithdrawPermissionID)
+//NewNHAssetID creates an new NHAssetID object
+func NewNHAssetID(id string) GrapheneObject {
+	gid := new(NHAssetID)
 	if err := gid.Parse(id); err != nil {
 		logging.Errorf(
-			"WithdrawPermissionID parser error %v",
+			"NHAssetID parser error %v",
 			errors.Annotate(err, "Parse"),
 		)
 		return nil
 	}
 
-	if gid.ObjectType() != ObjectTypeWithdrawPermission {
+	if gid.ObjectType() != ObjectTypeNHAsset {
 		logging.Errorf(
-			"WithdrawPermissionID parser error %s",
-			fmt.Sprintf("%q has no ObjectType 'ObjectTypeWithdrawPermission'", id),
+			"NHAssetID parser error %s",
+			fmt.Sprintf("%q has no ObjectType 'ObjectTypeNHAsset'", id),
 		)
 		return nil
 	}

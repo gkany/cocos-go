@@ -12,11 +12,11 @@ import (
 	"github.com/juju/errors"
 )
 
-type BlindedBalanceID struct {
+type ContractID struct {
 	ObjectID
 }
 
-func (p BlindedBalanceID) Marshal(enc *util.TypeEncoder) error {
+func (p ContractID) Marshal(enc *util.TypeEncoder) error {
 	n, err := enc.EncodeUVarintByByte(uint64(p.Instance()))
 	if err != nil {
 		return errors.Annotate(err, "encode instance")
@@ -31,62 +31,62 @@ func (p BlindedBalanceID) Marshal(enc *util.TypeEncoder) error {
 	return nil
 }
 
-func (p *BlindedBalanceID) Unmarshal(dec *util.TypeDecoder) error {
+func (p *ContractID) Unmarshal(dec *util.TypeDecoder) error {
 	var instance uint64
 	if err := dec.DecodeUVarint(&instance); err != nil {
 		return errors.Annotate(err, "decode instance")
 	}
 
-	p.number = UInt64((uint64(SpaceTypeProtocol) << 56) | (uint64(ObjectTypeBlindedBalance) << 48) | instance)
+	p.number = UInt64((uint64(SpaceTypeProtocol) << 56) | (uint64(ObjectTypeContract) << 48) | instance)
 	return nil
 }
 
-type BlindedBalanceIDs []BlindedBalanceID
+type ContractIDs []ContractID
 
-func (p BlindedBalanceIDs) Marshal(enc *util.TypeEncoder) error {
+func (p ContractIDs) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
 		return errors.Annotate(err, "encode length")
 	}
 
 	for _, ex := range p {
 		if err := enc.Encode(ex); err != nil {
-			return errors.Annotate(err, "encode BlindedBalanceID")
+			return errors.Annotate(err, "encode ContractID")
 		}
 	}
 
 	return nil
 }
 
-func BlindedBalanceIDFromObject(ob GrapheneObject) BlindedBalanceID {
-	id, ok := ob.(*BlindedBalanceID)
+func ContractIDFromObject(ob GrapheneObject) ContractID {
+	id, ok := ob.(*ContractID)
 	if ok {
 		return *id
 	}
 
-	p := BlindedBalanceID{}
+	p := ContractID{}
 	p.MustFromObject(ob)
-	if p.ObjectType() != ObjectTypeBlindedBalance {
-		panic(fmt.Sprintf("invalid ObjectType: %q has no ObjectType 'ObjectTypeBlindedBalance'", p.ID()))
+	if p.ObjectType() != ObjectTypeContract {
+		panic(fmt.Sprintf("invalid ObjectType: %q has no ObjectType 'ObjectTypeContract'", p.ID()))
 	}
 
 	return p
 }
 
-//NewBlindedBalanceID creates an new BlindedBalanceID object
-func NewBlindedBalanceID(id string) GrapheneObject {
-	gid := new(BlindedBalanceID)
+//NewContractID creates an new ContractID object
+func NewContractID(id string) GrapheneObject {
+	gid := new(ContractID)
 	if err := gid.Parse(id); err != nil {
 		logging.Errorf(
-			"BlindedBalanceID parser error %v",
+			"ContractID parser error %v",
 			errors.Annotate(err, "Parse"),
 		)
 		return nil
 	}
 
-	if gid.ObjectType() != ObjectTypeBlindedBalance {
+	if gid.ObjectType() != ObjectTypeContract {
 		logging.Errorf(
-			"BlindedBalanceID parser error %s",
-			fmt.Sprintf("%q has no ObjectType 'ObjectTypeBlindedBalance'", id),
+			"ContractID parser error %s",
+			fmt.Sprintf("%q has no ObjectType 'ObjectTypeContract'", id),
 		)
 		return nil
 	}

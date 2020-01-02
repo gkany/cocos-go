@@ -153,35 +153,43 @@ func (p OperationType) OperationName() string {
 type SpaceType UInt8
 
 const (
-	SpaceTypeProtocol SpaceType = iota + 1
+	SpaceTypeRelativeProtocol SpaceType = iota
+	SpaceTypeProtocol
 	SpaceTypeImplementation
+	SpaceTypeExtension
+	SpaceTypeNHAssetProtocol
+	SpaceTypeMarketHistory
 )
 
 type ObjectType UInt8
 
 //for SpaceTypeProtocol
 const (
-	ObjectTypeBase ObjectType = iota + 1
-	ObjectTypeAccount
-	ObjectTypeAsset
-	ObjectTypeForceSettlement
-	ObjectTypeCommitteeMember
-	ObjectTypeWitness
-	ObjectTypeLimitOrder
-	ObjectTypeCallOrder
-	ObjectTypeCustom
-	ObjectTypeProposal
-	ObjectTypeOperationHistory
-	ObjectTypeWithdrawPermission
-	ObjectTypeVestingBalance
-	ObjectTypeWorker
-	ObjectTypeBalance
+	ObjectTypeBase             ObjectType = iota + 1 // 1
+	ObjectTypeAccount                                // 2
+	ObjectTypeAsset                                  // 3
+	ObjectTypeForceSettlement                        // 4
+	ObjectTypeCommitteeMember                        // 5
+	ObjectTypeWitness                                // 6
+	ObjectTypeLimitOrder                             // 7
+	ObjectTypeCallOrder                              // 8
+	ObjectTypeCustom                                 // 9
+	ObjectTypeProposal                               // 10
+	ObjectTypeOperationHistory                       // 11
+	ObjectTypeCrontab                                // 12
+	ObjectTypeVestingBalance                         // 13
+	ObjectTypeWorker                                 // 14
+	ObjectTypeBalance                                // 15
+	ObjectTypeContract                               // 16
+	ObjectTypeContractData                           // 17
+	ObjectTypeFile                                   // 18
 )
 
 // for SpaceTypeImplementation
 const (
-	ObjectTypeGlobalProperty ObjectType = iota + 1
+	ObjectTypeGlobalProperty ObjectType = iota
 	ObjectTypeDynamicGlobalProperty
+	ObjectTypeContractBinCode
 	ObjectTypeAssetDynamicData
 	ObjectTypeAssetBitAssetData
 	ObjectTypeAccountBalance
@@ -189,11 +197,28 @@ const (
 	ObjectTypeTransaction
 	ObjectTypeBlockSummary
 	ObjectTypeAccountTransactionHistory
-	ObjectTypeBlindedBalance
+	ObjectTypeCollateralBid
 	ObjectTypeChainProperty
 	ObjectTypeWitnessSchedule
 	ObjectTypeBudgetRecord
 	ObjectTypeSpecialAuthority
+)
+
+// for extension_type_for_nico
+const (
+	ObjectTypeTemporaryAuthority ObjectType = iota
+	ObjectTypeTransactionInBlockInfo
+	ObjectTypeAssetRestrictedObject
+	ObjectTypeUnsuccessfulCandidates
+	ObjectTypeCollateralForGas
+)
+
+// for nh object type
+const (
+	ObjectTypeNhAssetCreator ObjectType = iota // 0
+	ObjectTypeWorldView                        // 1
+	ObjectTypeNHAsset                          // 2
+	ObjectTypeNHAssetOrder                     // 3
 )
 
 type AssetPermission Int16
@@ -790,16 +815,25 @@ func (p SignaturesType) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode length")
 	}
 
-	for _, k := range keys {
-		key := k.(AccountID)
-		if err := key.Marshal(enc); err != nil {
-			return errors.Annotate(err, "encode AccountID")
-		}
+	// for _, key := range keys {
+	// 	key := key.(AccountID)
+	// 	if err := key.Marshal(enc); err != nil {
+	// 		return errors.Annotate(err, "encode AccountID")
+	// 	}
 
-		if err := enc.Encode(p[key]); err != nil {
-			return errors.Annotate(err, "encode value")
-		}
-	}
+	// 	if err := enc.Encode(p[key]); err != nil {
+	// 		return errors.Annotate(err, "encode value")
+	// 	}
+	// }
 
 	return nil
 }
+
+type ContractIDListType []ContractID
+type NHAssetIDListType []NHAssetID
+type NHAssetMapType map[ContractID]NHAssetIDListType
+type StringMapType map[string]string
+type ContractDescribeMapType map[ContractID]StringMapType
+
+type NhAssetLeaseLimitType int // 0 -- black_list, 1 -- white_list
+type CharListType []int
