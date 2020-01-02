@@ -17,11 +17,12 @@ func init() {
 
 type AccountUpdateOperation struct {
 	types.OperationFee
-	Account    types.AccountID               `json:"account"`
-	Active     *types.Authority              `json:"active,omitempty"`
-	Extensions types.AccountUpdateExtensions `json:"extensions"`
-	NewOptions *types.AccountOptions         `json:"new_options,omitempty"`
-	Owner      *types.Authority              `json:"owner,omitempty"`
+	LockWithVote *types.LockWithVotePairType   `json:"lock_with_vote,omitempty"`
+	Account      types.AccountID               `json:"account"`
+	Owner        *types.Authority              `json:"owner,omitempty"`
+	Active       *types.Authority              `json:"active,omitempty"`
+	NewOptions   *types.AccountOptions         `json:"new_options,omitempty"`
+	Extensions   types.AccountUpdateExtensions `json:"extensions"`
 }
 
 func (p AccountUpdateOperation) Type() types.OperationType {

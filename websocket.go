@@ -98,18 +98,18 @@ type WebsocketAPI interface {
 	CreateWitness(keyBag *crypto.KeyBag, ownerAccount types.Account, url string, signKey types.PublicKey) error
 	UpdateWitness(keyBag *crypto.KeyBag, witnessAccount types.Account, url *string, signKey *types.PublicKey, workStatus bool) error
 
-	// // get_vesting_balances
+	ContractCreate(keyBag *crypto.KeyBag, ownerAccount *types.Account, name, data string, contractAuthority *types.PublicKey) error
 
-	// // withdraw_vesting
-	// WithDrawVesting(keyBag *crypto.KeyBag, witnessName, symbol string, amount uint64) error
+	ReviseContract(keyBag *crypto.KeyBag, reviser *types.Account, contractID types.ContractID, data string) error
 
-	// // vote_for_committee_member
-	// VoteForCommitteeMember(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error
+	GetVestingBalances(account *types.Account) (*types.VestingBalances, error)
 
-	// // vote_for_witness
-	// VoteForWitness(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error
+	WithDrawVesting(keyBag *crypto.KeyBag, owner *types.Account, id types.VestingBalanceID, amount types.AssetAmount) error
 
-	// network_get_connected_peers
+	VoteForCommitteeMember(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error
+	VoteForWitness(keyBag *crypto.KeyBag, votingAccount, witnessAccount string, approve uint64) error 
+
+	NetworkGetConnectedPeers() (*types.NetWorkPeers, error)
 
 	// improt_balances
 
@@ -134,12 +134,13 @@ type WebsocketAPI interface {
 }
 
 type websocketAPI struct {
-	wsClient       ClientProvider
-	username       string
-	password       string
-	databaseAPIID  int
-	historyAPIID   int
-	broadcastAPIID int
+	wsClient            ClientProvider
+	username            string
+	password            string
+	databaseAPIID       int
+	historyAPIID        int
+	broadcastAPIID      int
+	networkNodeAPIID    int
 }
 
 func (p *websocketAPI) getAPIID(identifier string) (int, error) {
@@ -1064,6 +1065,10 @@ func (p *websocketAPI) HistoryAPIID() int {
 	return p.historyAPIID
 }
 
+func (p *websocketAPI) NetWorkNodeAPIID() int {
+	return p.networkNodeAPIID
+}
+
 //CallWsAPI invokes a websocket API call
 func (p *websocketAPI) CallWsAPI(apiID int, method string, args ...interface{}) (*json.RawMessage, error) {
 	return p.wsClient.CallAPI(apiID, method, args...)
@@ -1130,6 +1135,11 @@ func (p *websocketAPI) getAPIIDs() (err error) {
 	p.broadcastAPIID, err = p.getAPIID("network_broadcast")
 	if err != nil {
 		return errors.Annotate(err, "network")
+	}
+
+	p.networkNodeAPIID, err = p.getAPIID("network_node")
+	if err != nil {
+		return errors.Annotate(err, "network_node")
 	}
 
 	return nil
@@ -1570,20 +1580,76 @@ func (p *websocketAPI) UpdateWitness(keyBag *crypto.KeyBag, witnessAccount types
 	return nil
 }
 
-/*
-	// get_vesting_balances
-
-	// withdraw_vesting
-func (p *websocketAPI) WithDrawVesting(keyBag *crypto.KeyBag, witnessName, symbol string, amount uint64) error {
-	account, err := p.GetAccountByName(name)
-	if err != nil {
-		return err
+func (p *websocketAPI) ContractCreate(keyBag *crypto.KeyBag, ownerAccount *types.Account, name, data string, contractAuthority *types.PublicKey) error {
+	op := operations.ContractCreateOperation{
+		Owner: ownerAccount.ID,
+		Name: name,
+		Data: data,
+		ContractAuthority: *contractAuthority,
+		Extensions: types.Extensions{},
 	}
 
-	op := operations.AccountUpgradeOperation{
-		AccountToUpgrade: account.ID,
-		UpgradeToLifetimeMember: true,
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil
+}
+
+func (p *websocketAPI) ReviseContract(keyBag *crypto.KeyBag, reviser *types.Account, contractID types.ContractID, data string) error {
+	op := operations.ReviseContractOperation{
+		Reviser: reviser.ID,
+		ContractID: contractID,
+		Data: data,
 		Extensions: types.Extensions{},
+	}
+
+	trx, err := p.BuildSignedTransaction(keyBag, &op)
+	if err != nil {
+		return errors.Annotate(err, "BuildSignedTransaction")
+	}
+
+	if err := p.BroadcastTransaction(trx); err != nil {
+		return errors.Annotate(err, "BroadcastTransaction")
+	}
+
+	return nil	
+}
+
+func (p *websocketAPI)GetVestingBalances(account *types.Account) (*types.VestingBalances, error) {
+	resp, err := p.wsClient.CallAPI(0, "get_vesting_balances", account.ID)
+	if err != nil {
+		return nil, errors.Annotate(err, "CallAPI")
+	}
+
+	logging.DDumpJSON("get_vesting_balances <", resp)
+
+	ret := types.VestingBalances{}
+	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+		return nil, errors.Annotate(err, "Unmarshal VestingBalances")
+	}
+
+	return &ret, nil
+}
+
+
+type VestingBalanceWithdrawOperation struct {
+	types.OperationFee
+	VestingBalance types.VestingBalanceID `json:"vesting_balance"`
+	Owner          types.AccountID        `json:"owner"`
+	Amount         types.AssetAmount      `json:"amount"`
+}
+
+func (p *websocketAPI) WithDrawVesting(keyBag *crypto.KeyBag, owner *types.Account, id types.VestingBalanceID, amount types.AssetAmount) error {
+	op := operations.VestingBalanceWithdrawOperation{
+		VestingBalance: id,
+		Owner: owner.ID,
+		Amount: amount,
 	}
 
 	trx, err := p.BuildSignedTransaction(keyBag, &op)
@@ -1599,16 +1665,41 @@ func (p *websocketAPI) WithDrawVesting(keyBag *crypto.KeyBag, witnessName, symbo
 }
 
 	// vote_for_committee_member
-func (p *websocketAPI) VoteForCommitteeMember(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error  {
-	account, err := p.GetAccountByName(name)
+func (p *websocketAPI) VoteForCommitteeMember(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error {
+	votingAccountObject, err := p.GetAccountByName(votingAccount)
 	if err != nil {
 		return err
 	}
 
-	op := operations.AccountUpgradeOperation{
-		AccountToUpgrade: account.ID,
-		UpgradeToLifetimeMember: true,
-		Extensions: types.Extensions{},
+	//TODO:
+	// committeeMemberObject, err := p.GetAccountByName(committeeMember)
+	// if err != nil {
+	// 	return err
+	// }
+
+	if approve > 0 {
+		var votes types.Votes
+		for _, vote := range votingAccountObject.Options.Votes {
+			if vote.Typ != types.VoteTypeWitness {
+				vote.Instance = vote.Instance + 1
+				votes = append(votes, vote)
+			}
+		}
+		votingAccountObject.Options.Votes = votes
+	} else {
+		votingAccountObject.Options.Votes = types.Votes{}  // clear
+	}
+
+	op := operations.AccountUpdateOperation{
+		Account: votingAccountObject.ID,
+		NewOptions: &votingAccountObject.Options,
+		LockWithVote: &types.LockWithVotePairType {
+			types.VoteTypeCommittee,
+			types.AssetAmount{
+				Asset: types.AssetIDFromObject(types.CoreAsset),
+				Amount: types.Int64(approve),
+			},
+		},
 	}
 
 	trx, err := p.BuildSignedTransaction(keyBag, &op)
@@ -1623,17 +1714,41 @@ func (p *websocketAPI) VoteForCommitteeMember(keyBag *crypto.KeyBag, votingAccou
 	return nil
 }
 
-	// vote_for_witness
-func (p *websocketAPI) VoteForWitness(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error  {
-	account, err := p.GetAccountByName(name)
+func (p *websocketAPI) VoteForWitness(keyBag *crypto.KeyBag, votingAccount, witnessAccount string, approve uint64) error {
+	votingAccountObject, err := p.GetAccountByName(votingAccount)
 	if err != nil {
 		return err
 	}
 
-	op := operations.AccountUpgradeOperation{
-		AccountToUpgrade: account.ID,
-		UpgradeToLifetimeMember: true,
-		Extensions: types.Extensions{},
+	// TODO:
+	// witnessAccountObject, err := p.GetAccountByName(witnessAccount)
+	// if err != nil {
+	// 	return err
+	// }
+
+	if approve > 0 {
+		var votes types.Votes
+		for _, vote := range votingAccountObject.Options.Votes {
+			if vote.Typ != types.VoteTypeCommittee {
+				vote.Instance = vote.Instance + 1
+				votes = append(votes, vote)
+			}
+		}
+		votingAccountObject.Options.Votes = votes
+	} else {
+		votingAccountObject.Options.Votes = types.Votes{}  // clear
+	}
+
+	op := operations.AccountUpdateOperation{
+		Account: votingAccountObject.ID,
+		NewOptions: &votingAccountObject.Options,
+		LockWithVote: &types.LockWithVotePairType {
+			types.VoteTypeWitness,
+			types.AssetAmount{
+				Asset: types.AssetIDFromObject(types.CoreAsset),
+				Amount: types.Int64(approve),
+			},
+		},
 	}
 
 	trx, err := p.BuildSignedTransaction(keyBag, &op)
@@ -1647,15 +1762,31 @@ func (p *websocketAPI) VoteForWitness(keyBag *crypto.KeyBag, votingAccount, comm
 
 	return nil
 }
-*/
+
+func (p *websocketAPI) NetworkGetConnectedPeers() (*types.NetWorkPeers, error) {
+	resp, err := p.wsClient.CallAPI(p.NetWorkNodeAPIID(), "get_connected_peers")
+	if err != nil {
+		return nil, errors.Annotate(err, "CallAPI")
+	}
+
+	logging.DDumpJSON("get_connected_peers <", resp)
+
+	ret := types.NetWorkPeers{}
+	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+		return nil, errors.Annotate(err, "Unmarshal [NetWorkPeers]")
+	}
+
+	return &ret, nil
+}
 
 //NewWebsocketAPI creates a new WebsocketAPI interface.
 //wsEndpointURL: a websocket node endpoint URL.
 func NewWebsocketAPI(wsEndpointURL string) WebsocketAPI {
 	api := &websocketAPI{
-		databaseAPIID:  InvalidApiID,
-		historyAPIID:   InvalidApiID,
-		broadcastAPIID: InvalidApiID,
+		databaseAPIID:    InvalidApiID,
+		historyAPIID:     InvalidApiID,
+		broadcastAPIID:   InvalidApiID,
+		networkNodeAPIID: InvalidApiID,
 	}
 
 	api.wsClient = NewSimpleClientProvider(wsEndpointURL, api)
@@ -1667,9 +1798,10 @@ func NewWebsocketAPI(wsEndpointURL string) WebsocketAPI {
 //startupEndpointURL: a websocket node endpoint URL to startup the latency tester quickly.
 func NewWebsocketAPIWithAutoEndpoint(startupEndpointURL string) (WebsocketAPI, error) {
 	api := &websocketAPI{
-		databaseAPIID:  InvalidApiID,
-		historyAPIID:   InvalidApiID,
-		broadcastAPIID: InvalidApiID,
+		databaseAPIID:    InvalidApiID,
+		historyAPIID:     InvalidApiID,
+		broadcastAPIID:   InvalidApiID,
+		networkNodeAPIID: InvalidApiID,
 	}
 
 	pr, err := NewBestNodeClientProvider(startupEndpointURL, api)

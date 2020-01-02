@@ -333,6 +333,48 @@ func testGetCommitteeMember(api graphSDK.WebsocketAPI) {
 	fmt.Println(committee, err)
 }
 
+func testCreateContract(api graphSDK.WebsocketAPI) {
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	publicKey, err := types.NewPublicKeyFromString(pubKey)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	contractName := "contract.debug.hello"
+	contractCode := "function hello() chainhelper:log('create contract test') end"
+	error := api.ContractCreate(keyBag, account, contractName, contractCode, publicKey)
+	fmt.Println(error)
+}
+
+func testGetVestingBalances(api graphSDK.WebsocketAPI) {
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	result, err := api.GetVestingBalances(account)
+	fmt.Println(result, err)
+}
+
+func testNetworkGetConnectedPeers(api graphSDK.WebsocketAPI) {
+	result, err := api.NetworkGetConnectedPeers()
+	fmt.Println(result, err)
+}
+
 func main() {
 	config.SetCurrent(config.ChainIDTestnet)
 	wsURL := "ws://test.cocosbcx.net"
@@ -372,6 +414,10 @@ func main() {
 	// testUpgradeAccount(api, new_account_name)
 
 	// testGetWitness(api)
-	testGetCommitteeMember(api)
+	// testGetCommitteeMember(api)
+	// testCreateContract(api)
+	// testGetVestingBalances(api)
+
+	testNetworkGetConnectedPeers(api)
 
 }

@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gkany/graphSDK/util"
 	sort "github.com/emirpasic/gods/utils"
+	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
 )
 
@@ -39,8 +39,8 @@ func (p Votes) Marshal(enc *util.TypeEncoder) error {
 }
 
 type VoteID struct {
-	typ      int
-	instance int
+	Typ      int
+	Instance int
 }
 
 func (p *VoteID) UnmarshalJSON(data []byte) error {
@@ -59,24 +59,24 @@ func (p *VoteID) UnmarshalJSON(data []byte) error {
 	if err != nil {
 		return errors.Annotate(err, "Atoi VoteID [type]")
 	}
-	p.typ = t
+	p.Typ = t
 
 	in, err := strconv.Atoi(tk[1])
 	if err != nil {
 		return errors.Annotate(err, "Atoi VoteID [instance]")
 	}
-	p.instance = in
+	p.Instance = in
 
 	return nil
 }
 
 func (p VoteID) MarshalJSON() ([]byte, error) {
-	return []byte(fmt.Sprintf(`"%d:%d"`, p.typ, p.instance)), nil
+	return []byte(fmt.Sprintf(`"%d:%d"`, p.Typ, p.Instance)), nil
 }
 
 //TODO: define this
 func (p VoteID) Marshal(enc *util.TypeEncoder) error {
-	bin := (p.typ & 0xff) | (p.instance << 8)
+	bin := (p.Typ & 0xff) | (p.Instance << 8)
 	if err := enc.Encode(uint32(bin)); err != nil {
 		return errors.Annotate(err, "encode ID")
 	}
@@ -98,11 +98,17 @@ func voteIDComparator(a, b interface{}) int {
 	bID := b.(VoteID)
 
 	switch {
-	case aID.instance > bID.instance:
+	case aID.Instance > bID.Instance:
 		return 1
-	case aID.instance < bID.instance:
+	case aID.Instance < bID.Instance:
 		return -1
 	default:
 		return 0
 	}
 }
+
+const (
+	VoteTypeCommittee = 0
+	VoteTypeWitness   = 1
+	VoteTypeVoteNoone = 2
+)
