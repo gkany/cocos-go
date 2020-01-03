@@ -1,0 +1,47 @@
+// -------------> Digest: 
+// tx: {"signatures":[],"ref_block_num":56203,"ref_block_prefix":3995866768,"expiration":"2020-01-02T07:45:55","operations":[[34,{"owner":"1.2.16","name":"contract.debug.hello","data":"function hello() chainhelper:log('create contract test end","contract_authority":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","extensions":[]}]],"extensions":[]}
+// Transaction Marshal
+//   -> RefBlockNum:  56203
+//     EncodeNumber: 56203, Hex: 8bdb
+//   ->RefBlockPrefix:  3995866768
+//     EncodeNumber: 3995866768, Hex: 90162cee
+//   ->Expiration[trx]:  2020-01-02 07:45:55 +0000 UTC
+//     EncodeNumber: 1577951155, Hex: b39f0d5e
+//   ->Operations:  [0xc00017e200]
+// Operations Marshal
+//     writeBytes:  [1] , Hex:  01
+//     EncodeNumber: 34, Hex: 22
+//   ---> i:  16
+//   ---> n:  1 , b:  [16] , b:  [16 0 0 0 0 0 0 0 0 0]
+//     writeBytes:  [16] , Hex:  10
+//     writeBytes:  [0] , Hex:  00
+//     writeBytes:  [0] , Hex:  00
+//     writeBytes:  [0] , Hex:  00
+//     writeBytes:  [0] , Hex:  00
+//     writeBytes:  [0] , Hex:  00
+//     writeBytes:  [0] , Hex:  00
+//     writeBytes:  [0] , Hex:  00
+//     EncodeString: contract.debug.hello
+//     writeBytes:  [20] , Hex:  14
+//     writeString:  contract.debug.hello
+//     EncodeString: function hello() chainhelper:log('create contract test end
+//     writeBytes:  [58] , Hex:  3a
+//     writeString:  function hello() chainhelper:log('create contract test end
+//     writeBytes:  [2 27 110 185 211 92 127 126 210 59 100 203 25 253 150 81 60 181 10 106 205 118 139 195 92 252 202 188 26 210 213 197 198] , Hex:  021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c6
+//     writeBytes:  [0] , Hex:  00
+//   ->Extensions:  {<nil>}
+//     writeBytes:  [0] , Hex:  00
+// rawTrx - Hex: 8bdb90162ceeb39f0d5e0122100000000000000014636f6e74726163742e64656275672e68656c6c6f3a66756e6374696f6e2068656c6c6f282920636861696e68656c7065723a6c6f67282763726561746520636f6e7472616374207465737420656e64021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c60000
+
+
+// locked >>> serialize_transaction {"signatures":[],"ref_block_num":56203,"ref_block_prefix":3995866768,"expiration":"2020-01-02T07:45:55","operations":[[34,{"owner":"1.2.16","name":"contract.debug.hello","data":"function hello() chainhelper:log('create contract test end","contract_authority":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","extensions":[]}]],"extensions":[]}
+// serialize_transaction {"signatures":[],"ref_block_num":56203,"ref_block_prefix":3995866768,"expiration":"2020-01-02T07:45:55","operations":[[34,{"owner":"1.2.16","name":"contract.debug.hello","data":"function hello() chainhelper:log('create contract test end","contract_authority":"COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx","extensions":[]}]],"extensions":[]}
+// "8bdb90162ceeb39f0d5e0122100000000000000014636f6e74726163742e64656275672e68656c6c6f3a66756e6374696f6e2068656c6c6f282920636861696e68656c7065723a6c6f67282763726561746520636f6e7472616374207465737420656e64021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c600000000"
+
+// a. 
+// 8bdb90162ceeb39f0d5e0122100000000000000014636f6e74726163742e64656275672e68656c6c6f3a66756e6374696f6e2068656c6c6f282920636861696e68656c7065723a6c6f67282763726561746520636f6e7472616374207465737420656e64021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c600000000
+
+// b. 
+// 8bdb90162ceeb39f0d5e0122100000000000000014636f6e74726163742e64656275672e68656c6c6f3a66756e6374696f6e2068656c6c6f282920636861696e68656c7065723a6c6f67282763726561746520636f6e7472616374207465737420656e64021b6eb9d35c7f7ed23b64cb19fd96513cb50a6acd768bc35cfccabc1ad2d5c5c60000
+
+

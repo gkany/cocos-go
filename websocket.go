@@ -59,6 +59,8 @@ type WebsocketAPI interface {
 	GetCallOrders(assetID types.GrapheneObject, limit int) (types.CallOrders, error)
 	GetChainID() (string, error)
 	GetDynamicGlobalProperties() (*types.DynamicGlobalProperties, error)
+	GetChainProperties() (*types.DynamicGlobalProperties, error)
+	GetGlobalProperties() (*types.DynamicGlobalProperties, error)
 	GetForceSettlementOrders(assetID types.GrapheneObject, limit int) (types.ForceSettlementOrders, error)
 	GetFullAccounts(accountIDs ...types.GrapheneObject) (types.FullAccountInfos, error)
 	GetLimitOrders(base, quote types.GrapheneObject, limit int) (types.LimitOrders, error)
@@ -109,7 +111,8 @@ type WebsocketAPI interface {
 	VoteForCommitteeMember(keyBag *crypto.KeyBag, votingAccount, committeeMember string, approve uint64) error
 	VoteForWitness(keyBag *crypto.KeyBag, votingAccount, witnessAccount string, approve uint64) error 
 
-	NetworkGetConnectedPeers() (*types.NetWorkPeers, error)
+	GetConnectedPeers() (*types.NetWorkPeers, error)
+	GetInfo()(*types.Info, error)
 
 	// improt_balances
 
@@ -1763,8 +1766,8 @@ func (p *websocketAPI) VoteForWitness(keyBag *crypto.KeyBag, votingAccount, witn
 	return nil
 }
 
-func (p *websocketAPI) NetworkGetConnectedPeers() (*types.NetWorkPeers, error) {
-	resp, err := p.wsClient.CallAPI(p.NetWorkNodeAPIID(), "get_connected_peers")
+func (p *websocketAPI) GetConnectedPeers() (*types.NetWorkPeers, error) {
+	resp, err := p.wsClient.CallAPI(p.NetWorkNodeAPIID(), "get_connected_peers", types.EmptyParams)
 	if err != nil {
 		return nil, errors.Annotate(err, "CallAPI")
 	}
@@ -1775,6 +1778,22 @@ func (p *websocketAPI) NetworkGetConnectedPeers() (*types.NetWorkPeers, error) {
 	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
 		return nil, errors.Annotate(err, "Unmarshal [NetWorkPeers]")
 	}
+
+	return &ret, nil
+}
+
+func (p *websocketAPI) GetInfo()(*types.Info, error) {
+	// resp, err := p.wsClient.CallAPI(p.NetWorkNodeAPIID(), "get_info", types.EmptyParams)
+	// if err != nil {
+	// 	return nil, errors.Annotate(err, "CallAPI")
+	// }
+	// logging.DDumpJSON("get_info <", resp)
+	// ret := types.Info{}
+	// if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+	// 	return nil, errors.Annotate(err, "Unmarshal [Info]")
+	// }
+
+	p.GetCha
 
 	return &ret, nil
 }

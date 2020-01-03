@@ -370,8 +370,13 @@ func testGetVestingBalances(api graphSDK.WebsocketAPI) {
 	fmt.Println(result, err)
 }
 
-func testNetworkGetConnectedPeers(api graphSDK.WebsocketAPI) {
-	result, err := api.NetworkGetConnectedPeers()
+func testGetConnectedPeers(api graphSDK.WebsocketAPI) {
+	result, err := api.GetConnectedPeers()
+	fmt.Println(result, err)
+}
+
+func testGetInfo(api graphSDK.WebsocketAPI) {
+	result, err := api.GetInfo()
 	fmt.Println(result, err)
 }
 
@@ -418,6 +423,7 @@ func main() {
 	// testCreateContract(api)
 	// testGetVestingBalances(api)
 
-	testNetworkGetConnectedPeers(api)
+	// testGetConnectedPeers(api)
+	testGetInfo(api)
 
 }

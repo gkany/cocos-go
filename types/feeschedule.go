@@ -88,8 +88,9 @@ func (p FeeScheduleParameters) Marshal(enc *util.TypeEncoder) error {
 }
 
 type FeeSchedule struct {
-	Scale      UInt32                `json:"scale"`
-	Parameters FeeScheduleParameters `json:"parameters"`
+	Parameters         FeeScheduleParameters `json:"parameters"`
+	Scale              UInt32                `json:"scale"`
+	MaximunHandlingFee Int64                 `json:"maximun_handling_fee"`
 }
 
 func (p FeeSchedule) Marshal(enc *util.TypeEncoder) error {
@@ -99,6 +100,10 @@ func (p FeeSchedule) Marshal(enc *util.TypeEncoder) error {
 
 	if err := enc.Encode(p.Scale); err != nil {
 		return errors.Annotate(err, "encode Scale")
+	}
+
+	if err := enc.Encode(p.MaximunHandlingFee); err != nil {
+		return errors.Annotate(err, "encode MaximunHandlingFee")
 	}
 
 	return nil
