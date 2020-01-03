@@ -9,14 +9,11 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
-	// "encoding/json"
 	"fmt"
 	"strconv"
 
-	// "github.com/gkany/graphSDK/logging"
 	"github.com/gkany/graphSDK/util"
 	"github.com/juju/errors"
-	// "github.com/pquerna/ffjson/ffjson"
 )
 
 type Memo struct {

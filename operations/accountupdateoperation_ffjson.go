@@ -34,7 +34,19 @@ func (j *AccountUpdateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 	var obj []byte
 	_ = obj
 	_ = err
-	buf.WriteString(`{ "account":`)
+	buf.WriteString(`{ `)
+	if j.LockWithVote != nil {
+		if true {
+			/* Struct fall back. type=types.LockWithVotePairType kind=struct */
+			buf.WriteString(`"lock_with_vote":`)
+			err = buf.Encode(j.LockWithVote)
+			if err != nil {
+				return err
+			}
+			buf.WriteByte(',')
+		}
+	}
+	buf.WriteString(`"account":`)
 
 	{
 
@@ -46,11 +58,33 @@ func (j *AccountUpdateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 
 	}
 	buf.WriteByte(',')
+	if j.Owner != nil {
+		if true {
+			/* Struct fall back. type=types.Authority kind=struct */
+			buf.WriteString(`"owner":`)
+			err = buf.Encode(j.Owner)
+			if err != nil {
+				return err
+			}
+			buf.WriteByte(',')
+		}
+	}
 	if j.Active != nil {
 		if true {
 			/* Struct fall back. type=types.Authority kind=struct */
 			buf.WriteString(`"active":`)
 			err = buf.Encode(j.Active)
+			if err != nil {
+				return err
+			}
+			buf.WriteByte(',')
+		}
+	}
+	if j.NewOptions != nil {
+		if true {
+			/* Struct fall back. type=types.AccountOptions kind=struct */
+			buf.WriteString(`"new_options":`)
+			err = buf.Encode(j.NewOptions)
 			if err != nil {
 				return err
 			}
@@ -64,28 +98,6 @@ func (j *AccountUpdateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) error 
 		return err
 	}
 	buf.WriteByte(',')
-	if j.NewOptions != nil {
-		if true {
-			/* Struct fall back. type=types.AccountOptions kind=struct */
-			buf.WriteString(`"new_options":`)
-			err = buf.Encode(j.NewOptions)
-			if err != nil {
-				return err
-			}
-			buf.WriteByte(',')
-		}
-	}
-	if j.Owner != nil {
-		if true {
-			/* Struct fall back. type=types.Authority kind=struct */
-			buf.WriteString(`"owner":`)
-			err = buf.Encode(j.Owner)
-			if err != nil {
-				return err
-			}
-			buf.WriteByte(',')
-		}
-	}
 	if j.Fee != nil {
 		if true {
 			/* Struct fall back. type=types.AssetAmount kind=struct */
@@ -106,28 +118,32 @@ const (
 	ffjtAccountUpdateOperationbase = iota
 	ffjtAccountUpdateOperationnosuchkey
 
+	ffjtAccountUpdateOperationLockWithVote
+
 	ffjtAccountUpdateOperationAccount
+
+	ffjtAccountUpdateOperationOwner
 
 	ffjtAccountUpdateOperationActive
 
-	ffjtAccountUpdateOperationExtensions
-
 	ffjtAccountUpdateOperationNewOptions
 
-	ffjtAccountUpdateOperationOwner
+	ffjtAccountUpdateOperationExtensions
 
 	ffjtAccountUpdateOperationFee
 )
 
+var ffjKeyAccountUpdateOperationLockWithVote = []byte("lock_with_vote")
+
 var ffjKeyAccountUpdateOperationAccount = []byte("account")
+
+var ffjKeyAccountUpdateOperationOwner = []byte("owner")
 
 var ffjKeyAccountUpdateOperationActive = []byte("active")
 
-var ffjKeyAccountUpdateOperationExtensions = []byte("extensions")
-
 var ffjKeyAccountUpdateOperationNewOptions = []byte("new_options")
 
-var ffjKeyAccountUpdateOperationOwner = []byte("owner")
+var ffjKeyAccountUpdateOperationExtensions = []byte("extensions")
 
 var ffjKeyAccountUpdateOperationFee = []byte("fee")
 
@@ -221,6 +237,14 @@ mainparse:
 						goto mainparse
 					}
 
+				case 'l':
+
+					if bytes.Equal(ffjKeyAccountUpdateOperationLockWithVote, kn) {
+						currentKey = ffjtAccountUpdateOperationLockWithVote
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
+
 				case 'n':
 
 					if bytes.Equal(ffjKeyAccountUpdateOperationNewOptions, kn) {
@@ -245,8 +269,8 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.SimpleLetterEqualFold(ffjKeyAccountUpdateOperationOwner, kn) {
-					currentKey = ffjtAccountUpdateOperationOwner
+				if fflib.EqualFoldRight(ffjKeyAccountUpdateOperationExtensions, kn) {
+					currentKey = ffjtAccountUpdateOperationExtensions
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -257,20 +281,26 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.EqualFoldRight(ffjKeyAccountUpdateOperationExtensions, kn) {
-					currentKey = ffjtAccountUpdateOperationExtensions
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.SimpleLetterEqualFold(ffjKeyAccountUpdateOperationActive, kn) {
 					currentKey = ffjtAccountUpdateOperationActive
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
 
+				if fflib.SimpleLetterEqualFold(ffjKeyAccountUpdateOperationOwner, kn) {
+					currentKey = ffjtAccountUpdateOperationOwner
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
 				if fflib.SimpleLetterEqualFold(ffjKeyAccountUpdateOperationAccount, kn) {
 					currentKey = ffjtAccountUpdateOperationAccount
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.EqualFoldRight(ffjKeyAccountUpdateOperationLockWithVote, kn) {
+					currentKey = ffjtAccountUpdateOperationLockWithVote
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -292,20 +322,23 @@ mainparse:
 			if tok == fflib.FFTok_left_brace || tok == fflib.FFTok_left_bracket || tok == fflib.FFTok_integer || tok == fflib.FFTok_double || tok == fflib.FFTok_string || tok == fflib.FFTok_bool || tok == fflib.FFTok_null {
 				switch currentKey {
 
+				case ffjtAccountUpdateOperationLockWithVote:
+					goto handle_LockWithVote
+
 				case ffjtAccountUpdateOperationAccount:
 					goto handle_Account
+
+				case ffjtAccountUpdateOperationOwner:
+					goto handle_Owner
 
 				case ffjtAccountUpdateOperationActive:
 					goto handle_Active
 
-				case ffjtAccountUpdateOperationExtensions:
-					goto handle_Extensions
-
 				case ffjtAccountUpdateOperationNewOptions:
 					goto handle_NewOptions
 
-				case ffjtAccountUpdateOperationOwner:
-					goto handle_Owner
+				case ffjtAccountUpdateOperationExtensions:
+					goto handle_Extensions
 
 				case ffjtAccountUpdateOperationFee:
 					goto handle_Fee
@@ -323,6 +356,26 @@ mainparse:
 			}
 		}
 	}
+
+handle_LockWithVote:
+
+	/* handler: j.LockWithVote type=types.LockWithVotePairType kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.LockWithVotePairType kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.LockWithVote)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
 
 handle_Account:
 
@@ -349,6 +402,26 @@ handle_Account:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
+handle_Owner:
+
+	/* handler: j.Owner type=types.Authority kind=struct quoted=false*/
+
+	{
+		/* Falling back. type=types.Authority kind=struct */
+		tbuf, err := fs.CaptureField(tok)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+
+		err = json.Unmarshal(tbuf, &j.Owner)
+		if err != nil {
+			return fs.WrapErr(err)
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
 handle_Active:
 
 	/* handler: j.Active type=types.Authority kind=struct quoted=false*/
@@ -361,26 +434,6 @@ handle_Active:
 		}
 
 		err = json.Unmarshal(tbuf, &j.Active)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_Extensions:
-
-	/* handler: j.Extensions type=types.AccountUpdateExtensions kind=struct quoted=false*/
-
-	{
-		/* Falling back. type=types.AccountUpdateExtensions kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
-
-		err = json.Unmarshal(tbuf, &j.Extensions)
 		if err != nil {
 			return fs.WrapErr(err)
 		}
@@ -409,18 +462,18 @@ handle_NewOptions:
 	state = fflib.FFParse_after_value
 	goto mainparse
 
-handle_Owner:
+handle_Extensions:
 
-	/* handler: j.Owner type=types.Authority kind=struct quoted=false*/
+	/* handler: j.Extensions type=types.AccountUpdateExtensions kind=struct quoted=false*/
 
 	{
-		/* Falling back. type=types.Authority kind=struct */
+		/* Falling back. type=types.AccountUpdateExtensions kind=struct */
 		tbuf, err := fs.CaptureField(tok)
 		if err != nil {
 			return fs.WrapErr(err)
 		}
 
-		err = json.Unmarshal(tbuf, &j.Owner)
+		err = json.Unmarshal(tbuf, &j.Extensions)
 		if err != nil {
 			return fs.WrapErr(err)
 		}

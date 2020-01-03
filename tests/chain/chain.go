@@ -139,11 +139,11 @@ func testHeadBlockPrefix(api graphSDK.WebsocketAPI) {
 		return
 	}
 
-	rawBlockID, err := hex.DecodeString(gdp.HeadBlockID.String())
+	rawBlockID, err := hex.DecodeString(gdp.HeadBlockID)
 	if err != nil {
 		return
 	}
-	fmt.Println("HeadBlockID: ", gdp.HeadBlockID.String(), ", rawBlockID: ", rawBlockID)
+	fmt.Println("HeadBlockID: ", gdp.HeadBlockID, ", rawBlockID: ", rawBlockID)
 	if len(rawBlockID) < 8 {
 		return
 	}
@@ -333,6 +333,63 @@ func testGetCommitteeMember(api graphSDK.WebsocketAPI) {
 	fmt.Println(committee, err)
 }
 
+func testCreateContract(api graphSDK.WebsocketAPI) {
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	publicKey, err := types.NewPublicKeyFromString(pubKey)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	contractName := "contract.debug.hello"
+	contractCode := "function hello() chainhelper:log('create contract test') end"
+	error := api.ContractCreate(keyBag, account, contractName, contractCode, publicKey)
+	fmt.Println(error)
+}
+
+func testGetVestingBalances(api graphSDK.WebsocketAPI) {
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	result, err := api.GetVestingBalances(account)
+	fmt.Println(result, err)
+}
+
+func testGetConnectedPeers(api graphSDK.WebsocketAPI) {
+	result, err := api.GetConnectedPeers()
+	fmt.Println(result, err)
+}
+
+func testGetInfo(api graphSDK.WebsocketAPI) {
+	result, err := api.Info()
+	fmt.Println(result, err)
+}
+
+func testGetGlobalProperties(api graphSDK.WebsocketAPI) {
+	result, err := api.GetGlobalProperties()
+	fmt.Println(result, err)
+}
+
+func testGetChainProperties(api graphSDK.WebsocketAPI) {
+	result, err := api.GetChainProperties()
+	fmt.Println(result, err)
+}
+
 func main() {
 	config.SetCurrent(config.ChainIDTestnet)
 	wsURL := "ws://test.cocosbcx.net"
@@ -372,6 +429,13 @@ func main() {
 	// testUpgradeAccount(api, new_account_name)
 
 	// testGetWitness(api)
-	testGetCommitteeMember(api)
+	// testGetCommitteeMember(api)
+	// testCreateContract(api)
+	// testGetVestingBalances(api)
+
+	// testGetConnectedPeers(api)
+	testGetInfo(api)
+	// testGetGlobalProperties(api)
+	// testGetChainProperties(api)
 
 }

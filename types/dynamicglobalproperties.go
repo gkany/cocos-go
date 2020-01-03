@@ -13,17 +13,17 @@ import (
 type DynamicGlobalProperties struct {
 	ID                             DynamicGlobalPropertyID `json:"id"`
 	HeadBlockNumber                UInt32                  `json:"head_block_number"`
-	HeadBlockID                    String                  `json:"head_block_id"`
+	HeadBlockID                    string                  `json:"head_block_id"`
 	Time                           Time                    `json:"time"`
 	CurrentWitness                 WitnessID               `json:"current_witness"`
 	CurrentTransactionCount        UInt32                  `json:"current_transaction_count"`
 	NextMaintenanceTime            Time                    `json:"next_maintenance_time"`
 	LastBudgetTime                 Time                    `json:"last_budget_time"`
-	WitnessBudget                  String                  `json:"witness_budget"`
+	WitnessBudget                  string                  `json:"witness_budget"`
 	AccountsRegisteredThisInterval int                     `json:"accounts_registered_this_interval"`
 	RecentlyMissedCount            int64                   `json:"recently_missed_count"`
 	CurrentAslot                   int64                   `json:"current_aslot"`
-	RecentSlotsFilled              String                  `json:"recent_slots_filled"`
+	RecentSlotsFilled              string                  `json:"recent_slots_filled"`
 	DynamicFlags                   int                     `json:"dynamic_flags"`
 	LastIrreversibleBlockNum       UInt32                  `json:"last_irreversible_block_num"`
 }
@@ -33,7 +33,7 @@ func (p DynamicGlobalProperties) RefBlockNum() UInt16 {
 }
 
 func (p DynamicGlobalProperties) RefBlockPrefix() (UInt32, error) {
-	rawBlockID, err := hex.DecodeString(p.HeadBlockID.String())
+	rawBlockID, err := hex.DecodeString(p.HeadBlockID)
 	if err != nil {
 		return 0, errors.Annotatef(err, "DecodeString HeadBlockID: %v", p.HeadBlockID)
 	}

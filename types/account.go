@@ -30,3 +30,8 @@ type Account struct {
 	ActiveSpecialAuthority   ActiveSpecialAuthority `json:"active_special_authority"`
 	TopNControlFlags         UInt64                 `json:"top_n_control_flags"`
 }
+
+type LockWithVotePairType struct {
+	Number UInt32
+	Asset  AssetAmount
+}
