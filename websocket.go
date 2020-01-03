@@ -59,8 +59,8 @@ type WebsocketAPI interface {
 	GetCallOrders(assetID types.GrapheneObject, limit int) (types.CallOrders, error)
 	GetChainID() (string, error)
 	GetDynamicGlobalProperties() (*types.DynamicGlobalProperties, error)
-	GetChainProperties() (*types.DynamicGlobalProperties, error)
-	GetGlobalProperties() (*types.DynamicGlobalProperties, error)
+	GetChainProperties() (*types.ChainProperty, error)
+	GetGlobalProperties() (*types.GlobalProperty, error)
 	GetForceSettlementOrders(assetID types.GrapheneObject, limit int) (types.ForceSettlementOrders, error)
 	GetFullAccounts(accountIDs ...types.GrapheneObject) (types.FullAccountInfos, error)
 	GetLimitOrders(base, quote types.GrapheneObject, limit int) (types.LimitOrders, error)
@@ -112,7 +112,7 @@ type WebsocketAPI interface {
 	VoteForWitness(keyBag *crypto.KeyBag, votingAccount, witnessAccount string, approve uint64) error 
 
 	GetConnectedPeers() (*types.NetWorkPeers, error)
-	GetInfo()(*types.Info, error)
+	Info()(*types.Info, error)
 
 	// improt_balances
 
@@ -586,6 +586,40 @@ func (p *websocketAPI) GetDynamicGlobalProperties() (*types.DynamicGlobalPropert
 	ret := types.DynamicGlobalProperties{}
 	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
 		return nil, errors.Annotate(err, "Unmarshal [DynamicGlobalProperties]")
+	}
+
+	return &ret, nil
+}
+
+func (p *websocketAPI) GetChainProperties() (*types.ChainProperty, error) {
+	resp, err := p.wsClient.CallAPI(0, "get_chain_properties", types.EmptyParams)
+	fmt.Println(resp)
+	if err != nil {
+		return nil, errors.Annotate(err, "CallAPI")
+	}
+
+	logging.DDumpJSON("get_chain_properties <", resp)
+
+	ret := types.ChainProperty{}
+	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+		return nil, errors.Annotate(err, "Unmarshal [ChainProperty]")
+	}
+
+	return &ret, nil
+}
+
+func (p *websocketAPI) GetGlobalProperties() (*types.GlobalProperty, error) {
+	resp, err := p.wsClient.CallAPI(0, "get_global_properties", types.EmptyParams)
+	fmt.Println(resp)
+	if err != nil {
+		return nil, errors.Annotate(err, "CallAPI")
+	}
+
+	logging.DDumpJSON("get_global_properties <", resp)
+
+	ret := types.GlobalProperty{}
+	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+		return nil, errors.Annotate(err, "Unmarshal [GlobalProperty]")
 	}
 
 	return &ret, nil
@@ -1782,20 +1816,44 @@ func (p *websocketAPI) GetConnectedPeers() (*types.NetWorkPeers, error) {
 	return &ret, nil
 }
 
-func (p *websocketAPI) GetInfo()(*types.Info, error) {
-	// resp, err := p.wsClient.CallAPI(p.NetWorkNodeAPIID(), "get_info", types.EmptyParams)
-	// if err != nil {
-	// 	return nil, errors.Annotate(err, "CallAPI")
-	// }
-	// logging.DDumpJSON("get_info <", resp)
-	// ret := types.Info{}
-	// if err := ffjson.Unmarshal(*resp, &ret); err != nil {
-	// 	return nil, errors.Annotate(err, "Unmarshal [Info]")
-	// }
+// func (p *websocketAPI) GetInfo()(*types.Info, error) {
+// 	resp, err := p.wsClient.CallAPI(p.NetWorkNodeAPIID(), "get_info", types.EmptyParams)
+// 	if err != nil {
+// 		return nil, errors.Annotate(err, "CallAPI")
+// 	}
+// 	logging.DDumpJSON("get_info <", resp)
+// 	ret := types.Info{}
+// 	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+// 		return nil, errors.Annotate(err, "Unmarshal [Info]")
+// 	}
 
-	p.GetCha
+// 	return &ret, nil
+// }
 
-	return &ret, nil
+func (p *websocketAPI) Info()(*types.Info, error) {
+	chainProps, err := p.GetChainProperties()
+	if err != nil {
+		return nil, err
+	}
+	globalProps, err := p.GetGlobalProperties()
+	if err != nil {
+		return nil, err
+	}
+	dynamicProps, err := p.GetDynamicGlobalProperties()
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Info{
+		HeadBlockNum: dynamicProps.HeadBlockNumber,
+		HeadBlockID: dynamicProps.HeadBlockID,
+		HeadBlockAge: dynamicProps.Time,
+		NextMaintenanceTime: dynamicProps.NextMaintenanceTime,
+		ChainID: chainProps.ChainID,
+		Participation: dynamicProps.RecentSlotsFilled,
+		ActiveWitnesses: globalProps.ActiveWitnesses,
+		ActiveCommitteeMembers: globalProps.ActiveCommitteeMembers,
+	}, nil
 }
 
 //NewWebsocketAPI creates a new WebsocketAPI interface.

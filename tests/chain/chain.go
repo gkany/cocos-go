@@ -139,11 +139,11 @@ func testHeadBlockPrefix(api graphSDK.WebsocketAPI) {
 		return
 	}
 
-	rawBlockID, err := hex.DecodeString(gdp.HeadBlockID.String())
+	rawBlockID, err := hex.DecodeString(gdp.HeadBlockID)
 	if err != nil {
 		return
 	}
-	fmt.Println("HeadBlockID: ", gdp.HeadBlockID.String(), ", rawBlockID: ", rawBlockID)
+	fmt.Println("HeadBlockID: ", gdp.HeadBlockID, ", rawBlockID: ", rawBlockID)
 	if len(rawBlockID) < 8 {
 		return
 	}
@@ -376,7 +376,17 @@ func testGetConnectedPeers(api graphSDK.WebsocketAPI) {
 }
 
 func testGetInfo(api graphSDK.WebsocketAPI) {
-	result, err := api.GetInfo()
+	result, err := api.Info()
+	fmt.Println(result, err)
+}
+
+func testGetGlobalProperties(api graphSDK.WebsocketAPI) {
+	result, err := api.GetGlobalProperties()
+	fmt.Println(result, err)
+}
+
+func testGetChainProperties(api graphSDK.WebsocketAPI) {
+	result, err := api.GetChainProperties()
 	fmt.Println(result, err)
 }
 
@@ -425,5 +435,7 @@ func main() {
 
 	// testGetConnectedPeers(api)
 	testGetInfo(api)
+	// testGetGlobalProperties(api)
+	// testGetChainProperties(api)
 
 }
