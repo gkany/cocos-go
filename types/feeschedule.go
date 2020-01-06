@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	sort "github.com/emirpasic/gods/utils"
-	"github.com/gkany/graphSDK/logging"
-	"github.com/gkany/graphSDK/util"
+	"github.com/gkany/cocos-go/logging"
+	"github.com/gkany/cocos-go/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )

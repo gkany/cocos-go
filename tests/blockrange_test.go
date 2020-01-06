@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/bradhe/stopwatch"
-	"github.com/gkany/graphSDK/logging"
+	"github.com/gkany/cocos-go/logging"
 	"github.com/stretchr/testify/assert"
 
 	// register operations
 
-	_ "github.com/gkany/graphSDK/operations"
+	_ "github.com/gkany/cocos-go/operations"
 )
 
 func TestBlockRange(t *testing.T) {

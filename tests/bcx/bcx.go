@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/cocos-go/types"
 )
 
 func test() {
@@ -60,7 +60,7 @@ func testAPI() {
 
 	// // 2. chain api 测试
 	// log.Println("------- chain api test ----------")
-	// api := graphSDK.NewWebsocketAPI(wsURL)
+	// api := cocos-go.NewWebsocketAPI(wsURL)
 	// if err := api.Connect(); err != nil {
 	// 	log.Println(err)
 	// }
@@ -76,7 +76,7 @@ func testAPI() {
 
 	// // 3. wallet api 测试
 	// log.Println("------- wallet api test ----------")
-	// walletAPI := graphSDK.NewWalletAPI(walletURL)
+	// walletAPI := cocos-go.NewWalletAPI(walletURL)
 	// if err := walletAPI.Connect(); err != nil {
 	// 	log.Println(err)
 	// }

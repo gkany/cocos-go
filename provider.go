@@ -1,11 +1,11 @@
-package graphSDK
+package cocos
 
 import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gkany/graphSDK/api"
-	"github.com/gkany/graphSDK/logging"
+	"github.com/gkany/cocos-go/api"
+	"github.com/gkany/cocos-go/logging"
 	"github.com/juju/errors"
 	deadlock "github.com/sasha-s/go-deadlock"
 	"github.com/tevino/abool"

@@ -1,22 +1,22 @@
-package graphSDK
+package cocos
 
 import (
 	"encoding/json"
 	"fmt"
 	"time"
 
-	"github.com/gkany/graphSDK/api"
-	"github.com/gkany/graphSDK/config"
-	"github.com/gkany/graphSDK/crypto"
-	"github.com/gkany/graphSDK/logging"
-	"github.com/gkany/graphSDK/operations"
-	"github.com/gkany/graphSDK/types"
-	"github.com/gkany/graphSDK/util"
+	"github.com/gkany/cocos-go/api"
+	"github.com/gkany/cocos-go/config"
+	"github.com/gkany/cocos-go/crypto"
+	"github.com/gkany/cocos-go/logging"
+	"github.com/gkany/cocos-go/operations"
+	"github.com/gkany/cocos-go/types"
+	"github.com/gkany/cocos-go/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 
 	// init operations
-	_ "github.com/gkany/graphSDK/operations"
+	_ "github.com/gkany/cocos-go/operations"
 )
 
 const (

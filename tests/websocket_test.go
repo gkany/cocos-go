@@ -3,11 +3,11 @@ package tests
 import (
 	"testing"
 
-	"github.com/gkany/graphSDK"
-	"github.com/gkany/graphSDK/config"
-	"github.com/gkany/graphSDK/crypto"
-	"github.com/gkany/graphSDK/operations"
-	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/cocos-go"
+	"github.com/gkany/cocos-go/config"
+	"github.com/gkany/cocos-go/crypto"
+	"github.com/gkany/cocos-go/operations"
+	"github.com/gkany/cocos-go/types"
 	"github.com/stretchr/testify/suite"
 )
 

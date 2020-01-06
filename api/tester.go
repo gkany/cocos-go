@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gkany/graphSDK/types"
-	"github.com/gkany/graphSDK/logging"
+	"github.com/gkany/cocos-go/types"
+	"github.com/gkany/cocos-go/logging"
 	sort "github.com/emirpasic/gods/utils"
 	deadlock "github.com/sasha-s/go-deadlock"
 	"gopkg.in/tomb.v2"

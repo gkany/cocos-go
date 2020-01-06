@@ -4,9 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkany/graphSDK"
-	"github.com/gkany/graphSDK/util"
-	"github.com/gkany/graphSDK/logging"
+	"github.com/gkany/cocos-go"
+	"github.com/gkany/cocos-go/util"
+	"github.com/gkany/cocos-go/logging"
 	"github.com/stretchr/testify/suite"
 	"gopkg.in/cheggaaa/pb.v1"
 )

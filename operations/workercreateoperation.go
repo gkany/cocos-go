@@ -3,8 +3,8 @@ package operations
 //go:generate ffjson $GOFILE
 
 import (
-	"github.com/gkany/graphSDK/types"
-	"github.com/gkany/graphSDK/util"
+	"github.com/gkany/cocos-go/types"
+	"github.com/gkany/cocos-go/util"
 	"github.com/juju/errors"
 )
 

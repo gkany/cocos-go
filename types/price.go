@@ -3,7 +3,7 @@ package types
 //go:generate ffjson $GOFILE
 
 import (
-	"github.com/gkany/graphSDK/util"
+	"github.com/gkany/cocos-go/util"
 	"github.com/juju/errors"
 )
 

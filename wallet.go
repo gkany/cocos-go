@@ -1,12 +1,12 @@
-package graphSDK
+package cocos
 
 import (
 	"fmt"
 
-	"github.com/gkany/graphSDK/api"
-	"github.com/gkany/graphSDK/config"
-	"github.com/gkany/graphSDK/logging"
-	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/cocos-go/api"
+	"github.com/gkany/cocos-go/config"
+	"github.com/gkany/cocos-go/logging"
+	"github.com/gkany/cocos-go/types"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )

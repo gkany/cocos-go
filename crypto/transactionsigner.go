@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/btcsuite/btcd/btcec"
-	"github.com/gkany/graphSDK/config"
-	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/cocos-go/config"
+	"github.com/gkany/cocos-go/types"
 
 	"github.com/juju/errors"
 )

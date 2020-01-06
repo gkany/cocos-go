@@ -4,13 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkany/graphSDK"
-	"github.com/gkany/graphSDK/config"
-	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/cocos-go"
+	"github.com/gkany/cocos-go/config"
+	"github.com/gkany/cocos-go/types"
 	"github.com/stretchr/testify/suite"
 
 	//import operations to initialize types.OperationMap
-	_ "github.com/gkany/graphSDK/operations"
+	_ "github.com/gkany/cocos-go/operations"
 )
 
 type commonTest struct {

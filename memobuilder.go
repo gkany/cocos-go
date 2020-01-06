@@ -1,10 +1,10 @@
-package graphSDK
+package cocos
 
 import (
 	"math/rand"
 
-	"github.com/gkany/graphSDK/crypto"
-	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/cocos-go/crypto"
+	"github.com/gkany/cocos-go/types"
 	"github.com/juju/errors"
 )
 

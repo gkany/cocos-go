@@ -10,17 +10,17 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gkany/graphSDK/gen/data"
-	"github.com/gkany/graphSDK/logging"
-	"github.com/gkany/graphSDK/tests"
-	"github.com/gkany/graphSDK/types"
+	"github.com/gkany/cocos-go/gen/data"
+	"github.com/gkany/cocos-go/logging"
+	"github.com/gkany/cocos-go/tests"
+	"github.com/gkany/cocos-go/types"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 	"github.com/stretchr/objx"
 	tomb "gopkg.in/tomb.v2"
 
 	// importing this initializes sample data fetching
-	"github.com/gkany/graphSDK/gen/samples"
+	"github.com/gkany/cocos-go/gen/samples"
 )
 
 const (

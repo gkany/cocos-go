@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gkany/graphSDK"
-	"github.com/gkany/graphSDK/types"
-	"github.com/gkany/graphSDK/util"
+	"github.com/gkany/cocos-go"
+	"github.com/gkany/cocos-go/types"
+	"github.com/gkany/cocos-go/util"
 	"github.com/juju/errors"
 	"github.com/stretchr/testify/assert"
 )

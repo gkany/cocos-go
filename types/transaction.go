@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/gkany/graphSDK/util"
+	"github.com/gkany/cocos-go/util"
 	"github.com/juju/errors"
 )
 

@@ -6,8 +6,8 @@ import (
 	"fmt"
 
 	"github.com/btcsuite/btcutil/base58"
-	"github.com/gkany/graphSDK/config"
-	"github.com/gkany/graphSDK/util"
+	"github.com/gkany/cocos-go/config"
+	"github.com/gkany/cocos-go/util"
 	"github.com/juju/errors"
 	"github.com/pquerna/ffjson/ffjson"
 )
