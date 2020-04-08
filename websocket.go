@@ -3,6 +3,8 @@ package cocos
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"strings"
 	"time"
 
 	"github.com/gkany/cocos-go/api"
@@ -101,8 +103,10 @@ type WebsocketAPI interface {
 	UpdateWitness(keyBag *crypto.KeyBag, witnessAccount types.Account, url *string, signKey *types.PublicKey, workStatus bool) error
 
 	ContractCreate(keyBag *crypto.KeyBag, ownerAccount *types.Account, name, data string, contractAuthority *types.PublicKey) error
-
 	ReviseContract(keyBag *crypto.KeyBag, reviser *types.Account, contractID types.ContractID, data string) error
+
+	ContractCreateFromFile(keyBag *crypto.KeyBag, ownerAccount *types.Account, name, filename string, contractAuthority *types.PublicKey) error
+	ReviseContractFromFile(keyBag *crypto.KeyBag, reviser *types.Account, contractID types.ContractID, filename string) error
 
 	GetVestingBalances(account *types.Account) (*types.VestingBalances, error)
 
@@ -1656,6 +1660,24 @@ func (p *websocketAPI) ReviseContract(keyBag *crypto.KeyBag, reviser *types.Acco
 	}
 
 	return nil	
+}
+
+func (p *websocketAPI) ContractCreateFromFile(keyBag *crypto.KeyBag, ownerAccount *types.Account, name, filename string, contractAuthority *types.PublicKey) error {
+	bytes, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return errors.Annotate(err, "ReadFile")
+	}
+	data := strings.Replace(string(bytes), "\n", " ")
+	return p.ContractCreate(keyBag, ownerAccount, name, data, contractAuthority)
+}
+
+func (p *websocketAPI) ReviseContractFromFile(keyBag *crypto.KeyBag, reviser *types.Account, contractID types.ContractID, filename string) error {
+	bytes, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return errors.Annotate(err, "ReadFile")
+	}
+	data := strings.Replace(string(bytes), "\n", " ")
+	return p.ReviseContract(keyBag, reviser, contractID, data)
 }
 
 func (p *websocketAPI)GetVestingBalances(account *types.Account) (*types.VestingBalances, error) {
