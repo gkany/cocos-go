@@ -384,6 +384,16 @@ func testCreateContractFromFile(api sdk.WebsocketAPI) {
 	fmt.Println(error)
 }
 
+func testGetContract(api sdk.WebsocketAPI) {
+	contractName := "contract.debug.test0248" // contract.debug.test0248
+	contract, error := api.GetContract(contractName)
+	if error != nil {
+		fmt.Println(error)
+		return
+	}
+	fmt.Println(contract)
+}
+
 func testGetVestingBalances(api sdk.WebsocketAPI) {
 	name := "nicotest"
 	account, err := api.GetAccountByName(name)
@@ -465,6 +475,9 @@ func main() {
 	// testGetChainProperties(api)
 
 	// contract
-	fmt.Println("\n\n--------------- create contract by file")
-	testCreateContractFromFile(api)
+	// fmt.Println("\n\n--------------- create contract by file")
+	// testCreateContractFromFile(api)
+
+	fmt.Println("\n\n--------------- get contract")
+	testGetContract(api)
 }

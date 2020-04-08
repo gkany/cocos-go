@@ -5,7 +5,6 @@ package types
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
@@ -78,7 +77,14 @@ func (j *Contract) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.WriteString(`,"is_release":false`)
 	}
 	buf.WriteString(`,"current_version":`)
-	fflib.WriteJsonString(buf, string(j.CurrentVersion))
+	buf.WriteString(`[`)
+	for i, v := range j.CurrentVersion {
+		if i != 0 {
+			buf.WriteString(`,`)
+		}
+		fflib.FormatBits2(buf, uint64(v), 10, false)
+	}
+	buf.WriteString(`]`)
 	if j.CheckContractAuthority {
 		buf.WriteString(`,"check_contract_authority":true`)
 	} else {
@@ -152,7 +158,16 @@ func (j *Contract) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.WriteString(`null`)
 	}
 	buf.WriteString(`,"lua_code_b_id":`)
-	fflib.WriteJsonString(buf, string(j.LuaCodeBID))
+
+	{
+
+		obj, err = j.LuaCodeBID.MarshalJSON()
+		if err != nil {
+			return err
+		}
+		buf.Write(obj)
+
+	}
 	buf.WriteByte('}')
 	return nil
 }
@@ -658,24 +673,79 @@ handle_IsRelease:
 
 handle_CurrentVersion:
 
-	/* handler: j.CurrentVersion type=string kind=string quoted=false*/
+	/* handler: j.CurrentVersion type=[32]uint8 kind=array quoted=false*/
 
 	{
 
 		{
-			if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
+			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for ", tok))
 			}
 		}
 
-		if tok == fflib.FFTok_null {
+		j.CurrentVersion = [32]uint8{}
 
-		} else {
+		if tok != fflib.FFTok_null {
+			wantVal := true
 
-			outBuf := fs.Output.Bytes()
+			idx := 0
+			for {
 
-			j.CurrentVersion = string(string(outBuf))
+				var tmpJCurrentVersion uint8
 
+				tok = fs.Scan()
+				if tok == fflib.FFTok_error {
+					goto tokerror
+				}
+				if tok == fflib.FFTok_right_brace {
+					break
+				}
+
+				if tok == fflib.FFTok_comma {
+					if wantVal == true {
+						// TODO(pquerna): this isn't an ideal error message, this handles
+						// things like [,,,] as an array value.
+						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
+					}
+					continue
+				} else {
+					wantVal = true
+				}
+
+				/* handler: tmpJCurrentVersion type=uint8 kind=uint8 quoted=false*/
+
+				{
+					if tok != fflib.FFTok_integer && tok != fflib.FFTok_null {
+						return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for uint8", tok))
+					}
+				}
+
+				{
+
+					if tok == fflib.FFTok_null {
+
+					} else {
+
+						tval, err := fflib.ParseUint(fs.Output.Bytes(), 10, 8)
+
+						if err != nil {
+							return fs.WrapErr(err)
+						}
+
+						tmpJCurrentVersion = uint8(tval)
+
+					}
+				}
+
+				// Standard json.Unmarshal ignores elements out of array bounds,
+				// that what we do as well.
+				if idx < 32 {
+					j.CurrentVersion[idx] = tmpJCurrentVersion
+					idx++
+				}
+
+				wantVal = false
+			}
 		}
 	}
 
@@ -744,18 +814,71 @@ handle_ContractAuthority:
 
 handle_ContractData:
 
-	/* handler: j.ContractData type=[][]interface {} kind=slice quoted=false*/
+	/* handler: j.ContractData type=types.LuaMap kind=slice quoted=false*/
 
 	{
-		/* Falling back. type=[][]interface {} kind=slice */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
+
+		{
+			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for LuaMap", tok))
+			}
 		}
 
-		err = json.Unmarshal(tbuf, &j.ContractData)
-		if err != nil {
-			return fs.WrapErr(err)
+		if tok == fflib.FFTok_null {
+			j.ContractData = nil
+		} else {
+
+			j.ContractData = []LuaMapItem{}
+
+			wantVal := true
+
+			for {
+
+				var tmpJContractData LuaMapItem
+
+				tok = fs.Scan()
+				if tok == fflib.FFTok_error {
+					goto tokerror
+				}
+				if tok == fflib.FFTok_right_brace {
+					break
+				}
+
+				if tok == fflib.FFTok_comma {
+					if wantVal == true {
+						// TODO(pquerna): this isn't an ideal error message, this handles
+						// things like [,,,] as an array value.
+						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
+					}
+					continue
+				} else {
+					wantVal = true
+				}
+
+				/* handler: tmpJContractData type=types.LuaMapItem kind=slice quoted=false*/
+
+				{
+					if tok == fflib.FFTok_null {
+
+					} else {
+
+						tbuf, err := fs.CaptureField(tok)
+						if err != nil {
+							return fs.WrapErr(err)
+						}
+
+						err = tmpJContractData.UnmarshalJSON(tbuf)
+						if err != nil {
+							return fs.WrapErr(err)
+						}
+					}
+					state = fflib.FFParse_after_value
+				}
+
+				j.ContractData = append(j.ContractData, tmpJContractData)
+
+				wantVal = false
+			}
 		}
 	}
 
@@ -764,18 +887,71 @@ handle_ContractData:
 
 handle_ContractABI:
 
-	/* handler: j.ContractABI type=[][]interface {} kind=slice quoted=false*/
+	/* handler: j.ContractABI type=types.LuaMap kind=slice quoted=false*/
 
 	{
-		/* Falling back. type=[][]interface {} kind=slice */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
+
+		{
+			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for LuaMap", tok))
+			}
 		}
 
-		err = json.Unmarshal(tbuf, &j.ContractABI)
-		if err != nil {
-			return fs.WrapErr(err)
+		if tok == fflib.FFTok_null {
+			j.ContractABI = nil
+		} else {
+
+			j.ContractABI = []LuaMapItem{}
+
+			wantVal := true
+
+			for {
+
+				var tmpJContractABI LuaMapItem
+
+				tok = fs.Scan()
+				if tok == fflib.FFTok_error {
+					goto tokerror
+				}
+				if tok == fflib.FFTok_right_brace {
+					break
+				}
+
+				if tok == fflib.FFTok_comma {
+					if wantVal == true {
+						// TODO(pquerna): this isn't an ideal error message, this handles
+						// things like [,,,] as an array value.
+						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
+					}
+					continue
+				} else {
+					wantVal = true
+				}
+
+				/* handler: tmpJContractABI type=types.LuaMapItem kind=slice quoted=false*/
+
+				{
+					if tok == fflib.FFTok_null {
+
+					} else {
+
+						tbuf, err := fs.CaptureField(tok)
+						if err != nil {
+							return fs.WrapErr(err)
+						}
+
+						err = tmpJContractABI.UnmarshalJSON(tbuf)
+						if err != nil {
+							return fs.WrapErr(err)
+						}
+					}
+					state = fflib.FFParse_after_value
+				}
+
+				j.ContractABI = append(j.ContractABI, tmpJContractABI)
+
+				wantVal = false
+			}
 		}
 	}
 
@@ -784,25 +960,24 @@ handle_ContractABI:
 
 handle_LuaCodeBID:
 
-	/* handler: j.LuaCodeBID type=string kind=string quoted=false*/
+	/* handler: j.LuaCodeBID type=types.ContractBinCodeID kind=struct quoted=false*/
 
 	{
-
-		{
-			if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
-			}
-		}
-
 		if tok == fflib.FFTok_null {
 
 		} else {
 
-			outBuf := fs.Output.Bytes()
+			tbuf, err := fs.CaptureField(tok)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
 
-			j.LuaCodeBID = string(string(outBuf))
-
+			err = j.LuaCodeBID.UnmarshalJSON(tbuf)
+			if err != nil {
+				return fs.WrapErr(err)
+			}
 		}
+		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value

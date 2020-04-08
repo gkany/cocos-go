@@ -107,7 +107,7 @@ type WebsocketAPI interface {
 
 	ContractCreateFromFile(keyBag *crypto.KeyBag, ownerAccount *types.Account, name, filename string, contractAuthority *types.PublicKey) error
 	ReviseContractFromFile(keyBag *crypto.KeyBag, reviser *types.Account, contractID types.ContractID, filename string) error
-
+	GetContract(name string) (*types.Contract, error)
 	GetVestingBalances(account *types.Account) (*types.VestingBalances, error)
 
 	WithDrawVesting(keyBag *crypto.KeyBag, owner *types.Account, id types.VestingBalanceID, amount types.AssetAmount) error
@@ -497,6 +497,22 @@ func (p *websocketAPI) GetAccountByName(name string) (*types.Account, error) {
 	ret := types.Account{}
 	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
 		return nil, errors.Annotate(err, "Unmarshal [Account]")
+	}
+
+	return &ret, nil
+}
+
+func (p *websocketAPI) GetContract(name string) (*types.Contract, error) {
+	resp, err := p.wsClient.CallAPI(0, "get_contract", name)
+	if err != nil {
+		return nil, errors.Annotate(err, "CallAPI")
+	}
+
+	logging.DDumpJSON("get_contract <", resp)
+
+	ret := types.Contract{}
+	if err := ffjson.Unmarshal(*resp, &ret); err != nil {
+		return nil, errors.Annotate(err, "Unmarshal [Contract]")
 	}
 
 	return &ret, nil
