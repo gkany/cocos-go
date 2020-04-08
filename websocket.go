@@ -1667,7 +1667,7 @@ func (p *websocketAPI) ContractCreateFromFile(keyBag *crypto.KeyBag, ownerAccoun
 	if err != nil {
 		return errors.Annotate(err, "ReadFile")
 	}
-	data := strings.Replace(string(bytes), "\n", " ")
+	data := strings.Replace(string(bytes), "\n", " ", -1)
 	return p.ContractCreate(keyBag, ownerAccount, name, data, contractAuthority)
 }
 
@@ -1676,7 +1676,7 @@ func (p *websocketAPI) ReviseContractFromFile(keyBag *crypto.KeyBag, reviser *ty
 	if err != nil {
 		return errors.Annotate(err, "ReadFile")
 	}
-	data := strings.Replace(string(bytes), "\n", " ")
+	data := strings.Replace(string(bytes), "\n", " ", -1)
 	return p.ReviseContract(keyBag, reviser, contractID, data)
 }
 

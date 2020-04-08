@@ -358,6 +358,32 @@ func testCreateContract(api sdk.WebsocketAPI) {
 	fmt.Println(error)
 }
 
+func testCreateContractFromFile(api sdk.WebsocketAPI) {
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	publicKey, err := types.NewPublicKeyFromString(pubKey)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	contractName := "contract.debug.test0249" // contract.debug.test0248
+	// contractCode := "function hello() chainhelper:log('create contract test') end"
+	filename := "test.lua"
+	error := api.ContractCreateFromFile(keyBag, account, contractName, filename, publicKey)
+	fmt.Println(error)
+}
+
 func testGetVestingBalances(api sdk.WebsocketAPI) {
 	name := "nicotest"
 	account, err := api.GetAccountByName(name)
@@ -438,4 +464,7 @@ func main() {
 	// testGetGlobalProperties(api)
 	// testGetChainProperties(api)
 
+	// contract
+	fmt.Println("\n\n--------------- create contract by file")
+	testCreateContractFromFile(api)
 }
