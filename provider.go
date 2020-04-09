@@ -43,7 +43,7 @@ func (p *SimpleClientProvider) CallAPI(apiID int, method string, args ...interfa
 
 	rawMessage, err := p.WebsocketClient.CallAPI(apiID, method, args...)
 	// fmt.Println(rawMessage)
-	fmt.Printf("rawMessage: %s\n", rawMessage)
+	fmt.Printf("rawMessage: %s, type: %T\n", rawMessage, rawMessage)
 	if err != nil {
 		return nil, errors.Annotate(err, "call api error")
 	}

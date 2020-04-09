@@ -384,9 +384,10 @@ func testCreateContractFromFile(api sdk.WebsocketAPI) {
 	fmt.Println(error)
 }
 
-func testGetContract(api sdk.WebsocketAPI) {
-	contractName := "contract.debug.test0248" // contract.debug.test0248
-	contract, error := api.GetContract(contractName)
+func testGetContract(api sdk.WebsocketAPI, name string) {
+	// contractName := "contract.debug.test0248" // contract.debug.test0248
+	// contractName := "1.16.2" // contract.debug.test0248
+	contract, error := api.GetContract(name)
 	if error != nil {
 		fmt.Println(error)
 		return
@@ -427,8 +428,11 @@ func testGetChainProperties(api sdk.WebsocketAPI) {
 }
 
 func main() {
-	config.SetCurrent(config.ChainIDTestnet)
-	wsURL := "ws://test.cocosbcx.net"
+	// config.SetCurrent(config.ChainIDTestnet)
+	// wsURL := "wss://test.cocosbcx.net"
+
+	config.SetCurrent(config.ChainIDMainnet)
+	wsURL := "wss://api.cocosbcx.net"
 
 	// chainID := config.ChainIDLocal
 	// wsURL := "ws://127.0.0.1:8049"
@@ -470,7 +474,7 @@ func main() {
 	// testGetVestingBalances(api)
 
 	// testGetConnectedPeers(api)
-	testGetInfo(api)
+	// testGetInfo(api)
 	// testGetGlobalProperties(api)
 	// testGetChainProperties(api)
 
@@ -479,5 +483,8 @@ func main() {
 	// testCreateContractFromFile(api)
 
 	fmt.Println("\n\n--------------- get contract")
-	testGetContract(api)
+	// testGetContract(api, "1.16.2")
+	testGetContract(api, "1.16.3")
+	// testGetContract(api, "1.16.5")
+
 }

@@ -507,8 +507,12 @@ func (p *websocketAPI) GetContract(name string) (*types.Contract, error) {
 	if err != nil {
 		return nil, errors.Annotate(err, "CallAPI")
 	}
+	fmt.Println("--------------------------- resp start")
+	fmt.Println(string(*resp))
+	fmt.Println("--------------------------- resp end")
 
-	logging.DDumpJSON("get_contract <", resp)
+	// logging.DDumpJSON("get_contract <", resp)
+	// fmt.Println("get_contract <", resp)
 
 	ret := types.Contract{}
 	if err := ffjson.Unmarshal(*resp, &ret); err != nil {

@@ -77,14 +77,7 @@ func (j *Contract) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.WriteString(`,"is_release":false`)
 	}
 	buf.WriteString(`,"current_version":`)
-	buf.WriteString(`[`)
-	for i, v := range j.CurrentVersion {
-		if i != 0 {
-			buf.WriteString(`,`)
-		}
-		fflib.FormatBits2(buf, uint64(v), 10, false)
-	}
-	buf.WriteString(`]`)
+	fflib.WriteJsonString(buf, string(j.CurrentVersion))
 	if j.CheckContractAuthority {
 		buf.WriteString(`,"check_contract_authority":true`)
 	} else {
@@ -673,79 +666,24 @@ handle_IsRelease:
 
 handle_CurrentVersion:
 
-	/* handler: j.CurrentVersion type=[32]uint8 kind=array quoted=false*/
+	/* handler: j.CurrentVersion type=string kind=string quoted=false*/
 
 	{
 
 		{
-			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for ", tok))
+			if tok != fflib.FFTok_string && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for string", tok))
 			}
 		}
 
-		j.CurrentVersion = [32]uint8{}
+		if tok == fflib.FFTok_null {
 
-		if tok != fflib.FFTok_null {
-			wantVal := true
+		} else {
 
-			idx := 0
-			for {
+			outBuf := fs.Output.Bytes()
 
-				var tmpJCurrentVersion uint8
+			j.CurrentVersion = string(string(outBuf))
 
-				tok = fs.Scan()
-				if tok == fflib.FFTok_error {
-					goto tokerror
-				}
-				if tok == fflib.FFTok_right_brace {
-					break
-				}
-
-				if tok == fflib.FFTok_comma {
-					if wantVal == true {
-						// TODO(pquerna): this isn't an ideal error message, this handles
-						// things like [,,,] as an array value.
-						return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-					}
-					continue
-				} else {
-					wantVal = true
-				}
-
-				/* handler: tmpJCurrentVersion type=uint8 kind=uint8 quoted=false*/
-
-				{
-					if tok != fflib.FFTok_integer && tok != fflib.FFTok_null {
-						return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for uint8", tok))
-					}
-				}
-
-				{
-
-					if tok == fflib.FFTok_null {
-
-					} else {
-
-						tval, err := fflib.ParseUint(fs.Output.Bytes(), 10, 8)
-
-						if err != nil {
-							return fs.WrapErr(err)
-						}
-
-						tmpJCurrentVersion = uint8(tval)
-
-					}
-				}
-
-				// Standard json.Unmarshal ignores elements out of array bounds,
-				// that what we do as well.
-				if idx < 32 {
-					j.CurrentVersion[idx] = tmpJCurrentVersion
-					idx++
-				}
-
-				wantVal = false
-			}
 		}
 	}
 

@@ -9,7 +9,7 @@ type Contract struct {
 	Name                   string            `json:"name"`
 	UserInvokeSharePercent uint32            `json:"user_invoke_share_percent"`
 	IsRelease              bool              `json:"is_release"`
-	CurrentVersion         [32]byte          `json:"current_version"`
+	CurrentVersion         string            `json:"current_version"`
 	CheckContractAuthority bool              `json:"check_contract_authority"`
 	ContractAuthority      PublicKey         `json:"contract_authority"`
 	ContractData           LuaMap            `json:"contract_data"`
