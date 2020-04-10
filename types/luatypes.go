@@ -231,7 +231,7 @@ func (p *LuaTypeItem) UnmarshalJSON(data []byte) error {
 
 // LuaKey ... eg: {"key": [2, {"v": "lua string test"}]}
 type LuaKey struct {
-	Key LuaKeyObjectType `json:"key"`
+	Key LuaType `json:"key"`
 }
 
 type LuaMap []LuaTypeItem
@@ -240,22 +240,6 @@ type LuaMap []LuaTypeItem
 type LuaTable struct {
 	Value LuaMap `json:"v"`
 }
-
-// Marshal ...
-// func (o LuaTable) Marshal(enc *util.TypeEncoder) error {
-// 	if err := enc.Encode(o.Value); err != nil {
-// 		return errors.Annotate(err, "encode lua map value")
-// 	}
-// 	return nil
-// }
-
-// func (o *LuaTable) Unmarshal(data []byte) error {
-// 	if err := ffjson.Unmarshal(data, o); err != nil {
-// 		return errors.Annotate(err, "unmarshal LuaTable object")
-// 	}
-
-// 	return nil
-// }
 
 // LuaFunction ...
 type LuaFunction struct {
@@ -279,4 +263,4 @@ func (o LuaFunction) Marshal(enc *util.TypeEncoder) error {
 type LuaType []interface{}
 
 // LuaKeyObjectType ...
-type LuaKeyObjectType []interface{}
+// type LuaKeyObjectType []interface{}

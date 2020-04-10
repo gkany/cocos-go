@@ -896,13 +896,13 @@ mainparse:
 
 handle_Key:
 
-	/* handler: j.Key type=types.LuaKeyObjectType kind=slice quoted=false*/
+	/* handler: j.Key type=types.LuaType kind=slice quoted=false*/
 
 	{
 
 		{
 			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for LuaKeyObjectType", tok))
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for LuaType", tok))
 			}
 		}
 
