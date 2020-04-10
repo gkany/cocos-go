@@ -1564,13 +1564,13 @@ handle_Value:
 			j.Value = nil
 		} else {
 
-			j.Value = []LuaMapItem{}
+			j.Value = []LuaTypeItem{}
 
 			wantVal := true
 
 			for {
 
-				var tmpJValue LuaMapItem
+				var tmpJValue LuaTypeItem
 
 				tok = fs.Scan()
 				if tok == fflib.FFTok_error {
@@ -1591,7 +1591,7 @@ handle_Value:
 					wantVal = true
 				}
 
-				/* handler: tmpJValue type=types.LuaMapItem kind=slice quoted=false*/
+				/* handler: tmpJValue type=types.LuaTypeItem kind=slice quoted=false*/
 
 				{
 					if tok == fflib.FFTok_null {

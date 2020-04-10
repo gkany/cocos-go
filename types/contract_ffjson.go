@@ -766,13 +766,13 @@ handle_ContractData:
 			j.ContractData = nil
 		} else {
 
-			j.ContractData = []LuaMapItem{}
+			j.ContractData = []LuaTypeItem{}
 
 			wantVal := true
 
 			for {
 
-				var tmpJContractData LuaMapItem
+				var tmpJContractData LuaTypeItem
 
 				tok = fs.Scan()
 				if tok == fflib.FFTok_error {
@@ -793,7 +793,7 @@ handle_ContractData:
 					wantVal = true
 				}
 
-				/* handler: tmpJContractData type=types.LuaMapItem kind=slice quoted=false*/
+				/* handler: tmpJContractData type=types.LuaTypeItem kind=slice quoted=false*/
 
 				{
 					if tok == fflib.FFTok_null {
@@ -839,13 +839,13 @@ handle_ContractABI:
 			j.ContractABI = nil
 		} else {
 
-			j.ContractABI = []LuaMapItem{}
+			j.ContractABI = []LuaTypeItem{}
 
 			wantVal := true
 
 			for {
 
-				var tmpJContractABI LuaMapItem
+				var tmpJContractABI LuaTypeItem
 
 				tok = fs.Scan()
 				if tok == fflib.FFTok_error {
@@ -866,7 +866,7 @@ handle_ContractABI:
 					wantVal = true
 				}
 
-				/* handler: tmpJContractABI type=types.LuaMapItem kind=slice quoted=false*/
+				/* handler: tmpJContractABI type=types.LuaTypeItem kind=slice quoted=false*/
 
 				{
 					if tok == fflib.FFTok_null {

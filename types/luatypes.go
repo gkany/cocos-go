@@ -51,11 +51,11 @@ type LuaBool struct {
 	V bool `json:"v"`
 }
 
-// LuaMapItem ... [LuaKey, LuaType]
-type LuaMapItem []interface{}
+// LuaTypeItem ... [LuaKey, LuaType]
+type LuaTypeItem []interface{}
 
 // Marshal ...
-func (o LuaMapItem) Marshal(enc *util.TypeEncoder) error {
+func (o LuaTypeItem) Marshal(enc *util.TypeEncoder) error {
 	fmt.Println("[test] lua map item Marshal")
 	if o == nil {
 		return nil
@@ -184,7 +184,7 @@ func parseLuaType(value []interface{}, output *[]interface{}) error {
 }
 
 // UnmarshalJSON ...
-func (p *LuaMapItem) UnmarshalJSON(data []byte) error {
+func (p *LuaTypeItem) UnmarshalJSON(data []byte) error {
 	raw := make([]json.RawMessage, 2)
 	if err := ffjson.Unmarshal(data, &raw); err != nil {
 		return errors.Annotate(err, "unmarshal raw object")
@@ -216,7 +216,7 @@ func (p *LuaMapItem) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	itemResult := make(LuaMapItem, 2)
+	itemResult := make(LuaTypeItem, 2)
 	itemResult[0] = keyResult
 	switch len(result) {
 	case 1:
@@ -234,7 +234,7 @@ type LuaKey struct {
 	Key LuaKeyObjectType `json:"key"`
 }
 
-type LuaMap []LuaMapItem
+type LuaMap []LuaTypeItem
 
 // LuaTable ...
 type LuaTable struct {
