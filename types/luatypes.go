@@ -51,6 +51,39 @@ type LuaBool struct {
 	V bool `json:"v"`
 }
 
+// LuaType ... [type_index, {"v":type_obj}]
+type LuaType []interface{}
+
+// LuaKey ... eg: {"key": [2, {"v": "lua string test"}]}
+type LuaKey struct {
+	Key LuaType `json:"key"`
+}
+
+type LuaMap []LuaTypeItem
+
+// LuaTable ...
+type LuaTable struct {
+	Value LuaMap `json:"v"`
+}
+
+// LuaFunction ...
+type LuaFunction struct {
+	IsVarArg bool     `json:"is_var_arg"`
+	ArgList  []string `json:"arglist"`
+}
+
+// Marshal ...
+func (o LuaFunction) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(o.IsVarArg); err != nil {
+		return errors.Annotate(err, "encode IsVarArg")
+	}
+
+	if err := enc.Encode(o.ArgList); err != nil {
+		return errors.Annotate(err, "encode ArgList")
+	}
+	return nil
+}
+
 // LuaTypeItem ... [LuaKey, LuaType]
 type LuaTypeItem []interface{}
 
@@ -71,6 +104,52 @@ func (o LuaTypeItem) Marshal(enc *util.TypeEncoder) error {
 	if err := enc.Encode(o[1]); err != nil {
 		return errors.Annotate(err, "encode item value")
 	}
+
+	return nil
+}
+
+// UnmarshalJSON ...
+func (p *LuaTypeItem) UnmarshalJSON(data []byte) error {
+	raw := make([]json.RawMessage, 2)
+	if err := ffjson.Unmarshal(data, &raw); err != nil {
+		return errors.Annotate(err, "unmarshal raw object")
+	}
+
+	var key LuaKey
+	if err := ffjson.Unmarshal(raw[0], &key); err != nil {
+		return errors.Annotate(err, "unmarshal key")
+	}
+
+	var value LuaType
+	if err := ffjson.Unmarshal(raw[1], &value); err != nil {
+		return errors.Annotate(err, "unmarshal value")
+	}
+
+	// keyResult, err := parseLuaKey(key)
+	// if err != nil {
+	// 	return err
+	// }
+	var keyResult []interface{}
+	err := parseLuaType(key.Key, &keyResult)
+	if err != nil {
+		return err
+	}
+
+	var result []interface{}
+	err = parseLuaType(value, &result)
+	if err != nil {
+		return err
+	}
+
+	itemResult := make(LuaTypeItem, 2)
+	itemResult[0] = keyResult
+	switch len(result) {
+	case 1:
+		itemResult[1] = result[0]
+	default:
+		itemResult[1] = result
+	}
+	*p = itemResult
 
 	return nil
 }
@@ -180,82 +259,3 @@ func parseLuaType(pair []interface{}, dst *[]interface{}) error {
 	*dst = append(*dst, result)
 	return nil
 }
-
-// UnmarshalJSON ...
-func (p *LuaTypeItem) UnmarshalJSON(data []byte) error {
-	raw := make([]json.RawMessage, 2)
-	if err := ffjson.Unmarshal(data, &raw); err != nil {
-		return errors.Annotate(err, "unmarshal raw object")
-	}
-
-	var key LuaKey
-	if err := ffjson.Unmarshal(raw[0], &key); err != nil {
-		return errors.Annotate(err, "unmarshal key")
-	}
-
-	var value LuaType
-	if err := ffjson.Unmarshal(raw[1], &value); err != nil {
-		return errors.Annotate(err, "unmarshal value")
-	}
-
-	// keyResult, err := parseLuaKey(key)
-	// if err != nil {
-	// 	return err
-	// }
-	var keyResult []interface{}
-	err := parseLuaType(key.Key, &keyResult)
-	if err != nil {
-		return err
-	}
-
-	var result []interface{}
-	err = parseLuaType(value, &result)
-	if err != nil {
-		return err
-	}
-
-	itemResult := make(LuaTypeItem, 2)
-	itemResult[0] = keyResult
-	switch len(result) {
-	case 1:
-		itemResult[1] = result[0]
-	default:
-		itemResult[1] = result
-	}
-	*p = itemResult
-
-	return nil
-}
-
-// LuaKey ... eg: {"key": [2, {"v": "lua string test"}]}
-type LuaKey struct {
-	Key LuaType `json:"key"`
-}
-
-type LuaMap []LuaTypeItem
-
-// LuaTable ...
-type LuaTable struct {
-	Value LuaMap `json:"v"`
-}
-
-// LuaFunction ...
-type LuaFunction struct {
-	IsVarArg bool     `json:"is_var_arg"`
-	ArgList  []string `json:"arglist"`
-}
-
-// Marshal ...
-func (o LuaFunction) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.Encode(o.IsVarArg); err != nil {
-		return errors.Annotate(err, "encode IsVarArg")
-	}
-
-	if err := enc.Encode(o.ArgList); err != nil {
-		return errors.Annotate(err, "encode ArgList")
-	}
-	return nil
-}
-
-// LuaType ... [type_index, {"v":type_obj}]
-type LuaType []interface{}
