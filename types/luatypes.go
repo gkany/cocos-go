@@ -25,10 +25,10 @@ const (
 
 // LuaKey ... lua key index number
 const (
-	LuaKeyInt = iota
-	LuaKeyNumber
-	LuaKeyString
-	LuaKeyBool
+	LuaKeyInt    = iota // 0
+	LuaKeyNumber        // 1
+	LuaKeyString        // 2
+	LuaKeyBool          // 3
 )
 
 // LuaInt ... type LuaInt uint64
@@ -56,13 +56,12 @@ type LuaTypeItem []interface{}
 
 // Marshal ...
 func (o LuaTypeItem) Marshal(enc *util.TypeEncoder) error {
-	fmt.Println("[test] lua map item Marshal")
 	if o == nil {
 		return nil
 	}
 
 	if len(o) != 2 {
-		return errors.Errorf("lua map item type length error. %v", len(o))
+		return errors.Errorf("lua map item type length error. size: %v", len(o))
 	}
 
 	if err := enc.Encode(o[0]); err != nil {
@@ -77,98 +76,97 @@ func (o LuaTypeItem) Marshal(enc *util.TypeEncoder) error {
 }
 
 // LuaKey ... int number string bool
-func parseLuaKey(key LuaKey) (interface{}, error) {
-	k1 := key.Key[0].(float64)
-	k2 := key.Key[1].(map[string]interface{})
-	k2v := k2["v"] // basic type
+func parseLuaKey(keyObject LuaKey) (interface{}, error) {
+	valueType := keyObject.Key[0].(float64)
+	value := keyObject.Key[1].(map[string]interface{})
+	valuev := value["v"] // basic type
 
-	var tempKey interface{}
-	switch k1 {
+	var result interface{}
+	switch valueType {
 	case LuaTypeInt, LuaTypeNumber:
-		switch k2v.(type) {
+		switch valuev.(type) {
 		case float64:
-			tempKey = k2v.(float64)
+			result = valuev.(float64)
 		case string:
-			kv, err := strconv.ParseFloat(k2v.(string), 64)
+			strf, err := strconv.ParseFloat(valuev.(string), 64)
 			if err != nil {
-				fmt.Printf("string ParseFloat64 failed. src: %v\n", k2v)
-				return tempKey, err
+				fmt.Printf("string ParseFloat64 failed. src: %v\n", valuev)
+				return result, err
 			}
-			tempKey = kv
+			result = strf
 		}
 	case LuaTypeString:
-		tempKey = k2v.(string)
+		result = valuev.(string)
 	case LuaTypeBool:
-		tempKey = k2v.(bool)
+		result = valuev.(bool)
 	default:
-		fmt.Println("UnKnow LuaKey type. ", fmt.Sprintf("%T", k1))
-		return nil, errors.Errorf("UnKnow LuaKey type, type index: %v", k1)
+		fmt.Println("UnKnow LuaKey type. ", fmt.Sprintf("%T", valueType))
+		return nil, errors.Errorf("UnKnow LuaKey type, type index: %v", valueType)
 	}
-	return tempKey, nil
+	return result, nil
 }
 
 // LuaType ... basic type: int number string bool, complex: LuaMap, LuaTable, LuaFunction, maybe include basic and complex type
-func parseLuaType(value []interface{}, output *[]interface{}) error {
-	var tempValue interface{}
+func parseLuaType(pair []interface{}, dst *[]interface{}) error {
+	var result interface{}
 
-	v1 := value[0].(float64)
-	v2 := value[1].(map[string]interface{})
-	v2v := v2["v"] // basic type
+	valueType := pair[0].(float64)
+	value := pair[1].(map[string]interface{})
+	valuev := value["v"] // basic type
 
-	switch v1 {
+	switch valueType {
 	case LuaTypeInt, LuaTypeNumber:
-		switch v2v.(type) {
+		switch valuev.(type) {
 		case float64:
-			tempValue = v2v.(float64)
+			result = valuev.(float64)
 		case string:
-			// tempValue = v2v.(string) // 强转成float64
-			vv, err := strconv.ParseFloat(v2v.(string), 64)
+			// result = valuev.(string) // 强转成float64
+			strf, err := strconv.ParseFloat(valuev.(string), 64)
 			if err != nil {
-				fmt.Printf("string ParseFloat64 failed. src: %v\n", v2v)
+				fmt.Printf("string ParseFloat64 failed. src: %v\n", valuev)
 				return err
 			}
-			tempValue = vv
+			result = strf
 		}
 	case LuaTypeString:
-		tempValue = v2v.(string)
+		result = valuev.(string)
 	case LuaTypeBool:
-		tempValue = v2v.(bool)
+		result = valuev.(bool)
 	case LuaTypeFunction:
-		isVarArg := v2["is_var_arg"].(bool)
-		argList := v2["arglist"].([]interface{})
-		temp := []string{}
-		for _, val := range argList {
-			temp = append(temp, val.(string))
+		isVarArg := value["is_var_arg"].(bool)
+		argList := value["arglist"].([]interface{})
+		args := []string{}
+		for _, arg := range argList {
+			args = append(args, arg.(string))
 		}
-		tempValue = LuaFunction{IsVarArg: isVarArg, ArgList: temp}
+		result = LuaFunction{IsVarArg: isVarArg, ArgList: args}
 	case LuaTypeTable:
-		tmap := value[1].(map[string]interface{})
-		for _, tv := range tmap {
-			tvList := tv.([]interface{})
-			for _, tvv := range tvList {
-				for _, tvvv := range tvv.([]interface{}) {
-					switch tvvv.(type) {
+		vMap := pair[1].(map[string]interface{})
+		for _, vMapList := range vMap {
+			for _, eList := range vMapList.([]interface{}) {
+				for _, element := range eList.([]interface{}) {
+					switch element.(type) {
 					case []interface{}:
-						err := parseLuaType(tvvv.([]interface{}), output)
+						err := parseLuaType(element.([]interface{}), dst)
 						if err != nil {
 							return err
 						}
 					case map[string]interface{}:
-						tvvvMap := tvv.([]interface{}) // [0] -- map[string]interface {} | [1] -- []interface {}
-						tm0 := tvvvMap[0]              // map[key:[2 map[v:PARTNER_INCENTIE]]]
-						tm1 := tvvvMap[1]
+						ePair := eList.([]interface{}) // [0] -- map[string]interface {} | [1] -- []interface {}
+						first := ePair[0]              // map[key:[2 map[v:PARTNER_INCENTIE]]]
+						second := ePair[1]
 
-						tm0Map := tm0.(map[string]interface{})
-						value := tm0Map["key"] // 二元数组： 根据类型解析
-						err := parseLuaType(value.([]interface{}), output)
+						firstMap := first.(map[string]interface{})
+						value := firstMap["key"] // pair type, parse by type
+						err := parseLuaType(value.([]interface{}), dst)
 						if err != nil {
-							fmt.Printf("** [error] tmoResult: %v\n", err)
+							fmt.Printf("parseLuaType error. data: %v, error: %v\n", value, err)
 							return err
 						}
 
-						err = parseLuaType(tm1.([]interface{}), output)
+						err = parseLuaType(second.([]interface{}), dst)
 						if err != nil {
-							fmt.Printf("** [error] tm1Result: %v\n", err)
+							fmt.Printf("parseLuaType error. data: %v, error: %v\n", second, err)
 							return err
 						}
 					}
@@ -176,10 +174,10 @@ func parseLuaType(value []interface{}, output *[]interface{}) error {
 			}
 		}
 	default:
-		fmt.Println("UnKnow LuaType type. ", fmt.Sprintf("%T", v1))
-		return errors.Errorf("UnKnow LuaType type, type index: %v", v1)
+		fmt.Println("UnKnow LuaType type. ", fmt.Sprintf("%T", valueType))
+		return errors.Errorf("UnKnow LuaType type, type index: %v", valueType)
 	}
-	*output = append(*output, tempValue)
+	*dst = append(*dst, result)
 	return nil
 }
 
@@ -261,6 +259,3 @@ func (o LuaFunction) Marshal(enc *util.TypeEncoder) error {
 
 // LuaType ... [type_index, {"v":type_obj}]
 type LuaType []interface{}
-
-// LuaKeyObjectType ...
-// type LuaKeyObjectType []interface{}
