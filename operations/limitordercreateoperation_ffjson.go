@@ -5,9 +5,9 @@ package operations
 
 import (
 	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gkany/cocos-go/types"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
 
@@ -46,17 +46,25 @@ func (j *LimitOrderCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) err
 		buf.Write(obj)
 
 	}
-	/* Struct fall back. type=types.AssetAmount kind=struct */
 	buf.WriteString(`,"amount_to_sell":`)
-	err = buf.Encode(&j.AmountToSell)
-	if err != nil {
-		return err
+
+	{
+
+		err = j.AmountToSell.MarshalJSONBuf(buf)
+		if err != nil {
+			return err
+		}
+
 	}
-	/* Struct fall back. type=types.AssetAmount kind=struct */
 	buf.WriteString(`,"min_to_receive":`)
-	err = buf.Encode(&j.MinToReceive)
-	if err != nil {
-		return err
+
+	{
+
+		err = j.MinToReceive.MarshalJSONBuf(buf)
+		if err != nil {
+			return err
+		}
+
 	}
 	buf.WriteString(`,"expiration":`)
 
@@ -88,11 +96,15 @@ func (j *LimitOrderCreateOperation) MarshalJSONBuf(buf fflib.EncodingBuffer) err
 	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
-			/* Struct fall back. type=types.AssetAmount kind=struct */
 			buf.WriteString(`"fee":`)
-			err = buf.Encode(j.Fee)
-			if err != nil {
-				return err
+
+			{
+
+				err = j.Fee.MarshalJSONBuf(buf)
+				if err != nil {
+					return err
+				}
+
 			}
 			buf.WriteByte(',')
 		}
@@ -372,16 +384,16 @@ handle_AmountToSell:
 	/* handler: j.AmountToSell type=types.AssetAmount kind=struct quoted=false*/
 
 	{
-		/* Falling back. type=types.AssetAmount kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
+		if tok == fflib.FFTok_null {
 
-		err = json.Unmarshal(tbuf, &j.AmountToSell)
-		if err != nil {
-			return fs.WrapErr(err)
+		} else {
+
+			err = j.AmountToSell.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
+			if err != nil {
+				return err
+			}
 		}
+		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value
@@ -392,16 +404,16 @@ handle_MinToReceive:
 	/* handler: j.MinToReceive type=types.AssetAmount kind=struct quoted=false*/
 
 	{
-		/* Falling back. type=types.AssetAmount kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
+		if tok == fflib.FFTok_null {
 
-		err = json.Unmarshal(tbuf, &j.MinToReceive)
-		if err != nil {
-			return fs.WrapErr(err)
+		} else {
+
+			err = j.MinToReceive.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
+			if err != nil {
+				return err
+			}
 		}
+		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value
@@ -497,16 +509,22 @@ handle_Fee:
 	/* handler: j.Fee type=types.AssetAmount kind=struct quoted=false*/
 
 	{
-		/* Falling back. type=types.AssetAmount kind=struct */
-		tbuf, err := fs.CaptureField(tok)
-		if err != nil {
-			return fs.WrapErr(err)
-		}
+		if tok == fflib.FFTok_null {
 
-		err = json.Unmarshal(tbuf, &j.Fee)
-		if err != nil {
-			return fs.WrapErr(err)
+			j.Fee = nil
+
+		} else {
+
+			if j.Fee == nil {
+				j.Fee = new(types.AssetAmount)
+			}
+
+			err = j.Fee.UnmarshalJSONFFLexer(fs, fflib.FFParse_want_key)
+			if err != nil {
+				return err
+			}
 		}
+		state = fflib.FFParse_after_value
 	}
 
 	state = fflib.FFParse_after_value

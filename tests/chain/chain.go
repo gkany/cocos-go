@@ -393,6 +393,8 @@ func testGetContract(api sdk.WebsocketAPI, name string) {
 		return
 	}
 	fmt.Println(contract)
+	fmt.Printf("contractData: %v\n", contract.ContractData)
+	fmt.Printf("contractABI: %v\n", contract.ContractABI)
 }
 
 func testGetVestingBalances(api sdk.WebsocketAPI) {
@@ -484,7 +486,8 @@ func main() {
 
 	fmt.Println("\n\n--------------- get contract")
 	// testGetContract(api, "1.16.2")
-	testGetContract(api, "1.16.3")
+	// testGetContract(api, "1.16.3")
 	// testGetContract(api, "1.16.5")
+	testGetContract(api, "1.16.9")
 
 }
