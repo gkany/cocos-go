@@ -87,12 +87,8 @@ func parseLuaKey(key LuaKey) (interface{}, error) {
 	case LuaTypeInt, LuaTypeNumber:
 		switch k2v.(type) {
 		case float64:
-			kv := k2v.(float64)
-			// fmt.Println("kv is int", kv)
-			tempKey = kv
+			tempKey = k2v.(float64)
 		case string:
-			// kv := k2v.(string)
-			// fmt.Println("kv is too large int --> string", kv)
 			kv, err := strconv.ParseFloat(k2v.(string), 64)
 			if err != nil {
 				fmt.Printf("string ParseFloat64 failed. src: %v\n", k2v)
@@ -100,21 +96,12 @@ func parseLuaKey(key LuaKey) (interface{}, error) {
 			}
 			tempKey = kv
 		}
-	// case LuaTypeNumber:
-	// 	kv := k2v.(float64)
-	// 	// fmt.Println("kv is number", kv)
-	// 	tempKey = kv
 	case LuaTypeString:
-		kv := k2v.(string)
-		// fmt.Println("kv is string", kv)
-		tempKey = kv
+		tempKey = k2v.(string)
 	case LuaTypeBool:
-		kv := k2v.(bool)
-		// fmt.Println("kv is bool", kv)
-		tempKey = kv
+		tempKey = k2v.(bool)
 	default:
-		fmt.Println("is of a type I don't know how to handle ", fmt.Sprintf("%T", k1))
-		// return nil, errors.Annotate("Unknow type")
+		fmt.Println("UnKnow LuaKey type. ", fmt.Sprintf("%T", k1))
 		return nil, errors.Errorf("UnKnow LuaKey type, type index: %v", k1)
 	}
 	return tempKey, nil
@@ -123,11 +110,8 @@ func parseLuaKey(key LuaKey) (interface{}, error) {
 // LuaType ... basic type: int number string bool, complex: LuaMap, LuaTable, LuaFunction, maybe include basic and complex type
 func parseLuaType(value []interface{}, output *[]interface{}) error {
 	var tempValue interface{}
-	// fmt.Printf("[start]sss [parseLuaType] value: %v \n outpt: %v\n", value, output)
 
 	v1 := value[0].(float64)
-	// fmt.Printf(">>> [parseLuaType]v1: %v, type: %v; v2:%v, type: %v\n", v1, v1, value[1], value[1])
-
 	v2 := value[1].(map[string]interface{})
 	v2v := v2["v"] // basic type
 
@@ -135,73 +119,47 @@ func parseLuaType(value []interface{}, output *[]interface{}) error {
 	case LuaTypeInt, LuaTypeNumber:
 		switch v2v.(type) {
 		case float64:
-			vv := v2v.(float64)
-			// fmt.Println("vv is string", vv)
-			tempValue = vv
+			tempValue = v2v.(float64)
 		case string:
-			// vv := v2v.(string) // 强转成int
+			// tempValue = v2v.(string) // 强转成float64
 			vv, err := strconv.ParseFloat(v2v.(string), 64)
 			if err != nil {
 				fmt.Printf("string ParseFloat64 failed. src: %v\n", v2v)
 				return err
 			}
-			// fmt.Println("vv is too large int --> string", vv)
 			tempValue = vv
 		}
-	// case LuaTypeNumber:
-	// 	vv := v2v.(float64)
-	// 	// fmt.Println("vv is number", vv)
-	// 	tempValue = vv
 	case LuaTypeString:
-		vv := v2v.(string)
-		// fmt.Println("vv is string", vv)
-		tempValue = vv
+		tempValue = v2v.(string)
 	case LuaTypeBool:
-		vv := v2v.(bool)
-		// fmt.Println("vv is bool", vv)
-		tempValue = vv
+		tempValue = v2v.(bool)
 	case LuaTypeFunction:
-		// fmt.Printf("[LuaTypeFunction] value[1]: %v, type: %T\n", value[1], value[1])
 		isVarArg := v2["is_var_arg"].(bool)
 		argList := v2["arglist"].([]interface{})
 		temp := []string{}
 		for _, val := range argList {
 			temp = append(temp, val.(string))
 		}
-		vv := LuaFunction{IsVarArg: isVarArg, ArgList: temp}
-		// fmt.Println("vv is function", vv)
-		tempValue = vv
+		tempValue = LuaFunction{IsVarArg: isVarArg, ArgList: temp}
 	case LuaTypeTable:
-		// fmt.Printf("-- [LuaTypeTable] value[1]: %v, type: %T\n", value[1], value[1])
 		tmap := value[1].(map[string]interface{})
 		for _, tv := range tmap {
-			// temp = append(temp, val.(string))
-			// fmt.Printf("---- tk:%v, type:%T;\n", tk, tk)
-			// fmt.Printf("---- tv:%v, type:%T\n", tv, tv)
 			tvList := tv.([]interface{})
 			for _, tvv := range tvList {
-				// temp = append(temp, val.(string))
-				// fmt.Printf("------ tvv:%v, type:%T\n", tvv, tvv)
 				for _, tvvv := range tvv.([]interface{}) {
-					// fmt.Printf("======= tvvv:%v, type:%T\n", tvvv, tvvv)
 					switch tvvv.(type) {
 					case []interface{}:
-						// fmt.Println("1111  start")
-						// fmt.Printf("data: %v, type: %v\n", tvvv, tvvv)
 						err := parseLuaType(tvvv.([]interface{}), output)
 						if err != nil {
 							return err
 						}
 					case map[string]interface{}:
-						// fmt.Println("\n2222  start")
-						// tvvvMap := tvv.(map[string]interface{})
 						tvvvMap := tvv.([]interface{}) // [0] -- map[string]interface {} | [1] -- []interface {}
 						tm0 := tvvvMap[0]              // map[key:[2 map[v:PARTNER_INCENTIE]]]
 						tm1 := tvvvMap[1]
 
 						tm0Map := tm0.(map[string]interface{})
 						value := tm0Map["key"] // 二元数组： 根据类型解析
-						// fmt.Printf("****** [tm0['key']]value:%v, type:%T\n", value, value)
 						err := parseLuaType(value.([]interface{}), output)
 						if err != nil {
 							fmt.Printf("** [error] tmoResult: %v\n", err)
@@ -213,25 +171,20 @@ func parseLuaType(value []interface{}, output *[]interface{}) error {
 							fmt.Printf("** [error] tm1Result: %v\n", err)
 							return err
 						}
-						// fmt.Printf("** tm1Result: %v\n", tm1Result)
-						// fmt.Println("2222  end\n")
 					}
 				}
 			}
 		}
 	default:
-		fmt.Println("is of a type I don't know how to handle ", fmt.Sprintf("%T", v1))
+		fmt.Println("UnKnow LuaType type. ", fmt.Sprintf("%T", v1))
 		return errors.Errorf("UnKnow LuaType type, type index: %v", v1)
 	}
-	// fmt.Printf("<<< [parseLuaType]parse result: %v ## end\n\n", tempValue)
 	*output = append(*output, tempValue)
-	// fmt.Printf("[end]sss [parseLuaType]outpt: %v\n", output)
 	return nil
 }
 
 // UnmarshalJSON ...
 func (p *LuaMapItem) UnmarshalJSON(data []byte) error {
-	// fmt.Printf("[start]# [LuaMapItem]data: %s  ## start\n", string(data))
 	raw := make([]json.RawMessage, 2)
 	if err := ffjson.Unmarshal(data, &raw); err != nil {
 		return errors.Annotate(err, "unmarshal raw object")
@@ -247,23 +200,23 @@ func (p *LuaMapItem) UnmarshalJSON(data []byte) error {
 		return errors.Annotate(err, "unmarshal value")
 	}
 
-	keyResult, err := parseLuaKey(key)
+	// keyResult, err := parseLuaKey(key)
+	// if err != nil {
+	// 	return err
+	// }
+	var keyResult []interface{}
+	err := parseLuaType(key.Key, &keyResult)
 	if err != nil {
 		return err
 	}
-	// fmt.Printf("[LueKey] %v --> %v\n", key, keyResult)
 
-	// fmt.Println("2.1 [LuaMapItem] start parse value")
 	var result []interface{}
 	err = parseLuaType(value, &result)
 	if err != nil {
 		return err
 	}
-	// fmt.Printf("[LueKey] %v \n----> %v\n", value, valueResult)
-	// fmt.Println("2.2 [LuaMapItem] end parse value")
 
 	itemResult := make(LuaMapItem, 2)
-	// p = &LuaMapItem{keyResult, result}
 	itemResult[0] = keyResult
 	switch len(result) {
 	case 1:
@@ -272,8 +225,7 @@ func (p *LuaMapItem) UnmarshalJSON(data []byte) error {
 		itemResult[1] = result
 	}
 	*p = itemResult
-	// fmt.Printf("# [LuaMapItem] p: %v ## end\n", p)
-	// fmt.Println("\n")
+
 	return nil
 }
 
@@ -290,23 +242,20 @@ type LuaTable struct {
 }
 
 // Marshal ...
-func (o LuaTable) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.Encode(o.Value); err != nil {
-		return errors.Annotate(err, "encode lua map value")
-	}
-	return nil
-}
+// func (o LuaTable) Marshal(enc *util.TypeEncoder) error {
+// 	if err := enc.Encode(o.Value); err != nil {
+// 		return errors.Annotate(err, "encode lua map value")
+// 	}
+// 	return nil
+// }
 
-func (o *LuaTable) Unmarshal(data []byte) error {
-	fmt.Printf("## [LuaTable]data: %s  ## start\n", string(data))
+// func (o *LuaTable) Unmarshal(data []byte) error {
+// 	if err := ffjson.Unmarshal(data, o); err != nil {
+// 		return errors.Annotate(err, "unmarshal LuaTable object")
+// 	}
 
-	if err := ffjson.Unmarshal(data, o); err != nil {
-		return errors.Annotate(err, "unmarshal LuaTable object")
-	}
-
-	fmt.Printf("## [LuaTable] o: %v  ## end\n", o)
-	return nil
-}
+// 	return nil
+// }
 
 // LuaFunction ...
 type LuaFunction struct {
