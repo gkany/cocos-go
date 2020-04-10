@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
 
 	sdk "github.com/gkany/cocos-go"
 	"github.com/gkany/cocos-go/config"
@@ -397,6 +398,24 @@ func testGetContract(api sdk.WebsocketAPI, name string) {
 	fmt.Printf("contractABI: %v\n", contract.ContractABI)
 }
 
+func testGetContracts(api sdk.WebsocketAPI) {
+	// contractName := "contract.debug.test0248" // contract.debug.test0248
+	// contractName := "1.16.2" // contract.debug.test0248
+
+	max := 66
+	for i := 1; i < max; i++ {
+		name := "1.16." + strconv.Itoa(i)
+		contract, error := api.GetContract(name)
+		if error != nil {
+			fmt.Printf("get_contract [%v] error. %v\n", name, error)
+			return
+		}
+		// fmt.Printf("name: %v, contractData: %v\n", name, contract.ContractData)
+		fmt.Printf("name: %v, contractABI: %v\n\n", name, contract.ContractABI)
+	}
+
+}
+
 func testGetVestingBalances(api sdk.WebsocketAPI) {
 	name := "nicotest"
 	account, err := api.GetAccountByName(name)
@@ -487,7 +506,8 @@ func main() {
 	fmt.Println("\n\n--------------- get contract")
 	// testGetContract(api, "1.16.2")
 	// testGetContract(api, "1.16.3")
-	testGetContract(api, "1.16.5")
+	// testGetContract(api, "1.16.5")
 	// testGetContract(api, "1.16.9")
+	testGetContracts(api)
 
 }

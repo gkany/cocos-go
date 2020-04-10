@@ -1,5 +1,7 @@
 package types
 
+//go:generate ffjson $GOFILE
+
 import (
 	"encoding/json"
 	"fmt"
@@ -82,7 +84,7 @@ func parseLuaKey(key LuaKey) (interface{}, error) {
 
 	var tempKey interface{}
 	switch k1 {
-	case LuaTypeInt:
+	case LuaTypeInt, LuaTypeNumber:
 		switch k2v.(type) {
 		case float64:
 			kv := k2v.(float64)
@@ -91,17 +93,17 @@ func parseLuaKey(key LuaKey) (interface{}, error) {
 		case string:
 			// kv := k2v.(string)
 			// fmt.Println("kv is too large int --> string", kv)
-			kv, err := strconv.ParseInt(k2v.(string), 10, 64)
+			kv, err := strconv.ParseFloat(k2v.(string), 64)
 			if err != nil {
-				fmt.Printf("string ParseInt64 failed. src: %v\n", k2v)
+				fmt.Printf("string ParseFloat64 failed. src: %v\n", k2v)
 				return tempKey, err
 			}
 			tempKey = kv
 		}
-	case LuaTypeNumber:
-		kv := k2v.(float64)
-		// fmt.Println("kv is number", kv)
-		tempKey = kv
+	// case LuaTypeNumber:
+	// 	kv := k2v.(float64)
+	// 	// fmt.Println("kv is number", kv)
+	// 	tempKey = kv
 	case LuaTypeString:
 		kv := k2v.(string)
 		// fmt.Println("kv is string", kv)
@@ -130,7 +132,7 @@ func parseLuaType(value []interface{}, output *[]interface{}) error {
 	v2v := v2["v"] // basic type
 
 	switch v1 {
-	case LuaTypeInt:
+	case LuaTypeInt, LuaTypeNumber:
 		switch v2v.(type) {
 		case float64:
 			vv := v2v.(float64)
@@ -138,18 +140,18 @@ func parseLuaType(value []interface{}, output *[]interface{}) error {
 			tempValue = vv
 		case string:
 			// vv := v2v.(string) // 强转成int
-			vv, err := strconv.ParseInt(v2v.(string), 10, 64)
+			vv, err := strconv.ParseFloat(v2v.(string), 64)
 			if err != nil {
-				fmt.Printf("string ParseInt64 failed. src: %v\n", v2v)
+				fmt.Printf("string ParseFloat64 failed. src: %v\n", v2v)
 				return err
 			}
 			// fmt.Println("vv is too large int --> string", vv)
 			tempValue = vv
 		}
-	case LuaTypeNumber:
-		vv := v2v.(float64)
-		// fmt.Println("vv is number", vv)
-		tempValue = vv
+	// case LuaTypeNumber:
+	// 	vv := v2v.(float64)
+	// 	// fmt.Println("vv is number", vv)
+	// 	tempValue = vv
 	case LuaTypeString:
 		vv := v2v.(string)
 		// fmt.Println("vv is string", vv)
