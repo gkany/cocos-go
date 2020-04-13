@@ -378,7 +378,7 @@ func testCreateContractFromFile(api sdk.WebsocketAPI) {
 		return
 	}
 
-	contractName := "contract.debug.test0249" // contract.debug.test0248
+	contractName := "contract.debug.test01" // contract.debug.test0248
 	// contractCode := "function hello() chainhelper:log('create contract test') end"
 	filename := "test.lua"
 	error := api.ContractCreateFromFile(keyBag, account, contractName, filename, publicKey)
@@ -455,6 +455,9 @@ func main() {
 	config.SetCurrent(config.ChainIDMainnet)
 	wsURL := "wss://api.cocosbcx.net"
 
+	// config.SetCurrent(config.ChainIDLocal)
+	// wsURL := "ws://127.0.0.1:8049"
+
 	// chainID := config.ChainIDLocal
 	// wsURL := "ws://127.0.0.1:8049"
 	// config.SetCurrent(chainID)
@@ -468,7 +471,7 @@ func main() {
 
 	// get chain data
 	// testAPIID(api)
-	// getData(api)
+	getData(api)
 	// testListAssets(api)
 	// testHeadBlockPrefix(api)
 	// testGetAccountByName(api)
@@ -500,14 +503,16 @@ func main() {
 	// testGetChainProperties(api)
 
 	// contract
-	// fmt.Println("\n\n--------------- create contract by file")
+	fmt.Println("\n\n--------------- create contract by file")
 	// testCreateContractFromFile(api)
 
 	fmt.Println("\n\n--------------- get contract")
+	// testGetContract(api, "1.16.1")
+
 	// testGetContract(api, "1.16.2")
 	// testGetContract(api, "1.16.3")
 	// testGetContract(api, "1.16.5")
 	// testGetContract(api, "1.16.9")
-	testGetContracts(api)
+	// testGetContracts(api)
 
 }
