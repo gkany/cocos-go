@@ -13,9 +13,8 @@ import (
 	"github.com/gkany/cocos-go/config"
 	"github.com/gkany/cocos-go/logging"
 	"github.com/gkany/cocos-go/util"
-	"github.com/pquerna/ffjson/ffjson"
-
 	"github.com/juju/errors"
+	"github.com/pquerna/ffjson/ffjson"
 )
 
 const (
@@ -143,14 +142,6 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 		return nil, ErrChainConfigIsUndefined
 	}
 
-	// test
-	// fmt.Println("-------------> Digest: ")
-	// if txJSON, err := tx.MarshalJSON(); err != nil {
-	// 	fmt.Println(err)
-	// } else {
-	// 	fmt.Printf("tx: %s\n", string(txJSON))
-	// }
-
 	writer := sha256.New()
 	rawChainID, err := hex.DecodeString(chain.ID)
 	if err != nil {
@@ -168,7 +159,7 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Annotatef(err, "Serialize")
 	}
-	fmt.Printf("rawTrx - Hex: %v\n", hex.EncodeToString(rawTrx[:]))
+	// fmt.Printf("rawTrx - Hex: %v\n", hex.EncodeToString(rawTrx[:]))
 
 	//	digestTrx := sha256.Sum256(rawTrx)
 	//	util.Dump("digest trx", hex.EncodeToString(digestTrx[:]))
@@ -179,8 +170,8 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 
 	digest := writer.Sum(nil)
 	//	util.Dump("digest trx all", hex.EncodeToString(digest[:]))
-	fmt.Printf("digest: %v, hex: %s\n", digest[:], hex.EncodeToString(digest[:]))
-	
+	// fmt.Printf("digest: %v, hex: %s\n", digest[:], hex.EncodeToString(digest[:]))
+
 	return digest[:], nil
 }
 

@@ -8,7 +8,6 @@ import (
 	"github.com/btcsuite/btcd/btcec"
 	"github.com/gkany/cocos-go/config"
 	"github.com/gkany/cocos-go/types"
-
 	"github.com/juju/errors"
 )
 
@@ -33,7 +32,7 @@ func NewTransactionSigner(tx *types.SignedTransaction) *TransactionSigner {
 func (tx *TransactionSigner) Sign(privKeys types.PrivateKeys, chain *config.ChainConfig) error {
 	for _, prv := range privKeys {
 		ecdsaKey := prv.ToECDSA()
-		fmt.Printf("private Key: %s, public key: %s\n", prv.ToWIF(), prv.PublicKey().String())
+		// fmt.Printf("private Key: %s, public key: %s\n", prv.ToWIF(), prv.PublicKey().String())
 
 		if ecdsaKey.Curve != btcec.S256() {
 			return types.ErrInvalidPrivateKeyCurve
@@ -44,7 +43,7 @@ func (tx *TransactionSigner) Sign(privKeys types.PrivateKeys, chain *config.Chai
 			if err != nil {
 				return errors.Annotate(err, "Digest")
 			}
-			fmt.Printf("tx digest: %v\n", digest)
+			// fmt.Printf("tx digest: %v\n", digest)
 
 			sig, err := prv.SignCompact(digest) // 2. 私钥签名
 			if err != nil {
@@ -58,7 +57,7 @@ func (tx *TransactionSigner) Sign(privKeys types.PrivateKeys, chain *config.Chai
 				tx.Signatures = append(tx.Signatures, types.Buffer(sig))
 				break
 			}
-			fmt.Printf("tx: %v\n", tx)
+			// fmt.Printf("tx: %v\n", tx)
 		}
 	}
 

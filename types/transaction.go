@@ -20,27 +20,27 @@ type Transaction struct {
 
 func (p Transaction) Marshal(enc *util.TypeEncoder) error {
 	fmt.Println("Transaction Marshal")
-	fmt.Println("  -> RefBlockNum: ", p.RefBlockNum)
+	// fmt.Println("  -> RefBlockNum: ", p.RefBlockNum)
 	if err := enc.Encode(p.RefBlockNum); err != nil {
 		return errors.Annotate(err, "encode RefBlockNum")
 	}
 
-	fmt.Println("  ->RefBlockPrefix: ", p.RefBlockPrefix)
+	// fmt.Println("  ->RefBlockPrefix: ", p.RefBlockPrefix)
 	if err := enc.Encode(p.RefBlockPrefix); err != nil {
 		return errors.Annotate(err, "encode RefBlockPrefix")
 	}
 
-	fmt.Println("  ->Expiration[trx]: ", p.Expiration)
+	// fmt.Println("  ->Expiration[trx]: ", p.Expiration)
 	if err := enc.Encode(p.Expiration); err != nil {
 		return errors.Annotate(err, "encode Expiration")
 	}
 
-	fmt.Println("  ->Operations: ", p.Operations)
+	// fmt.Println("  ->Operations: ", p.Operations)
 	if err := enc.Encode(p.Operations); err != nil {
 		return errors.Annotate(err, "encode Operations")
 	}
 
-	fmt.Println("  ->Extensions: ", p.Extensions)
+	// fmt.Println("  ->Extensions: ", p.Extensions)
 	if err := enc.Encode(p.Extensions); err != nil {
 		return errors.Annotate(err, "encode Extension")
 	}
