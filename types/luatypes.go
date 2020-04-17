@@ -31,24 +31,104 @@ const (
 	LuaKeyBool          // 3
 )
 
-// LuaInt ... type LuaInt uint64
+// LuaInt ... type LuaInt uint64  eg:[0, {"v": 100}]
 type LuaInt struct {
 	V uint64 `json:"v"`
 }
 
-// LuaNumber ... float64
+// Marshal ...
+func (o LuaInt) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(LuaTypeInt); err != nil {
+		return errors.Annotate(err, "encode type")
+	}
+
+	if err := enc.Encode(o.V); err != nil {
+		return errors.Annotate(err, "encode data")
+	}
+	return nil
+}
+
+// MarshalJSON ...
+func (o LuaInt) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal([]interface{}{
+		LuaTypeInt,
+		o,
+	})
+}
+
+// LuaNumber ... float64 eg:[1, {"v": 3.14}]
 type LuaNumber struct {
 	V float64 `json:"v"`
 }
 
-// LuaString ... string
+// Marshal ...
+func (o LuaNumber) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(LuaTypeNumber); err != nil {
+		return errors.Annotate(err, "encode type")
+	}
+
+	if err := enc.Encode(o.V); err != nil {
+		return errors.Annotate(err, "encode data")
+	}
+	return nil
+}
+
+// MarshalJSON ...
+func (o LuaNumber) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal([]interface{}{
+		LuaTypeNumber,
+		o,
+	})
+}
+
+// LuaString ... string eg:[2, {"v": "hello, Lua contract"}]
 type LuaString struct {
 	V string `json:"v"`
 }
 
-// LuaBool ... bool
+// Marshal ...
+func (o LuaString) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(LuaTypeString); err != nil {
+		return errors.Annotate(err, "encode type")
+	}
+
+	if err := enc.Encode(o.V); err != nil {
+		return errors.Annotate(err, "encode data")
+	}
+	return nil
+}
+
+// MarshalJSON ...
+func (o LuaString) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal([]interface{}{
+		LuaTypeString,
+		o,
+	})
+}
+
+// LuaBool ... bool eg:[3, {"v": true}]
 type LuaBool struct {
 	V bool `json:"v"`
+}
+
+// Marshal ...
+func (o LuaBool) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(LuaTypeBool); err != nil {
+		return errors.Annotate(err, "encode type")
+	}
+
+	if err := enc.Encode(o.V); err != nil {
+		return errors.Annotate(err, "encode data")
+	}
+	return nil
+}
+
+// MarshalJSON ...
+func (o LuaBool) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal([]interface{}{
+		LuaTypeBool,
+		o,
+	})
 }
 
 // LuaType ... [type_index, {"v":type_obj}]
@@ -59,14 +139,35 @@ type LuaKey struct {
 	Key LuaType `json:"key"`
 }
 
+// LuaMap ...
 type LuaMap []LuaTypeItem
 
-// LuaTable ...
+// LuaTable ...  eg:[4,{"v":[[{"key":[2,{"v":"name"}]},[2,{"v":"Jack"}]],[{"key":[2,{"v":"age"}]},[0,{"v":22}]],[{"key":[2,{"v":"sex"}]},[2,{"v":"man"}]],[{"key":[2,{"v":"height"}]},[0,{"v":170}]],[{"key":[2,{"v":"weight"}]},[1,{"v":65.3}]],[{"key":[2,{"v":"address"}]},[2,{"v":"CN"}]],[{"key":[2,{"v":"is_student"}]},[3,{"v":false}]]]}]
 type LuaTable struct {
 	Value LuaMap `json:"v"`
 }
 
-// LuaFunction ...
+// Marshal ...
+func (o LuaTable) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(LuaTypeTable); err != nil {
+		return errors.Annotate(err, "encode type")
+	}
+
+	if err := enc.Encode(o.Value); err != nil {
+		return errors.Annotate(err, "encode data")
+	}
+	return nil
+}
+
+// MarshalJSON ...
+func (o LuaTable) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal([]interface{}{
+		LuaTypeTable,
+		o,
+	})
+}
+
+// LuaFunction ... eg: [5, {"v": {"is_var_arg": true, "arglist": ["arg1", "arg2", "arg3"]}}]
 type LuaFunction struct {
 	IsVarArg bool     `json:"is_var_arg"`
 	ArgList  []string `json:"arglist"`
@@ -82,6 +183,14 @@ func (o LuaFunction) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode ArgList")
 	}
 	return nil
+}
+
+// MarshalJSON ...
+func (o LuaFunction) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal([]interface{}{
+		LuaTypeFunction,
+		o,
+	})
 }
 
 // LuaTypeItem ... [LuaKey, LuaType]
@@ -109,7 +218,7 @@ func (o LuaTypeItem) Marshal(enc *util.TypeEncoder) error {
 }
 
 // UnmarshalJSON ...
-func (p *LuaTypeItem) UnmarshalJSON(data []byte) error {
+func (o *LuaTypeItem) UnmarshalJSON(data []byte) error {
 	raw := make([]json.RawMessage, 2)
 	if err := ffjson.Unmarshal(data, &raw); err != nil {
 		return errors.Annotate(err, "unmarshal raw object")
@@ -149,7 +258,7 @@ func (p *LuaTypeItem) UnmarshalJSON(data []byte) error {
 	default:
 		itemResult[1] = result
 	}
-	*p = itemResult
+	*o = itemResult
 
 	return nil
 }
