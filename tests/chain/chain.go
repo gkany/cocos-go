@@ -353,9 +353,50 @@ func testCreateContract(api sdk.WebsocketAPI) {
 		return
 	}
 
-	contractName := "contract.debug.hello"
-	contractCode := "function hello() chainhelper:log('create contract test') end"
+	contractName := "contract.debug.hellotest"
+	contractCode := "function hello(str) chainhelper:log('create contract test, str: ' .. str) end"
 	error := api.ContractCreate(keyBag, account, contractName, contractCode, publicKey)
+	fmt.Println(error)
+}
+
+func testCallContract(api sdk.WebsocketAPI) {
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	// pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	// publicKey, err := types.NewPublicKeyFromString(pubKey)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	contractName := "contract.debug.hellotest"
+	contract, err := api.GetContract(contractName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// func (p *websocketAPI) CallContract(keyBag *crypto.KeyBag, caller, creator *types.Account,
+	// contractID types.ContractID, function string, valueList []types.LuaType, amount float64)
+
+	functionName := "hello"
+	arg := types.LuaString{
+		V: "Call Contract test",
+	}
+	valueList := []interface{}{
+		arg,
+	}
+	amount := 20.0
+	error := api.CallContract(keyBag, account, account, contract.ID, functionName, valueList, amount)
 	fmt.Println(error)
 }
 
@@ -452,15 +493,15 @@ func main() {
 	// config.SetCurrent(config.ChainIDTestnet)
 	// wsURL := "wss://test.cocosbcx.net"
 
-	config.SetCurrent(config.ChainIDMainnet)
-	wsURL := "wss://api.cocosbcx.net"
+	// config.SetCurrent(config.ChainIDMainnet)
+	// wsURL := "wss://api.cocosbcx.net"
 
 	// config.SetCurrent(config.ChainIDLocal)
 	// wsURL := "ws://127.0.0.1:8049"
 
-	// chainID := config.ChainIDLocal
-	// wsURL := "ws://127.0.0.1:8049"
-	// config.SetCurrent(chainID)
+	chainID := config.ChainIDLocal
+	wsURL := "ws://127.0.0.1:8049"
+	config.SetCurrent(chainID)
 
 	// chain api 测试
 	log.Println("------- chain api test ----------")
@@ -514,5 +555,7 @@ func main() {
 	// testGetContract(api, "1.16.5")
 	// testGetContract(api, "1.16.9")
 	// testGetContracts(api)
+
+	testCallContract(api)
 
 }

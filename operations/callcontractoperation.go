@@ -22,7 +22,7 @@ type CallContractFunction struct {
 	Creator      types.AccountID  `json:"creator"`
 	ContractID   types.ContractID `json:"contract_id"`
 	FunctionName string           `json:"function_name"`
-	ValueList    []types.LuaType  `json:"value_list"`
+	ValueList    []interface{}    `json:"value_list"`
 	Extensions   types.Extensions `json:"extensions"`
 	Amount       float64          `json:"amount"`
 }

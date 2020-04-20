@@ -77,21 +77,10 @@ func (j *CallContractFunction) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 			if i != 0 {
 				buf.WriteString(`,`)
 			}
-			if v != nil {
-				buf.WriteString(`[`)
-				for i, v := range v {
-					if i != 0 {
-						buf.WriteString(`,`)
-					}
-					/* Interface types must use runtime reflection. type=interface {} kind=interface */
-					err = buf.Encode(v)
-					if err != nil {
-						return err
-					}
-				}
-				buf.WriteString(`]`)
-			} else {
-				buf.WriteString(`null`)
+			/* Interface types must use runtime reflection. type=interface {} kind=interface */
+			err = buf.Encode(v)
+			if err != nil {
+				return err
 			}
 		}
 		buf.WriteString(`]`)
@@ -493,7 +482,7 @@ handle_FunctionName:
 
 handle_ValueList:
 
-	/* handler: j.ValueList type=[]types.LuaType kind=slice quoted=false*/
+	/* handler: j.ValueList type=[]interface {} kind=slice quoted=false*/
 
 	{
 
@@ -507,13 +496,13 @@ handle_ValueList:
 			j.ValueList = nil
 		} else {
 
-			j.ValueList = []types.LuaType{}
+			j.ValueList = []interface{}{}
 
 			wantVal := true
 
 			for {
 
-				var tmpJValueList types.LuaType
+				var tmpJValueList interface{}
 
 				tok = fs.Scan()
 				if tok == fflib.FFTok_error {
@@ -534,66 +523,18 @@ handle_ValueList:
 					wantVal = true
 				}
 
-				/* handler: tmpJValueList type=types.LuaType kind=slice quoted=false*/
+				/* handler: tmpJValueList type=interface {} kind=interface quoted=false*/
 
 				{
-
-					{
-						if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-							return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for LuaType", tok))
-						}
+					/* Falling back. type=interface {} kind=interface */
+					tbuf, err := fs.CaptureField(tok)
+					if err != nil {
+						return fs.WrapErr(err)
 					}
 
-					if tok == fflib.FFTok_null {
-						tmpJValueList = nil
-					} else {
-
-						tmpJValueList = []interface{}{}
-
-						wantVal := true
-
-						for {
-
-							var tmpTmpJValueList interface{}
-
-							tok = fs.Scan()
-							if tok == fflib.FFTok_error {
-								goto tokerror
-							}
-							if tok == fflib.FFTok_right_brace {
-								break
-							}
-
-							if tok == fflib.FFTok_comma {
-								if wantVal == true {
-									// TODO(pquerna): this isn't an ideal error message, this handles
-									// things like [,,,] as an array value.
-									return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-								}
-								continue
-							} else {
-								wantVal = true
-							}
-
-							/* handler: tmpTmpJValueList type=interface {} kind=interface quoted=false*/
-
-							{
-								/* Falling back. type=interface {} kind=interface */
-								tbuf, err := fs.CaptureField(tok)
-								if err != nil {
-									return fs.WrapErr(err)
-								}
-
-								err = json.Unmarshal(tbuf, &tmpTmpJValueList)
-								if err != nil {
-									return fs.WrapErr(err)
-								}
-							}
-
-							tmpJValueList = append(tmpJValueList, tmpTmpJValueList)
-
-							wantVal = false
-						}
+					err = json.Unmarshal(tbuf, &tmpJValueList)
+					if err != nil {
+						return fs.WrapErr(err)
 					}
 				}
 

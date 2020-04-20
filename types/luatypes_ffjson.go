@@ -11,39 +11,6 @@ import (
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
 
-// MarshalJSON marshal bytes to json - template
-func (j *LuaBool) MarshalJSON() ([]byte, error) {
-	var buf fflib.Buffer
-	if j == nil {
-		buf.WriteString("null")
-		return buf.Bytes(), nil
-	}
-	err := j.MarshalJSONBuf(&buf)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-// MarshalJSONBuf marshal buff to json - template
-func (j *LuaBool) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
-	if j == nil {
-		buf.WriteString("null")
-		return nil
-	}
-	var err error
-	var obj []byte
-	_ = obj
-	_ = err
-	if j.V {
-		buf.WriteString(`{"v":true`)
-	} else {
-		buf.WriteString(`{"v":false`)
-	}
-	buf.WriteByte('}')
-	return nil
-}
-
 const (
 	ffjtLuaBoolbase = iota
 	ffjtLuaBoolnosuchkey
@@ -214,52 +181,6 @@ tokerror:
 	panic("ffjson-generated: unreachable, please report bug.")
 done:
 
-	return nil
-}
-
-// MarshalJSON marshal bytes to json - template
-func (j *LuaFunction) MarshalJSON() ([]byte, error) {
-	var buf fflib.Buffer
-	if j == nil {
-		buf.WriteString("null")
-		return buf.Bytes(), nil
-	}
-	err := j.MarshalJSONBuf(&buf)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-// MarshalJSONBuf marshal buff to json - template
-func (j *LuaFunction) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
-	if j == nil {
-		buf.WriteString("null")
-		return nil
-	}
-	var err error
-	var obj []byte
-	_ = obj
-	_ = err
-	if j.IsVarArg {
-		buf.WriteString(`{"is_var_arg":true`)
-	} else {
-		buf.WriteString(`{"is_var_arg":false`)
-	}
-	buf.WriteString(`,"arglist":`)
-	if j.ArgList != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.ArgList {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-			fflib.WriteJsonString(buf, string(v))
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	buf.WriteByte('}')
 	return nil
 }
 
@@ -528,36 +449,6 @@ tokerror:
 	panic("ffjson-generated: unreachable, please report bug.")
 done:
 
-	return nil
-}
-
-// MarshalJSON marshal bytes to json - template
-func (j *LuaInt) MarshalJSON() ([]byte, error) {
-	var buf fflib.Buffer
-	if j == nil {
-		buf.WriteString("null")
-		return buf.Bytes(), nil
-	}
-	err := j.MarshalJSONBuf(&buf)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-// MarshalJSONBuf marshal buff to json - template
-func (j *LuaInt) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
-	if j == nil {
-		buf.WriteString("null")
-		return nil
-	}
-	var err error
-	var obj []byte
-	_ = obj
-	_ = err
-	buf.WriteString(`{"v":`)
-	fflib.FormatBits2(buf, uint64(j.V), 10, false)
-	buf.WriteByte('}')
 	return nil
 }
 
@@ -980,36 +871,6 @@ done:
 	return nil
 }
 
-// MarshalJSON marshal bytes to json - template
-func (j *LuaNumber) MarshalJSON() ([]byte, error) {
-	var buf fflib.Buffer
-	if j == nil {
-		buf.WriteString("null")
-		return buf.Bytes(), nil
-	}
-	err := j.MarshalJSONBuf(&buf)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-// MarshalJSONBuf marshal buff to json - template
-func (j *LuaNumber) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
-	if j == nil {
-		buf.WriteString("null")
-		return nil
-	}
-	var err error
-	var obj []byte
-	_ = obj
-	_ = err
-	buf.WriteString(`{"v":`)
-	fflib.AppendFloat(buf, float64(j.V), 'g', -1, 64)
-	buf.WriteByte('}')
-	return nil
-}
-
 const (
 	ffjtLuaNumberbase = iota
 	ffjtLuaNumbernosuchkey
@@ -1178,36 +1039,6 @@ done:
 	return nil
 }
 
-// MarshalJSON marshal bytes to json - template
-func (j *LuaString) MarshalJSON() ([]byte, error) {
-	var buf fflib.Buffer
-	if j == nil {
-		buf.WriteString("null")
-		return buf.Bytes(), nil
-	}
-	err := j.MarshalJSONBuf(&buf)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-// MarshalJSONBuf marshal buff to json - template
-func (j *LuaString) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
-	if j == nil {
-		buf.WriteString("null")
-		return nil
-	}
-	var err error
-	var obj []byte
-	_ = obj
-	_ = err
-	buf.WriteString(`{"v":`)
-	fflib.WriteJsonString(buf, string(j.V))
-	buf.WriteByte('}')
-	return nil
-}
-
 const (
 	ffjtLuaStringbase = iota
 	ffjtLuaStringnosuchkey
@@ -1369,62 +1200,6 @@ tokerror:
 	panic("ffjson-generated: unreachable, please report bug.")
 done:
 
-	return nil
-}
-
-// MarshalJSON marshal bytes to json - template
-func (j *LuaTable) MarshalJSON() ([]byte, error) {
-	var buf fflib.Buffer
-	if j == nil {
-		buf.WriteString("null")
-		return buf.Bytes(), nil
-	}
-	err := j.MarshalJSONBuf(&buf)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
-}
-
-// MarshalJSONBuf marshal buff to json - template
-func (j *LuaTable) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
-	if j == nil {
-		buf.WriteString("null")
-		return nil
-	}
-	var err error
-	var obj []byte
-	_ = obj
-	_ = err
-	buf.WriteString(`{"v":`)
-	if j.Value != nil {
-		buf.WriteString(`[`)
-		for i, v := range j.Value {
-			if i != 0 {
-				buf.WriteString(`,`)
-			}
-			if v != nil {
-				buf.WriteString(`[`)
-				for i, v := range v {
-					if i != 0 {
-						buf.WriteString(`,`)
-					}
-					/* Interface types must use runtime reflection. type=interface {} kind=interface */
-					err = buf.Encode(v)
-					if err != nil {
-						return err
-					}
-				}
-				buf.WriteString(`]`)
-			} else {
-				buf.WriteString(`null`)
-			}
-		}
-		buf.WriteString(`]`)
-	} else {
-		buf.WriteString(`null`)
-	}
-	buf.WriteByte('}')
 	return nil
 }
 

@@ -106,7 +106,7 @@ type WebsocketAPI interface {
 	ContractCreateFromFile(keyBag *crypto.KeyBag, ownerAccount *types.Account, name, filename string, contractAuthority *types.PublicKey) error
 	ReviseContractFromFile(keyBag *crypto.KeyBag, reviser *types.Account, contractID types.ContractID, filename string) error
 
-	CallContract(keyBag *crypto.KeyBag, caller, owner *types.Account, contractID types.ContractID, function string, valueList []types.LuaType, amount float64) error
+	CallContract(keyBag *crypto.KeyBag, caller, owner *types.Account, contractID types.ContractID, function string, valueList []interface{}, amount float64) error
 
 	GetContract(name string) (*types.Contract, error)
 	GetVestingBalances(account *types.Account) (*types.VestingBalances, error)
@@ -1683,15 +1683,15 @@ func (p *websocketAPI) ReviseContract(keyBag *crypto.KeyBag, reviser *types.Acco
 	return nil
 }
 
-func (p *websocketAPI) CallContract(keyBag *crypto.KeyBag, caller, creator *types.Account, contractID types.ContractID, function string, valueList []types.LuaType, amount float64) error {
+func (p *websocketAPI) CallContract(keyBag *crypto.KeyBag, caller, creator *types.Account, contractID types.ContractID, function string, valueList []interface{}, amount float64) error {
 	op := operations.CallContractFunction{
-		Caller:          caller.ID,
-		Creator:         creator.ID,
-		ContractID:      contractID,
-		FunctionName:    function,
-		ValueList:       valueList,
-		Extensions:      types.Extensions{},
-		Amount:          amount,
+		Caller:       caller.ID,
+		Creator:      creator.ID,
+		ContractID:   contractID,
+		FunctionName: function,
+		ValueList:    valueList,
+		Extensions:   types.Extensions{},
+		Amount:       amount,
 	}
 
 	trx, err := p.BuildSignedTransaction(keyBag, &op)
