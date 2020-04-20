@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"runtime"
 	"strconv"
 
 	sdk "github.com/gkany/cocos-go"
@@ -360,6 +361,7 @@ func testCreateContract(api sdk.WebsocketAPI) {
 }
 
 func testCallContract(api sdk.WebsocketAPI) {
+	fmt.Printf(">>> %v\n", runFuncName())
 	name := "nicotest"
 	account, err := api.GetAccountByName(name)
 	if err != nil {
@@ -378,7 +380,7 @@ func testCallContract(api sdk.WebsocketAPI) {
 	// 	return
 	// }
 
-	contractName := "contract.debug.hellotest"
+	contractName := "contract.debug.param0"
 	contract, err := api.GetContract(contractName)
 	if err != nil {
 		fmt.Println(err)
@@ -388,15 +390,13 @@ func testCallContract(api sdk.WebsocketAPI) {
 	// func (p *websocketAPI) CallContract(keyBag *crypto.KeyBag, caller, creator *types.Account,
 	// contractID types.ContractID, function string, valueList []types.LuaType, amount float64)
 
-	functionName := "hello"
-	arg := types.LuaString{
-		V: "Call Contract test",
-	}
-	valueList := []interface{}{
-		arg,
-	}
-	amount := 20.0
-	error := api.CallContract(keyBag, account, account, contract.ID, functionName, valueList, amount)
+	functionName := "param"
+	// arg := types.LuaString{
+	// 	V: "Call Contract test",
+	// }
+	valueList := make([]interface{}, 0)
+	// valueList[0] = arg
+	error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
 	fmt.Println(error)
 }
 
@@ -419,10 +419,43 @@ func testCreateContractFromFile(api sdk.WebsocketAPI) {
 		return
 	}
 
-	contractName := "contract.debug.test01" // contract.debug.test0248
+	contractName := "contract.debug.param0" // contract.debug.test0248
 	// contractCode := "function hello() chainhelper:log('create contract test') end"
-	filename := "test.lua"
+	filename := "test1.lua"
 	error := api.ContractCreateFromFile(keyBag, account, contractName, filename, publicKey)
+	fmt.Println(error)
+}
+
+func testReveseContractFromFile(api sdk.WebsocketAPI) {
+	fmt.Printf(">>> %v\n", runFuncName())
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	// pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	// publicKey, err := types.NewPublicKeyFromString(pubKey)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	contractName := "contract.debug.param0" // contract.debug.test0248
+	contract, err := api.GetContract(contractName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	filename := "test1.lua"
+	// ReviseContractFromFile(keyBag *crypto.KeyBag, reviser *types.Account, contractID types.ContractID, filename string)
+	error := api.ReviseContractFromFile(keyBag, account, contract.ID, filename)
 	fmt.Println(error)
 }
 
@@ -489,7 +522,15 @@ func testGetChainProperties(api sdk.WebsocketAPI) {
 	fmt.Println(result, err)
 }
 
+func runFuncName() string {
+	pc := make([]uintptr, 1)
+	runtime.Callers(2, pc)
+	f := runtime.FuncForPC(pc[0])
+	return f.Name()
+}
+
 func main() {
+	fmt.Printf(">>> %v\n", runFuncName())
 	// config.SetCurrent(config.ChainIDTestnet)
 	// wsURL := "wss://test.cocosbcx.net"
 
@@ -544,10 +585,10 @@ func main() {
 	// testGetChainProperties(api)
 
 	// contract
-	fmt.Println("\n\n--------------- create contract by file")
+	// fmt.Println("\n\n--------------- create contract by file")
 	// testCreateContractFromFile(api)
 
-	fmt.Println("\n\n--------------- get contract")
+	// fmt.Println("\n\n--------------- get contract")
 	// testGetContract(api, "1.16.1")
 
 	// testGetContract(api, "1.16.2")
@@ -556,6 +597,7 @@ func main() {
 	// testGetContract(api, "1.16.9")
 	// testGetContracts(api)
 
+	// testReveseContractFromFile(api)
 	testCallContract(api)
 
 }

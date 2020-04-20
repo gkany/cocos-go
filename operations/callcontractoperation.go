@@ -3,6 +3,8 @@ package operations
 //go:generate ffjson $GOFILE
 
 import (
+	"fmt"
+
 	"github.com/gkany/cocos-go/types"
 	"github.com/gkany/cocos-go/util"
 	"github.com/juju/errors"
@@ -18,13 +20,11 @@ func init() {
 // CallContractFunction ...
 type CallContractFunction struct {
 	types.OperationFee
-	Caller       types.AccountID  `json:"caller"`
-	Creator      types.AccountID  `json:"creator"`
-	ContractID   types.ContractID `json:"contract_id"`
-	FunctionName string           `json:"function_name"`
-	ValueList    []interface{}    `json:"value_list"`
-	Extensions   types.Extensions `json:"extensions"`
-	Amount       float64          `json:"amount"`
+	Caller       types.AccountID   `json:"caller"`
+	ContractID   types.ContractID  `json:"contract_id"`
+	FunctionName string            `json:"function_name"`
+	ValueList    types.LuaTypesVec `json:"value_list"`
+	Extensions   types.Extensions  `json:"extensions"`
 }
 
 // Type ...
@@ -51,6 +51,7 @@ func (p CallContractFunction) MarshalFeeScheduleParams(params types.M, enc *util
 
 // Marshal ...
 func (p CallContractFunction) Marshal(enc *util.TypeEncoder) error {
+	fmt.Printf("--> type: %v\n", p.Type())
 	if err := enc.Encode(int8(p.Type())); err != nil {
 		return errors.Annotate(err, "encode OperationType")
 	}
@@ -59,32 +60,29 @@ func (p CallContractFunction) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode fee")
 	}
 
+	fmt.Printf("--> Caller: %v\n", p.Caller)
 	if err := enc.Encode(p.Caller); err != nil {
 		return errors.Annotate(err, "encode Caller")
 	}
 
-	if err := enc.Encode(p.Creator); err != nil {
-		return errors.Annotate(err, "encode Creator")
-	}
-
+	fmt.Printf("--> ContractID: %v\n", p.ContractID)
 	if err := enc.Encode(p.ContractID); err != nil {
 		return errors.Annotate(err, "encode ContractID")
 	}
 
+	fmt.Printf("--> FunctionName: %v\n", p.FunctionName)
 	if err := enc.Encode(p.FunctionName); err != nil {
 		return errors.Annotate(err, "encode FunctionName")
 	}
 
+	fmt.Printf("--> ValueList: %v\n", p.ValueList)
 	if err := enc.Encode(p.ValueList); err != nil {
 		return errors.Annotate(err, "encode ValueList")
 	}
 
+	fmt.Printf("--> Extensions: %v\n", p.Extensions)
 	if err := enc.Encode(p.Extensions); err != nil {
 		return errors.Annotate(err, "encode extensions")
-	}
-
-	if err := enc.Encode(p.Amount); err != nil {
-		return errors.Annotate(err, "encode Amount")
 	}
 
 	return nil

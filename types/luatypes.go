@@ -368,3 +368,20 @@ func parseLuaType(pair []interface{}, dst *[]interface{}) error {
 	*dst = append(*dst, result)
 	return nil
 }
+
+// ValueList ...
+type LuaTypesVec []interface{}
+
+func (p LuaTypesVec) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
+		return errors.Annotate(err, "encode length")
+	}
+
+	for _, item := range p {
+		if err := enc.Encode(item); err != nil {
+			return errors.Annotate(err, "encode LuaType item")
+		}
+	}
+
+	return nil
+}

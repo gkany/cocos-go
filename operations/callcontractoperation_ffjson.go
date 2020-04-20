@@ -46,17 +46,6 @@ func (j *CallContractFunction) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"creator":`)
-
-	{
-
-		obj, err = j.Creator.MarshalJSON()
-		if err != nil {
-			return err
-		}
-		buf.Write(obj)
-
-	}
 	buf.WriteString(`,"contract_id":`)
 
 	{
@@ -98,8 +87,6 @@ func (j *CallContractFunction) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 		buf.Write(obj)
 
 	}
-	buf.WriteString(`,"amount":`)
-	fflib.AppendFloat(buf, float64(j.Amount), 'g', -1, 64)
 	buf.WriteByte(',')
 	if j.Fee != nil {
 		if true {
@@ -127,8 +114,6 @@ const (
 
 	ffjtCallContractFunctionCaller
 
-	ffjtCallContractFunctionCreator
-
 	ffjtCallContractFunctionContractID
 
 	ffjtCallContractFunctionFunctionName
@@ -137,14 +122,10 @@ const (
 
 	ffjtCallContractFunctionExtensions
 
-	ffjtCallContractFunctionAmount
-
 	ffjtCallContractFunctionFee
 )
 
 var ffjKeyCallContractFunctionCaller = []byte("caller")
-
-var ffjKeyCallContractFunctionCreator = []byte("creator")
 
 var ffjKeyCallContractFunctionContractID = []byte("contract_id")
 
@@ -153,8 +134,6 @@ var ffjKeyCallContractFunctionFunctionName = []byte("function_name")
 var ffjKeyCallContractFunctionValueList = []byte("value_list")
 
 var ffjKeyCallContractFunctionExtensions = []byte("extensions")
-
-var ffjKeyCallContractFunctionAmount = []byte("amount")
 
 var ffjKeyCallContractFunctionFee = []byte("fee")
 
@@ -219,23 +198,10 @@ mainparse:
 			} else {
 				switch kn[0] {
 
-				case 'a':
-
-					if bytes.Equal(ffjKeyCallContractFunctionAmount, kn) {
-						currentKey = ffjtCallContractFunctionAmount
-						state = fflib.FFParse_want_colon
-						goto mainparse
-					}
-
 				case 'c':
 
 					if bytes.Equal(ffjKeyCallContractFunctionCaller, kn) {
 						currentKey = ffjtCallContractFunctionCaller
-						state = fflib.FFParse_want_colon
-						goto mainparse
-
-					} else if bytes.Equal(ffjKeyCallContractFunctionCreator, kn) {
-						currentKey = ffjtCallContractFunctionCreator
 						state = fflib.FFParse_want_colon
 						goto mainparse
 
@@ -282,12 +248,6 @@ mainparse:
 					goto mainparse
 				}
 
-				if fflib.SimpleLetterEqualFold(ffjKeyCallContractFunctionAmount, kn) {
-					currentKey = ffjtCallContractFunctionAmount
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
 				if fflib.EqualFoldRight(ffjKeyCallContractFunctionExtensions, kn) {
 					currentKey = ffjtCallContractFunctionExtensions
 					state = fflib.FFParse_want_colon
@@ -308,12 +268,6 @@ mainparse:
 
 				if fflib.AsciiEqualFold(ffjKeyCallContractFunctionContractID, kn) {
 					currentKey = ffjtCallContractFunctionContractID
-					state = fflib.FFParse_want_colon
-					goto mainparse
-				}
-
-				if fflib.SimpleLetterEqualFold(ffjKeyCallContractFunctionCreator, kn) {
-					currentKey = ffjtCallContractFunctionCreator
 					state = fflib.FFParse_want_colon
 					goto mainparse
 				}
@@ -344,9 +298,6 @@ mainparse:
 				case ffjtCallContractFunctionCaller:
 					goto handle_Caller
 
-				case ffjtCallContractFunctionCreator:
-					goto handle_Creator
-
 				case ffjtCallContractFunctionContractID:
 					goto handle_ContractID
 
@@ -358,9 +309,6 @@ mainparse:
 
 				case ffjtCallContractFunctionExtensions:
 					goto handle_Extensions
-
-				case ffjtCallContractFunctionAmount:
-					goto handle_Amount
 
 				case ffjtCallContractFunctionFee:
 					goto handle_Fee
@@ -394,31 +342,6 @@ handle_Caller:
 			}
 
 			err = j.Caller.UnmarshalJSON(tbuf)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-		}
-		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_Creator:
-
-	/* handler: j.Creator type=types.AccountID kind=struct quoted=false*/
-
-	{
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tbuf, err := fs.CaptureField(tok)
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			err = j.Creator.UnmarshalJSON(tbuf)
 			if err != nil {
 				return fs.WrapErr(err)
 			}
@@ -482,13 +405,13 @@ handle_FunctionName:
 
 handle_ValueList:
 
-	/* handler: j.ValueList type=[]interface {} kind=slice quoted=false*/
+	/* handler: j.ValueList type=types.LuaTypesVec kind=slice quoted=false*/
 
 	{
 
 		{
 			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for ", tok))
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for LuaTypesVec", tok))
 			}
 		}
 
@@ -568,36 +491,6 @@ handle_Extensions:
 			}
 		}
 		state = fflib.FFParse_after_value
-	}
-
-	state = fflib.FFParse_after_value
-	goto mainparse
-
-handle_Amount:
-
-	/* handler: j.Amount type=float64 kind=float64 quoted=false*/
-
-	{
-		if tok != fflib.FFTok_double && tok != fflib.FFTok_integer && tok != fflib.FFTok_null {
-			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for float64", tok))
-		}
-	}
-
-	{
-
-		if tok == fflib.FFTok_null {
-
-		} else {
-
-			tval, err := fflib.ParseFloat(fs.Output.Bytes(), 64)
-
-			if err != nil {
-				return fs.WrapErr(err)
-			}
-
-			j.Amount = float64(tval)
-
-		}
 	}
 
 	state = fflib.FFParse_after_value
