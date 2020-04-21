@@ -394,7 +394,7 @@ func testCallContract(api sdk.WebsocketAPI) {
 	// arg := types.LuaString{
 	// 	V: "Call Contract test",
 	// }
-	valueList := make([]types.LuaTypeItem, 0)
+	valueList := make([]types.LuaTypeParam, 0)
 	// valueList[0] = arg
 	error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
 	fmt.Println(error)
@@ -583,12 +583,74 @@ func testCallContract2(api sdk.WebsocketAPI) {
 	arg := types.LuaString{
 		V: "Call Contract test param1",
 	}
-	valueList := make([]types.LuaTypeParam, 1)
-	param1 := types.LuaTypeParam{
-		types.LuaTypeString,
-		arg,
+	// valueList := make([]types.LuaTypeParam, 1)
+	// param1 := types.LuaTypeParam{
+	// 	types.LuaTypeString,
+	// 	arg,
+	// }
+	// valueList[0] = param1
+	valueList := []types.LuaTypeParam{
+		types.LuaTypeParam{
+			types.LuaTypeString,
+			arg,
+		},
 	}
-	valueList[0] = param1
+	error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
+	fmt.Println(error)
+}
+
+func testCallContract3(api sdk.WebsocketAPI) {
+	fmt.Printf(">>> %v\n", runFuncName())
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	// pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	// publicKey, err := types.NewPublicKeyFromString(pubKey)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	contractName := "contract.debug.param2"
+	contract, err := api.GetContract(contractName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// func (p *websocketAPI) CallContract(keyBag *crypto.KeyBag, caller, creator *types.Account,
+	// contractID types.ContractID, function string, valueList []types.LuaType, amount float64)
+
+	functionName := "param2"
+	arg := types.LuaString{
+		V: "Call Contract test param1",
+	}
+	// valueList := make([]types.LuaTypeParam, 1)
+	// param1 := types.LuaTypeParam{
+	// 	types.LuaTypeString,
+	// 	arg,
+	// }
+	// valueList[0] = param1
+	valueList := []types.LuaTypeParam{
+		types.LuaTypeParam{
+			types.LuaTypeString,
+			arg,
+		},
+		types.LuaTypeParam{
+			types.LuaTypeBool,
+			types.LuaBool{
+				V: true,
+			},
+		},
+	}
 	error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
 	fmt.Println(error)
 }
@@ -602,8 +664,8 @@ func runFuncName() string {
 
 func main() {
 	fmt.Printf(">>> %v\n", runFuncName())
-	config.SetCurrent(config.ChainIDTestnet)
-	wsURL := "wss://test.cocosbcx.net"
+	// config.SetCurrent(config.ChainIDTestnet)
+	// wsURL := "wss://test.cocosbcx.net"
 
 	// config.SetCurrent(config.ChainIDMainnet)
 	// wsURL := "wss://api.cocosbcx.net"
@@ -611,9 +673,9 @@ func main() {
 	// config.SetCurrent(config.ChainIDLocal)
 	// wsURL := "ws://127.0.0.1:8049"
 
-	// chainID := config.ChainIDLocal
-	// wsURL := "ws://127.0.0.1:8049"
-	// config.SetCurrent(chainID)
+	chainID := config.ChainIDLocal
+	wsURL := "ws://127.0.0.1:8049"
+	config.SetCurrent(chainID)
 
 	// chain api 测试
 	log.Println("------- chain api test ----------")
@@ -672,6 +734,7 @@ func main() {
 	// testCallContract(api)
 
 	// testCreateContractFromFile2(api)
-	testCallContract2(api)
+	// testCallContract2(api)
+	testCallContract3(api)
 
 }

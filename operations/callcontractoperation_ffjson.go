@@ -451,66 +451,18 @@ handle_ValueList:
 					wantVal = true
 				}
 
-				/* handler: tmpJValueList type=types.LuaTypeParam kind=slice quoted=false*/
+				/* handler: tmpJValueList type=types.LuaTypeParam kind=struct quoted=false*/
 
 				{
-
-					{
-						if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-							return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for LuaTypeParam", tok))
-						}
+					/* Falling back. type=types.LuaTypeParam kind=struct */
+					tbuf, err := fs.CaptureField(tok)
+					if err != nil {
+						return fs.WrapErr(err)
 					}
 
-					if tok == fflib.FFTok_null {
-						tmpJValueList = nil
-					} else {
-
-						tmpJValueList = []interface{}{}
-
-						wantVal := true
-
-						for {
-
-							var tmpTmpJValueList interface{}
-
-							tok = fs.Scan()
-							if tok == fflib.FFTok_error {
-								goto tokerror
-							}
-							if tok == fflib.FFTok_right_brace {
-								break
-							}
-
-							if tok == fflib.FFTok_comma {
-								if wantVal == true {
-									// TODO(pquerna): this isn't an ideal error message, this handles
-									// things like [,,,] as an array value.
-									return fs.WrapErr(fmt.Errorf("wanted value token, but got token: %v", tok))
-								}
-								continue
-							} else {
-								wantVal = true
-							}
-
-							/* handler: tmpTmpJValueList type=interface {} kind=interface quoted=false*/
-
-							{
-								/* Falling back. type=interface {} kind=interface */
-								tbuf, err := fs.CaptureField(tok)
-								if err != nil {
-									return fs.WrapErr(err)
-								}
-
-								err = json.Unmarshal(tbuf, &tmpTmpJValueList)
-								if err != nil {
-									return fs.WrapErr(err)
-								}
-							}
-
-							tmpJValueList = append(tmpJValueList, tmpTmpJValueList)
-
-							wantVal = false
-						}
+					err = json.Unmarshal(tbuf, &tmpJValueList)
+					if err != nil {
+						return fs.WrapErr(err)
 					}
 				}
 

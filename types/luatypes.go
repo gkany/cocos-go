@@ -88,7 +88,8 @@ type LuaString struct {
 
 // Marshal ...
 func (o LuaString) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.Encode(LuaTypeString); err != nil {
+	fmt.Println("LuaString Marshal")
+	if err := enc.Encode(uint8(LuaTypeString)); err != nil {
 		return errors.Annotate(err, "encode type")
 	}
 
@@ -113,7 +114,7 @@ type LuaBool struct {
 
 // Marshal ...
 func (o LuaBool) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.Encode(LuaTypeBool); err != nil {
+	if err := enc.Encode(uint8(LuaTypeBool)); err != nil {
 		return errors.Annotate(err, "encode type")
 	}
 
@@ -149,7 +150,7 @@ type LuaTable struct {
 
 // Marshal ...
 func (o LuaTable) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.Encode(LuaTypeTable); err != nil {
+	if err := enc.Encode(uint8(LuaTypeTable)); err != nil {
 		return errors.Annotate(err, "encode type")
 	}
 
@@ -175,6 +176,10 @@ type LuaFunction struct {
 
 // Marshal ...
 func (o LuaFunction) Marshal(enc *util.TypeEncoder) error {
+	if err := enc.Encode(uint8(LuaTypeFunction)); err != nil {
+		return errors.Annotate(err, "encode type")
+	}
+
 	if err := enc.Encode(o.IsVarArg); err != nil {
 		return errors.Annotate(err, "encode IsVarArg")
 	}
@@ -375,10 +380,16 @@ func parseLuaType(pair []interface{}, dst *[]interface{}) error {
 }
 
 //LuaTypeParam ...  eg: [index, LuaType_object]
+// type LuaTypeParam struct {
+// 	Index UInt64
+// 	Value interface{}
+// }
+
 type LuaTypeParam []interface{}
 
 // Marshal ...
 func (o LuaTypeParam) Marshal(enc *util.TypeEncoder) error {
+	fmt.Printf("LuaTypeParam) Marshal")
 	if err := enc.Encode(o[1]); err != nil {
 		return errors.Annotate(err, "encode lua type index")
 	}
@@ -388,25 +399,9 @@ func (o LuaTypeParam) Marshal(enc *util.TypeEncoder) error {
 
 // MarshalJSON ...
 func (o LuaTypeParam) MarshalJSON() ([]byte, error) {
+	fmt.Printf("LuaTypeParam) MarshalJSON: %v\n", o)
 	return ffjson.Marshal([]interface{}{
 		o[0],
 		o[1],
 	})
 }
-
-// ValueList ...
-// type LuaTypesVec []LuaTypeType
-
-// func (o LuaTypesVec) Marshal(enc *util.TypeEncoder) error {
-// 	if error := enc.EncodeUVarint(uint64(len(o))); error != nil {
-// 		return errors.Annotate(err, "encode length")
-// 	}
-
-// 	for _, item := range o {
-// 		if err := enc.Encode(item); err != nil {
-// 			return errors.Annotate(err, "encode LuaType item")
-// 		}
-// 	}
-
-// 	return nil
-// }

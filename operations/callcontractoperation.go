@@ -75,13 +75,16 @@ func (p CallContractFunction) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode FunctionName")
 	}
 
-	fmt.Printf("--> ValueList: %v\n", p.ValueList)
+	fmt.Printf("--> ValueList size: %v\n", len(p.ValueList))
 	if err := enc.EncodeUVarint(uint64(len(p.ValueList))); err != nil {
 		return errors.Annotate(err, "encode length")
 	}
 
-	if err := enc.Encode(p.ValueList); err != nil {
-		return errors.Annotate(err, "encode LuaType item")
+	fmt.Printf("--> ValueList: %v\n", p.ValueList)
+	for _, item := range p.ValueList {
+		if err := enc.Encode(item); err != nil {
+			return errors.Annotate(err, "encode LuaType item")
+		}
 	}
 
 	fmt.Printf("--> Extensions: %v\n", p.Extensions)

@@ -119,6 +119,7 @@ func (p *TypeEncoder) Encode(v interface{}) error {
 		}
 
 	default:
+		fmt.Printf("TypeEncoder: type: %v\n", v)
 		return errors.Errorf("TypeEncoder: unsupported type encountered")
 	}
 }
