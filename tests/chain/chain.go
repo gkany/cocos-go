@@ -583,8 +583,8 @@ func testCallContract2(api sdk.WebsocketAPI) {
 	arg := types.LuaString{
 		V: "Call Contract test param1",
 	}
-	valueList := make([]types.LuaTypeItem, 1)
-	param1 := types.LuaTypeItem{
+	valueList := make([]types.LuaTypeParam, 1)
+	param1 := types.LuaTypeParam{
 		types.LuaTypeString,
 		arg,
 	}
@@ -602,8 +602,8 @@ func runFuncName() string {
 
 func main() {
 	fmt.Printf(">>> %v\n", runFuncName())
-	// config.SetCurrent(config.ChainIDTestnet)
-	// wsURL := "wss://test.cocosbcx.net"
+	config.SetCurrent(config.ChainIDTestnet)
+	wsURL := "wss://test.cocosbcx.net"
 
 	// config.SetCurrent(config.ChainIDMainnet)
 	// wsURL := "wss://api.cocosbcx.net"
@@ -611,9 +611,9 @@ func main() {
 	// config.SetCurrent(config.ChainIDLocal)
 	// wsURL := "ws://127.0.0.1:8049"
 
-	chainID := config.ChainIDLocal
-	wsURL := "ws://127.0.0.1:8049"
-	config.SetCurrent(chainID)
+	// chainID := config.ChainIDLocal
+	// wsURL := "ws://127.0.0.1:8049"
+	// config.SetCurrent(chainID)
 
 	// chain api 测试
 	log.Println("------- chain api test ----------")

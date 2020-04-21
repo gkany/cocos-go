@@ -1403,21 +1403,15 @@ func (j *LuaTable) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 			if i != 0 {
 				buf.WriteString(`,`)
 			}
-			if v != nil {
-				buf.WriteString(`[`)
-				for i, v := range v {
-					if i != 0 {
-						buf.WriteString(`,`)
-					}
-					/* Interface types must use runtime reflection. type=interface {} kind=interface */
-					err = buf.Encode(v)
-					if err != nil {
-						return err
-					}
+
+			{
+
+				obj, err = v.MarshalJSON()
+				if err != nil {
+					return err
 				}
-				buf.WriteString(`]`)
-			} else {
-				buf.WriteString(`null`)
+				buf.Write(obj)
+
 			}
 		}
 		buf.WriteString(`]`)

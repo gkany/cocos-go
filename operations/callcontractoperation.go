@@ -20,11 +20,11 @@ func init() {
 // CallContractFunction ...
 type CallContractFunction struct {
 	types.OperationFee
-	Caller       types.AccountID     `json:"caller"`
-	ContractID   types.ContractID    `json:"contract_id"`
-	FunctionName string              `json:"function_name"`
-	ValueList    []types.LuaTypeItem `json:"value_list"`
-	Extensions   types.Extensions    `json:"extensions"`
+	Caller       types.AccountID      `json:"caller"`
+	ContractID   types.ContractID     `json:"contract_id"`
+	FunctionName string               `json:"function_name"`
+	ValueList    []types.LuaTypeParam `json:"value_list"` // [[index, {"v":value}], ....]
+	Extensions   types.Extensions     `json:"extensions"`
 }
 
 // Type ...
