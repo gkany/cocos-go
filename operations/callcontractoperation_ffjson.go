@@ -5,7 +5,6 @@ package operations
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/gkany/cocos-go/types"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
@@ -66,10 +65,15 @@ func (j *CallContractFunction) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 			if i != 0 {
 				buf.WriteString(`,`)
 			}
-			/* Interface types must use runtime reflection. type=interface {} kind=interface */
-			err = buf.Encode(v)
-			if err != nil {
-				return err
+
+			{
+
+				obj, err = v.MarshalJSON()
+				if err != nil {
+					return err
+				}
+				buf.Write(obj)
+
 			}
 		}
 		buf.WriteString(`]`)
@@ -405,13 +409,13 @@ handle_FunctionName:
 
 handle_ValueList:
 
-	/* handler: j.ValueList type=types.LuaTypesVec kind=slice quoted=false*/
+	/* handler: j.ValueList type=[]types.LuaTypeItem kind=slice quoted=false*/
 
 	{
 
 		{
 			if tok != fflib.FFTok_left_brace && tok != fflib.FFTok_null {
-				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for LuaTypesVec", tok))
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for ", tok))
 			}
 		}
 
@@ -419,13 +423,13 @@ handle_ValueList:
 			j.ValueList = nil
 		} else {
 
-			j.ValueList = []interface{}{}
+			j.ValueList = []types.LuaTypeItem{}
 
 			wantVal := true
 
 			for {
 
-				var tmpJValueList interface{}
+				var tmpJValueList types.LuaTypeItem
 
 				tok = fs.Scan()
 				if tok == fflib.FFTok_error {
@@ -446,19 +450,24 @@ handle_ValueList:
 					wantVal = true
 				}
 
-				/* handler: tmpJValueList type=interface {} kind=interface quoted=false*/
+				/* handler: tmpJValueList type=types.LuaTypeItem kind=slice quoted=false*/
 
 				{
-					/* Falling back. type=interface {} kind=interface */
-					tbuf, err := fs.CaptureField(tok)
-					if err != nil {
-						return fs.WrapErr(err)
-					}
+					if tok == fflib.FFTok_null {
 
-					err = json.Unmarshal(tbuf, &tmpJValueList)
-					if err != nil {
-						return fs.WrapErr(err)
+					} else {
+
+						tbuf, err := fs.CaptureField(tok)
+						if err != nil {
+							return fs.WrapErr(err)
+						}
+
+						err = tmpJValueList.UnmarshalJSON(tbuf)
+						if err != nil {
+							return fs.WrapErr(err)
+						}
 					}
+					state = fflib.FFParse_after_value
 				}
 
 				j.ValueList = append(j.ValueList, tmpJValueList)

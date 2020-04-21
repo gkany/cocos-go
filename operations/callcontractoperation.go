@@ -20,11 +20,11 @@ func init() {
 // CallContractFunction ...
 type CallContractFunction struct {
 	types.OperationFee
-	Caller       types.AccountID   `json:"caller"`
-	ContractID   types.ContractID  `json:"contract_id"`
-	FunctionName string            `json:"function_name"`
-	ValueList    types.LuaTypesVec `json:"value_list"`
-	Extensions   types.Extensions  `json:"extensions"`
+	Caller       types.AccountID     `json:"caller"`
+	ContractID   types.ContractID    `json:"contract_id"`
+	FunctionName string              `json:"function_name"`
+	ValueList    []types.LuaTypeItem `json:"value_list"`
+	Extensions   types.Extensions    `json:"extensions"`
 }
 
 // Type ...
@@ -76,8 +76,14 @@ func (p CallContractFunction) Marshal(enc *util.TypeEncoder) error {
 	}
 
 	fmt.Printf("--> ValueList: %v\n", p.ValueList)
-	if err := enc.Encode(p.ValueList); err != nil {
-		return errors.Annotate(err, "encode ValueList")
+	if err := enc.EncodeUVarint(uint64(len(p.ValueList))); err != nil {
+		return errors.Annotate(err, "encode length")
+	}
+
+	for _, item := range p.ValueList {
+		if err := enc.Encode(item); err != nil {
+			return errors.Annotate(err, "encode LuaType item")
+		}
 	}
 
 	fmt.Printf("--> Extensions: %v\n", p.Extensions)

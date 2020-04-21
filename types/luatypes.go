@@ -49,12 +49,12 @@ func (o LuaInt) Marshal(enc *util.TypeEncoder) error {
 }
 
 // MarshalJSON ...
-func (o LuaInt) MarshalJSON() ([]byte, error) {
-	return ffjson.Marshal([]interface{}{
-		LuaTypeInt,
-		o,
-	})
-}
+// func (o LuaInt) MarshalJSON() ([]byte, error) {
+// 	return ffjson.Marshal([]interface{}{
+// 		LuaTypeInt,
+// 		o,
+// 	})
+// }
 
 // LuaNumber ... float64 eg:[1, {"v": 3.14}]
 type LuaNumber struct {
@@ -74,12 +74,12 @@ func (o LuaNumber) Marshal(enc *util.TypeEncoder) error {
 }
 
 // MarshalJSON ...
-func (o LuaNumber) MarshalJSON() ([]byte, error) {
-	return ffjson.Marshal([]interface{}{
-		LuaTypeNumber,
-		o,
-	})
-}
+// func (o LuaNumber) MarshalJSON() ([]byte, error) {
+// 	return ffjson.Marshal([]interface{}{
+// 		LuaTypeNumber,
+// 		o,
+// 	})
+// }
 
 // LuaString ... string eg:[2, {"v": "hello, Lua contract"}]
 type LuaString struct {
@@ -99,12 +99,12 @@ func (o LuaString) Marshal(enc *util.TypeEncoder) error {
 }
 
 // MarshalJSON ...
-func (o LuaString) MarshalJSON() ([]byte, error) {
-	return ffjson.Marshal([]interface{}{
-		LuaTypeString,
-		o,
-	})
-}
+// func (o LuaString) MarshalJSON() ([]byte, error) {
+// 	return ffjson.Marshal([]interface{}{
+// 		LuaTypeString,
+// 		o,
+// 	})
+// }
 
 // LuaBool ... bool eg:[3, {"v": true}]
 type LuaBool struct {
@@ -124,12 +124,12 @@ func (o LuaBool) Marshal(enc *util.TypeEncoder) error {
 }
 
 // MarshalJSON ...
-func (o LuaBool) MarshalJSON() ([]byte, error) {
-	return ffjson.Marshal([]interface{}{
-		LuaTypeBool,
-		o,
-	})
-}
+// func (o LuaBool) MarshalJSON() ([]byte, error) {
+// 	return ffjson.Marshal([]interface{}{
+// 		LuaTypeBool,
+// 		o,
+// 	})
+// }
 
 // LuaType ... [type_index, {"v":type_obj}]
 type LuaType []interface{}
@@ -160,12 +160,12 @@ func (o LuaTable) Marshal(enc *util.TypeEncoder) error {
 }
 
 // MarshalJSON ...
-func (o LuaTable) MarshalJSON() ([]byte, error) {
-	return ffjson.Marshal([]interface{}{
-		LuaTypeTable,
-		o,
-	})
-}
+// func (o LuaTable) MarshalJSON() ([]byte, error) {
+// 	return ffjson.Marshal([]interface{}{
+// 		LuaTypeTable,
+// 		o,
+// 	})
+// }
 
 // LuaFunction ... eg: [5, {"v": {"is_var_arg": true, "arglist": ["arg1", "arg2", "arg3"]}}]
 type LuaFunction struct {
@@ -186,12 +186,12 @@ func (o LuaFunction) Marshal(enc *util.TypeEncoder) error {
 }
 
 // MarshalJSON ...
-func (o LuaFunction) MarshalJSON() ([]byte, error) {
-	return ffjson.Marshal([]interface{}{
-		LuaTypeFunction,
-		o,
-	})
-}
+// func (o LuaFunction) MarshalJSON() ([]byte, error) {
+// 	return ffjson.Marshal([]interface{}{
+// 		LuaTypeFunction,
+// 		o,
+// 	})
+// }
 
 // LuaTypeItem ... [LuaKey, LuaType]
 type LuaTypeItem []interface{}
@@ -216,6 +216,10 @@ func (o LuaTypeItem) Marshal(enc *util.TypeEncoder) error {
 
 	return nil
 }
+
+// func (o LuaTypeItem) MarshalJSON() ([]byte, error) {
+// 	return ffjson.Marshal(o)
+// }
 
 // UnmarshalJSON ...
 func (o *LuaTypeItem) UnmarshalJSON(data []byte) error {
@@ -369,19 +373,66 @@ func parseLuaType(pair []interface{}, dst *[]interface{}) error {
 	return nil
 }
 
+// type LuaTypeType
+
+// func (o LuaTypeType) MarshalJSON() ([]byte, error) {
+// 	switch o.(type) {
+// 	case LuaInt:
+// 		return ffjson.Marshal([]interface{}{
+// 			LuaTypeInt,
+// 			o,
+// 		})
+// 	case LuaNumber:
+// 		return ffjson.Marshal([]interface{}{
+// 			LuaTypeNumber,
+// 			o,
+// 		})
+// 	case LuaString:
+// 		return ffjson.Marshal([]interface{}{
+// 			LuaTypeString,
+// 			o,
+// 		})
+// 	case LuaBool:
+// 		return ffjson.Marshal([]interface{}{
+// 			LuaTypeBool,
+// 			o,
+// 		})
+// 	case LuaFunction:
+// 		return ffjson.Marshal([]interface{}{
+// 			LuaTypeFunction,
+// 			o,
+// 		})
+// 	case LuaTable:
+// 		return ffjson.Marshal([]interface{}{
+// 			LuaTypeTable,
+// 			o,
+// 		})
+// 	}
+
+// 	return nil, errors.Annotate(err, "Unknow lua type")
+// }
+
+// func (o LuaTypeType) Marshal(enc *util.TypeEncoder) error {
+// 	if err := enc.Encode(o); err != nil {
+// 		return errors.Annotate(err, "encode luatype type")
+// 	}
+
+// 	return nil
+// }
+
 // ValueList ...
-type LuaTypesVec []interface{}
+// type LuaTypesVec []LuaTypeType
 
-func (p LuaTypesVec) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.EncodeUVarint(uint64(len(p))); err != nil {
-		return errors.Annotate(err, "encode length")
-	}
+// func (o LuaTypesVec) Marshal(enc *util.TypeEncoder) error {
+// 	if error := enc.EncodeUVarint(uint64(len(o))); error != nil {
+// 		return errors.Annotate(err, "encode length")
+// 	}
 
-	for _, item := range p {
-		if err := enc.Encode(item); err != nil {
-			return errors.Annotate(err, "encode LuaType item")
-		}
-	}
+// 	for _, item := range o {
+// 		if err := enc.Encode(item); err != nil {
+// 			return errors.Annotate(err, "encode LuaType item")
+// 		}
+// 	}
 
-	return nil
-}
+// 	return nil
+// }

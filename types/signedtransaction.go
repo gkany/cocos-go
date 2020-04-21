@@ -159,7 +159,7 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 	if err != nil {
 		return nil, errors.Annotatef(err, "Serialize")
 	}
-	// fmt.Printf("rawTrx - Hex: %v\n", hex.EncodeToString(rawTrx[:]))
+	fmt.Printf("rawTrx - Hex: %v\n", hex.EncodeToString(rawTrx[:]))
 
 	//	digestTrx := sha256.Sum256(rawTrx)
 	//	util.Dump("digest trx", hex.EncodeToString(digestTrx[:]))
@@ -170,7 +170,7 @@ func (tx SignedTransaction) Digest(chain *config.ChainConfig) ([]byte, error) {
 
 	digest := writer.Sum(nil)
 	//	util.Dump("digest trx all", hex.EncodeToString(digest[:]))
-	// fmt.Printf("digest: %v, hex: %s\n", digest[:], hex.EncodeToString(digest[:]))
+	fmt.Printf("digest: %v, hex: %s\n", digest[:], hex.EncodeToString(digest[:]))
 
 	return digest[:], nil
 }

@@ -394,7 +394,7 @@ func testCallContract(api sdk.WebsocketAPI) {
 	// arg := types.LuaString{
 	// 	V: "Call Contract test",
 	// }
-	valueList := make([]interface{}, 0)
+	valueList := make([]types.LuaTypeItem, 0)
 	// valueList[0] = arg
 	error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
 	fmt.Println(error)
@@ -522,6 +522,77 @@ func testGetChainProperties(api sdk.WebsocketAPI) {
 	fmt.Println(result, err)
 }
 
+func testCreateContractFromFile2(api sdk.WebsocketAPI) {
+	fmt.Printf(">>> %v\n", runFuncName())
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	publicKey, err := types.NewPublicKeyFromString(pubKey)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	contractName := "contract.debug.param2" // contract.debug.test0248
+	// contractCode := "function hello() chainhelper:log('create contract test') end"
+	filename := "test2.lua"
+	error := api.ContractCreateFromFile(keyBag, account, contractName, filename, publicKey)
+	fmt.Println(error)
+}
+
+func testCallContract2(api sdk.WebsocketAPI) {
+	fmt.Printf(">>> %v\n", runFuncName())
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	// pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	// publicKey, err := types.NewPublicKeyFromString(pubKey)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	contractName := "contract.debug.param2"
+	contract, err := api.GetContract(contractName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// func (p *websocketAPI) CallContract(keyBag *crypto.KeyBag, caller, creator *types.Account,
+	// contractID types.ContractID, function string, valueList []types.LuaType, amount float64)
+
+	functionName := "param1"
+	arg := types.LuaString{
+		V: "Call Contract test param1",
+	}
+	valueList := make([]types.LuaTypeItem, 1)
+	param1 := types.LuaTypeItem{
+		types.LuaTypeString,
+		arg,
+	}
+	valueList[0] = param1
+	error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
+	fmt.Println(error)
+}
+
 func runFuncName() string {
 	pc := make([]uintptr, 1)
 	runtime.Callers(2, pc)
@@ -553,7 +624,7 @@ func main() {
 
 	// get chain data
 	// testAPIID(api)
-	getData(api)
+	// getData(api)
 	// testListAssets(api)
 	// testHeadBlockPrefix(api)
 	// testGetAccountByName(api)
@@ -598,6 +669,9 @@ func main() {
 	// testGetContracts(api)
 
 	// testReveseContractFromFile(api)
-	testCallContract(api)
+	// testCallContract(api)
+
+	// testCreateContractFromFile2(api)
+	testCallContract2(api)
 
 }
