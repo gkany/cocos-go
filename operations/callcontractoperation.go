@@ -80,10 +80,8 @@ func (p CallContractFunction) Marshal(enc *util.TypeEncoder) error {
 		return errors.Annotate(err, "encode length")
 	}
 
-	for _, item := range p.ValueList {
-		if err := enc.Encode(item); err != nil {
-			return errors.Annotate(err, "encode LuaType item")
-		}
+	if err := enc.Encode(p.ValueList); err != nil {
+		return errors.Annotate(err, "encode LuaType item")
 	}
 
 	fmt.Printf("--> Extensions: %v\n", p.Extensions)

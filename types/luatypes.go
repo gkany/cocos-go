@@ -217,9 +217,10 @@ func (o LuaTypeItem) Marshal(enc *util.TypeEncoder) error {
 	return nil
 }
 
-// func (o LuaTypeItem) MarshalJSON() ([]byte, error) {
-// 	return ffjson.Marshal(o)
-// }
+// MarshalJSON ...
+func (o LuaTypeItem) MarshalJSON() ([]byte, error) {
+	return ffjson.Marshal(o)
+}
 
 // UnmarshalJSON ...
 func (o *LuaTypeItem) UnmarshalJSON(data []byte) error {
