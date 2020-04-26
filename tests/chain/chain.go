@@ -549,6 +549,30 @@ func testCreateContractFromFile2(api sdk.WebsocketAPI) {
 	fmt.Println(error)
 }
 
+func testReviseContractFromFile2(api sdk.WebsocketAPI) {
+	fmt.Printf(">>> %v\n", runFuncName())
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	// pubKey := "COCOS56a5dTnfGpuPoWACnYj65dahcXMpTrNQkV3hHWCFkLxMF5mXpx"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	contractName := "contract.debug.param2" // contract.debug.test0248
+	contract, err := api.GetContract(contractName)
+	if err != nil {
+		return
+	}
+	filename := "test2.lua"
+	error := api.ReviseContractFromFile(keyBag, account, contract.ID, filename)
+	fmt.Println(error)
+}
+
 func testCallContract2(api sdk.WebsocketAPI) {
 	fmt.Printf(">>> %v\n", runFuncName())
 	name := "nicotest"
@@ -655,6 +679,105 @@ func testCallContract3(api sdk.WebsocketAPI) {
 	fmt.Println(error)
 }
 
+func testCallContract4(api sdk.WebsocketAPI) {
+	fmt.Printf(">>> %v\n", runFuncName())
+	name := "nicotest"
+	account, err := api.GetAccountByName(name)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	priKey := "5J2SChqa9QxrCkdMor9VC2k9NT4R4ctRrJA6odQCPkb3yL89vxo"
+	keyBag := crypto.NewKeyBag()
+	keyBag.Add(priKey)
+
+	contractName := "contract.debug.param2"
+	contract, err := api.GetContract(contractName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	functionName := "test_luatype"
+	// test luatype string
+	// valueList := []types.LuaTypeParam{
+	// 	types.LuaTypeParam{
+	// 		types.LuaTypeString,
+	// 		types.LuaString{
+	// 			V: "test LuaString Type",
+	// 		},
+	// 	},
+	// }
+	// error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
+	// fmt.Println(error)
+
+	// // test luatype bool
+	// valueList = []types.LuaTypeParam{
+	// 	types.LuaTypeParam{
+	// 		types.LuaTypeBool,
+	// 		types.LuaBool{
+	// 			V: true,
+	// 		},
+	// 	},
+	// }
+	// error = api.CallContract(keyBag, account, contract.ID, functionName, valueList)
+	// fmt.Println(error)
+
+	// test luatype Int
+	// valueList := []types.LuaTypeParam{
+	// 	types.LuaTypeParam{
+	// 		types.LuaTypeInt,
+	// 		types.LuaInt{
+	// 			V: 200,
+	// 		},
+	// 	},
+	// }
+	// error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
+	// fmt.Println(error)
+
+	// test Luatype number
+	// valueList := []types.LuaTypeParam{
+	// 	types.LuaTypeParam{
+	// 		types.LuaTypeNumber,
+	// 		types.LuaNumber{
+	// 			V: 3.14,
+	// 		},
+	// 	},
+	// }
+	// error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
+	// fmt.Println(error)
+
+	// test luatype table
+	valueList := []types.LuaTypeParam{
+		types.LuaTypeParam{
+			types.LuaTypeTable,
+			types.LuaTable{
+				Value: types.LuaMap{
+					types.LuaTypeItem{
+						types.LuaKey{
+							Key: types.LuaType{
+								types.LuaString{V: "key1"},
+							},
+						},
+						types.LuaString{V: "value1"},
+					},
+					types.LuaTypeItem{
+						types.LuaKey{
+							Key: types.LuaType{
+								types.LuaInt{V: 200},
+							},
+						},
+						types.LuaString{V: "value2"},
+					},
+				},
+			},
+		},
+	}
+	error := api.CallContract(keyBag, account, contract.ID, functionName, valueList)
+	fmt.Println(error)
+}
+
 func runFuncName() string {
 	pc := make([]uintptr, 1)
 	runtime.Callers(2, pc)
@@ -735,6 +858,9 @@ func main() {
 
 	// testCreateContractFromFile2(api)
 	// testCallContract2(api)
-	testCallContract3(api)
+	// testCallContract3(api)
+
+	// testReviseContractFromFile2(api)
+	testCallContract4(api)
 
 }

@@ -38,7 +38,7 @@ type LuaInt struct {
 
 // Marshal ...
 func (o LuaInt) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.Encode(LuaTypeInt); err != nil {
+	if err := enc.Encode(uint8(LuaTypeInt)); err != nil {
 		return errors.Annotate(err, "encode type")
 	}
 
@@ -63,7 +63,7 @@ type LuaNumber struct {
 
 // Marshal ...
 func (o LuaNumber) Marshal(enc *util.TypeEncoder) error {
-	if err := enc.Encode(LuaTypeNumber); err != nil {
+	if err := enc.Encode(uint8(LuaTypeNumber)); err != nil {
 		return errors.Annotate(err, "encode type")
 	}
 
@@ -380,11 +380,6 @@ func parseLuaType(pair []interface{}, dst *[]interface{}) error {
 }
 
 //LuaTypeParam ...  eg: [index, LuaType_object]
-// type LuaTypeParam struct {
-// 	Index UInt64
-// 	Value interface{}
-// }
-
 type LuaTypeParam []interface{}
 
 // Marshal ...
